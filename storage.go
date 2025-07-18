@@ -25,6 +25,7 @@ func scanIntoAccount(rows *sql.Rows) (*Account, error) {
 		&acc.Wins,
 		&acc.Losses,
 		&acc.CreatedAt,
+		&acc.Status,
 	)
 	return acc, err
 }

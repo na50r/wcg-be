@@ -14,6 +14,10 @@ type APIError struct {
 	Error string `json:"error"`
 }
 
+type GenericResponse struct {
+	Message string `json:"message"`
+}
+
 type Account struct {
 	Username  string `json:"username"`
 	Password  string `json:"password"`
@@ -45,6 +49,7 @@ type AccountResponse struct {
 	ImageName string `json:"imageName"`
 	Image     []byte `json:"image"`
 	CreatedAt string `json:"createdAt"`
+	Status    string `json:"status"`
 }
 
 type UpdateAccountRequest struct {
@@ -56,6 +61,14 @@ type UpdateAccountRequest struct {
 type Image struct {
 	Name string `json:"name"`
 	Data []byte `json:"data"`
+}
+
+type ImagesResponse struct {
+	Names []string `json:"names"`
+}
+
+type ChangeImageRequest struct {
+	ImageName string `json:"imageName"`
 }
 
 func NewAccount(username, password string) (*Account, error) {
@@ -71,6 +84,6 @@ func NewAccount(username, password string) (*Account, error) {
 		Losses:    0,
 		ImageName: imageName,
 		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
-		Status:    "offline",
+		Status:    "OFFLINE",
 	}, nil
 }

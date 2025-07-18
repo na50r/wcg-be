@@ -98,7 +98,7 @@ func setImages(store Storage) error {
 }
 
 func main() {
-	seed := flag.Bool("seed", false, "seed images and elements")
+	seed := flag.Bool("seed", false, "seed images")
 	flag.Parse()
 
 	store, err := NewSQLiteStore()
@@ -120,9 +120,10 @@ func main() {
 	//Accounts for ports provided by hosting services
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
-		PORT = "3000"
+		PORT = "3030"
 	}
 
 	server := NewAPIServer(":"+PORT, store)
+	log.Printf("Starting server on port %s", PORT)
 	server.Run()
 }

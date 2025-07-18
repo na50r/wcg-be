@@ -3,12 +3,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
-	"reflect"
-	"time"
 	jwt "github.com/golang-jwt/jwt"
 	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
+	"log"
+	"net/http"
+	"time"
+	"unicode"
 )
 
 func WriteJSON(w http.ResponseWriter, status int, v any) error {
@@ -62,10 +63,48 @@ func (s *APIServer) Run() {
 	router.HandleFunc("/account/{username}", withJWTAuth(makeHTTPHandleFunc(s.handleGetAccount)))
 	router.HandleFunc("/login", makeHTTPHandleFunc(s.handleLogin))
 	router.HandleFunc("/logout", makeHTTPHandleFunc(s.handleLogout))
+	router.HandleFunc("/account/{username}/images", withJWTAuth(makeHTTPHandleFunc(s.handleGetImages)))
+	router.HandleFunc("/account/{username}/image", withJWTAuth(makeHTTPHandleFunc(s.handleChangeImage)))
 	//router.HandleFunc("/account/{username}", makeHTTPHandleFunc(s.handleUpdateAccount))
-	http.ListenAndServe(s.listenAddr, router)
+	log.Fatal(http.ListenAndServe(s.listenAddr, router))
+
 }
 
+func (s *APIServer) handleGetImages(w http.ResponseWriter, r *http.Request) error {
+	images, err := s.store.GetImages()
+	if err != nil {
+		return err
+	}
+	names := make([]string, 0, len(images))
+	for _, image := range images {
+		names = append(names, image.Name)
+	}
+	resp := ImagesResponse{Names: names}
+	return WriteJSON(w, http.StatusOK, resp)
+}
+
+func (s *APIServer) handleChangeImage(w http.ResponseWriter, r *http.Request) error {
+	if r.Method != http.MethodPost {
+		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		return err
+	}
+	req := new(ChangeImageRequest)
+	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+		return err
+	}
+
+	username, err := getUsername(r)
+	acc, err := s.store.GetAccountByUsername(username)
+	if err != nil {
+		return err
+	}
+	log.Println("Changing image for", username, "to", req.ImageName)
+	acc.ImageName = req.ImageName
+	if err := s.store.UpdateAccount(acc); err != nil {
+		return err
+	}
+	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Image changed, Reloading App..."})
+}
 
 func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
@@ -74,6 +113,10 @@ func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error
 	}
 	req := new(RegisterRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+		return err
+	}
+
+	if err := passwordValid(req.Password); err != nil {
 		return err
 	}
 
@@ -87,11 +130,11 @@ func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error
 	if err := s.store.CreateAccount(acc); err != nil {
 		return WriteJSON(w, http.StatusConflict, APIError{Error: "Username taken, choose another one"})
 	}
-	return WriteJSON(w, http.StatusCreated, acc)
+	return WriteJSON(w, http.StatusCreated, GenericResponse{Message: "Account created"})
 }
 
 func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
-	if r.Method != http.MethodPut {
+	if r.Method != http.MethodPost {
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
 		return err
 	}
@@ -106,14 +149,14 @@ func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
 	pw := req.Password
 	encpw := acc.Password
 	if err := bcrypt.CompareHashAndPassword([]byte(encpw), []byte(pw)); err != nil {
-		return err
+		return fmt.Errorf("Incorrect password, please try again")
 	}
 
 	tokenString, err := createJWT(acc)
 	if err != nil {
 		return err
 	}
-	acc.Status = "online"
+	acc.Status = "ONLINE"
 	if err := s.store.UpdateAccount(acc); err != nil {
 		return err
 	}
@@ -122,7 +165,7 @@ func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
 }
 
 func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
-	if r.Method != http.MethodPut {
+	if r.Method != http.MethodPost {
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
 		return err
 	}
@@ -139,14 +182,14 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	if acc.Status == "offline" {
+	if acc.Status == "OFFLINE" {
 		return WriteJSON(w, http.StatusBadRequest, APIError{Error: "Already logged out"})
 	}
-	acc.Status = "offline"
+	acc.Status = "OFFLINE"
 	if err := s.store.UpdateAccount(acc); err != nil {
 		return err
 	}
-	return WriteJSON(w, http.StatusOK, "Logout successful")
+	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Logout successful"})
 }
 
 func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) error {
@@ -170,49 +213,13 @@ func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) err
 	resp.CreatedAt = acc.CreatedAt
 	resp.Wins = acc.Wins
 	resp.Losses = acc.Losses
+	resp.Status = acc.Status
 	return WriteJSON(w, http.StatusOK, resp)
 }
-
-// func (s *APIServer) handleUpdateAccount(w http.ResponseWriter, r *http.Request) error {
-// 	username, err := getUsername(r)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	req := new(UpdateAccountRequest)
-// 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
-// 		return err
-// 	}
-// 	acc, err := s.store.GetAccountByUsername(username)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	updateAccountWithReflect(acc, req)
-// 	if err := s.store.UpdateAccount(acc); err != nil {
-// 		return err
-// 	}
-// 	return WriteJSON(w, http.StatusOK, req)
-// }
 
 func getUsername(r *http.Request) (string, error) {
 	username := mux.Vars(r)["username"]
 	return username, nil
-}
-
-// ChatGPT Aided
-// Reference: https://blog.devtrovert.com/p/reflection-in-go-everything-you-need (flexible update)
-func updateAccountWithReflect(acc, req *Account) {
-	accVal := reflect.ValueOf(acc).Elem()
-	reqVal := reflect.ValueOf(req).Elem()
-	for i := 0; i < reqVal.NumField(); i++ {
-		reqField := reqVal.Field(i)
-		if !reqField.IsNil() {
-			fieldName := reqVal.Type().Field(i).Name
-			accField := accVal.FieldByName(fieldName)
-			if accField.IsValid() && accField.CanSet() {
-				accField.Set(reqField.Elem())
-			}
-		}
-	}
 }
 
 // Authentication Middleware Adapted from Anthony GG's tutorial
@@ -273,4 +280,26 @@ func retrieveToken(r *http.Request) (jwt.Token, error) {
 		return jwt.Token{}, fmt.Errorf("unauthorized")
 	}
 	return *token, nil
+}
+
+func passwordValid(password string) error {
+	if len(password) < 2 {
+		return fmt.Errorf("password must be at least 8 characters")
+	}
+	if len(password) > 20 {
+		return fmt.Errorf("password must be less than 20 characters")
+	}
+	if !IsLetter(password) {
+		return fmt.Errorf("password must contain a letter")
+	}
+	return nil
+}
+
+func IsLetter(s string) bool {
+	for _, r := range s {
+		if !unicode.IsLetter(r) {
+			return false
+		}
+	}
+	return true
 }

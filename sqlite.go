@@ -36,7 +36,8 @@ func (s *SQLiteStore) createAccountTable() error {
 		password text,
 		wins integer,
 		losses integer,
-		created_at datetime
+		created_at datetime,
+		status text
 		)`
 	_, err := s.db.Exec(query)
 	return err
@@ -46,17 +47,6 @@ func (s *SQLiteStore) createImageTable() error {
 	query := `create table if not exists image (
 		name text primary key,
 		data blob
-		)`
-	_, err := s.db.Exec(query)
-	return err
-}
-
-func (s *SQLiteStore) createSessionTable() error {
-	query := `create table if not exists sessions (
-		id text,
-		username text,
-		player_type text
-		unique(id, username)
 		)`
 	_, err := s.db.Exec(query)
 	return err
@@ -76,8 +66,8 @@ func (s *SQLiteStore) Init() error {
 
 func (s *SQLiteStore) CreateAccount(acc *Account) error {
 	query := `insert into account 
-	(username, image_name, password, wins, losses, created_at)
-	values (?, ?, ?, ?, ?, ?)`
+	(username, image_name, password, wins, losses, created_at, status)
+	values (?, ?, ?, ?, ?, ?,?)`
 	_, err := s.db.Exec(
 		query,
 		acc.Username,
@@ -86,6 +76,7 @@ func (s *SQLiteStore) CreateAccount(acc *Account) error {
 		acc.Wins,
 		acc.Losses,
 		acc.CreatedAt,
+		acc.Status,
 	)
 	if err != nil {
 		return err
@@ -112,7 +103,8 @@ func (s *SQLiteStore) UpdateAccount(acc *Account) error {
 	image_name = ?,
 	password = ?,
 	wins = ?,
-	losses = ?
+	losses = ?,
+	status = ?
 	where username = ?`
 	_, err := s.db.Exec(
 		query,
@@ -121,6 +113,7 @@ func (s *SQLiteStore) UpdateAccount(acc *Account) error {
 		acc.Password,
 		acc.Wins,
 		acc.Losses,
+		acc.Status,
 		acc.Username,
 	)
 	return err
