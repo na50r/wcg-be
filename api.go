@@ -3,13 +3,15 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	jwt "github.com/golang-jwt/jwt"
-	"github.com/gorilla/mux"
-	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
 	"time"
 	"unicode"
+
+	jwt "github.com/golang-jwt/jwt"
+	"github.com/gorilla/mux"
+	"github.com/na50r/wombo-combo-go-be/sse"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func WriteJSON(w http.ResponseWriter, status int, v any) error {
@@ -29,12 +31,14 @@ func makeHTTPHandleFunc(f APIFunc) http.HandlerFunc {
 type APIServer struct {
 	listenAddr string
 	store      Storage
+	broker     *sse.Broker
 }
 
 func NewAPIServer(listenAddr string, store Storage) *APIServer {
 	return &APIServer{
 		listenAddr: listenAddr,
 		store:      store,
+		broker:     sse.NewBroker(),
 	}
 }
 
@@ -65,9 +69,69 @@ func (s *APIServer) Run() {
 	router.HandleFunc("/logout", makeHTTPHandleFunc(s.handleLogout))
 	router.HandleFunc("/account/{username}/images", withJWTAuth(makeHTTPHandleFunc(s.handleGetImages)))
 	router.HandleFunc("/account/{username}/image", withJWTAuth(makeHTTPHandleFunc(s.handleChangeImage)))
+	router.HandleFunc("/account/{username}/lobby", withJWTAuth(makeHTTPHandleFunc(s.handleCreateLobby)))
+	router.HandleFunc("/lobbies", makeHTTPHandleFunc(s.handleGetLobbies))
+	//router.HandleFunc("/lobby/{lobbyID}", makeHTTPHandleFunc(s.handleDeleteLobby))
 	//router.HandleFunc("/account/{username}", makeHTTPHandleFunc(s.handleUpdateAccount))
+
+	// Events
+	router.HandleFunc("/events/lobbies", s.broker.SSEHandler)
+	router.HandleFunc("/events/messages", s.broker.SSEHandler)
+	router.HandleFunc("/events/publish", s.broker.PublishEndpoint)
 	log.Fatal(http.ListenAndServe(s.listenAddr, router))
 
+}
+
+func (s *APIServer) handleCreateLobby(w http.ResponseWriter, r *http.Request) error {
+	if r.Method != http.MethodPost {
+		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		return err
+	}
+	req := new(CreateLobbyRequest)
+	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+		return err
+	}
+	username, err := getUsername(r)
+	if err != nil {
+		return err
+	}
+	owner, err := s.store.GetPlayerForAccount(username)
+	if err != nil {
+		return err
+	}
+	lobbyID := req.Name
+	owner.LobbyID = lobbyID
+	owner.IsOwner = true
+	if err := s.store.CreatePlayer(owner); err != nil {
+		return err
+	}
+
+	img, err := s.store.GetImage(owner.ImageName)
+	if err != nil {
+		return err
+	}
+	ownerDTO := &PlayerDTO{Name: owner.Name, Image: img}
+	lobbyDTO := &LobbyDTO{Owner: *ownerDTO, Players: []*PlayerDTO{}}
+	s.broker.Publish(sse.Message{Data: "LOBBY_CREATED"})
+	return WriteJSON(w, http.StatusOK, lobbyDTO)
+}
+
+func (s *APIServer) handleGetLobbies(w http.ResponseWriter, r *http.Request) error {
+	owners, err := s.store.GetOwners()
+	if err != nil {
+		return err
+	}
+	lobbies := []*LobbiesDTO{}
+	for _, owner := range owners {
+		img, err := s.store.GetImage(owner.ImageName)
+		if err != nil {
+			return err
+		}
+		ownerDTO := &PlayerDTO{Name: owner.Name, Image: img}
+		lobby := &LobbiesDTO{Owner: *ownerDTO, PlayerCount: 1, LobbyID: owner.LobbyID}
+		lobbies = append(lobbies, lobby)
+	}
+	return WriteJSON(w, http.StatusOK, lobbies)
 }
 
 func (s *APIServer) handleGetImages(w http.ResponseWriter, r *http.Request) error {
@@ -189,6 +253,16 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 	if err := s.store.UpdateAccount(acc); err != nil {
 		return err
 	}
+
+	// Delete Lobby of logged out users
+	lobbyID, err := s.store.GetLobbyForOwner(username)
+	if err != nil {
+		return err
+	}
+	if err := s.store.DeleteLobby(lobbyID); err != nil {
+		return err
+	}
+	s.broker.Publish(sse.Message{Data: "LOBBY_DELETED"})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Logout successful"})
 }
 
@@ -206,7 +280,7 @@ func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) err
 		return err
 	}
 
-	resp := new(AccountResponse)
+	resp := new(AccountDTO)
 	resp.Username = acc.Username
 	resp.Image = img
 	resp.ImageName = acc.ImageName

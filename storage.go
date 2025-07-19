@@ -12,6 +12,12 @@ type Storage interface {
 	GetImage(name string) ([]byte, error)
 	GetImages() ([]*Image, error)
 	NewImageForAccount(username string) string
+	GetPlayerForAccount(username string) (*Player, error)
+	CreatePlayer(player *Player) error
+	GetPlayersByLobbyID(lobbyID string) ([]*Player, error)
+	GetOwners() ([]*Player, error)
+	GetLobbyForOwner(owner string) (string, error)
+	DeleteLobby(lobbyID string) error
 	Init() error
 }
 
@@ -37,4 +43,15 @@ func scanIntoImage(rows *sql.Rows) (*Image, error) {
 		&image.Data,
 	)
 	return image, err
+}
+
+func scanIntoPlayer(rows *sql.Rows) (*Player, error) {
+	player := new(Player)
+	err := rows.Scan(
+		&player.Name,
+		&player.LobbyID,
+		&player.ImageName,
+		&player.IsOwner,
+	)
+	return player, err
 }

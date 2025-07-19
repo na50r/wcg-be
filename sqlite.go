@@ -52,12 +52,27 @@ func (s *SQLiteStore) createImageTable() error {
 	return err
 }
 
+func (s *SQLiteStore) createPlayerTable() error {
+	query := `create table if not exists player (
+		name text,
+		lobby_id text,
+		image_name,
+		is_owner boolean,
+		primary key (name, lobby_id)
+		)`
+	_, err := s.db.Exec(query)
+	return err
+}
 
 func (s *SQLiteStore) Init() error {
 	if err := s.createAccountTable(); err != nil {
 		return err
 	}
 	if err := s.createImageTable(); err != nil {
+		return err
+	}
+	if err := s.createPlayerTable(); err != nil {
+		fmt.Println(err)
 		return err
 	}
 	return nil
@@ -82,6 +97,56 @@ func (s *SQLiteStore) CreateAccount(acc *Account) error {
 		return err
 	}
 	return nil
+}
+
+func (s *SQLiteStore) CreatePlayer(player *Player) error {
+	query := `insert into player 
+	(name, lobby_id, image_name, is_owner)
+	values (?, ?, ?, ?)`
+	_, err := s.db.Exec(
+		query,
+		player.Name,
+		player.LobbyID,
+		player.ImageName,
+		player.IsOwner,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SQLiteStore) GetPlayerByLobbyIDAndName(name string, lobbyID string) (*Player, error) {
+	rows, err := s.db.Query("select * from player where name = ? and lobby_id = ?", name, lobbyID)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		defer rows.Close()
+		return scanIntoPlayer(rows)
+	}
+	return nil, fmt.Errorf("player %s not found", name)
+}
+
+func (s *SQLiteStore) DeletePlayer(name string, lobbyID string) error {
+	_, err := s.db.Exec("delete from player where name = ? and lobby_id = ?", name, lobbyID)
+	return err
+}
+
+func (s *SQLiteStore) GetPlayersByLobbyID(lobbyID string) ([]*Player, error) {
+	rows, err := s.db.Query("select * from player where lobby_id = ?", lobbyID)
+	if err != nil {
+		return nil, err
+	}
+	players := []*Player{}
+	for rows.Next() {
+		player, err := scanIntoPlayer(rows)
+		if err != nil {
+			return nil, err
+		}
+		players = append(players, player)
+	}
+	return players, nil
 }
 
 func (s *SQLiteStore) GetAccountByUsername(username string) (*Account, error) {
@@ -173,4 +238,50 @@ func (s *SQLiteStore) NewImageForAccount(username string) string {
 	hash := int(username[0]) % size
 	image := images[hash]
 	return image.Name
+}
+
+func (s *SQLiteStore) GetPlayerForAccount(username string) (*Player, error) {
+	acc, err := s.GetAccountByUsername(username)
+	if err != nil {
+		return nil, err
+	}
+	return &Player{Name: acc.Username, ImageName: acc.ImageName, IsOwner: false}, nil
+}
+
+func (s *SQLiteStore) GetOwners() ([]*Player, error) {
+	rows, err := s.db.Query("select * from player where is_owner = ?", true)
+	if err != nil {
+		return nil, err
+	}
+	owners := []*Player{}
+	for rows.Next() {
+		owner, err := scanIntoPlayer(rows)
+		if err != nil {
+			return nil, err
+		}
+		owners = append(owners, owner)
+	}
+	return owners, nil
+}
+
+func (s *SQLiteStore) GetLobbyForOwner(owner string) (string, error) {
+	rows, err := s.db.Query("select lobby_id from player where name = ? and is_owner = ?", owner, true)
+	if err != nil {
+		return "", err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var lobbyID string
+		err := rows.Scan(&lobbyID)
+		if err != nil {
+			return "", err
+		}
+		return lobbyID, nil
+	}
+	return "", nil
+}
+
+func (s *SQLiteStore) DeleteLobby(lobbyID string) error {
+	_, err := s.db.Exec("delete from player where lobby_id = ?", lobbyID)
+	return err
 }

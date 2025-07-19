@@ -7,7 +7,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-
 type APIFunc func(http.ResponseWriter, *http.Request) error
 
 type APIError struct {
@@ -42,7 +41,7 @@ type LoginResponse struct {
 	Token string `json:"token"`
 }
 
-type AccountResponse struct {
+type AccountDTO struct {
 	Username  string `json:"username"`
 	Wins      int    `json:"wins"`
 	Losses    int    `json:"losses"`
@@ -50,6 +49,33 @@ type AccountResponse struct {
 	Image     []byte `json:"image"`
 	CreatedAt string `json:"createdAt"`
 	Status    string `json:"status"`
+}
+
+type CreateLobbyRequest struct {
+	Name string `json:"name"`
+}
+
+type Player struct {
+	LobbyID   string `json:"lobbyID"`
+	Name      string `json:"name"`
+	ImageName string `json:"imageName"`
+	IsOwner   bool   `json:"isOwner"`
+}
+
+type PlayerDTO struct {
+	Name  string `json:"name"`
+	Image []byte `json:"image"`
+}
+
+type LobbyDTO struct {
+	Owner   PlayerDTO    `json:"owner"`
+	Players []*PlayerDTO `json:"players"`
+}
+
+type LobbiesDTO struct {
+	Owner PlayerDTO    `json:"owner"`
+	PlayerCount int      `json:"playerCount"`
+	LobbyID string     `json:"lobbyID"`
 }
 
 type UpdateAccountRequest struct {
