@@ -60,6 +60,7 @@ type Player struct {
 	Name      string `json:"name"`
 	ImageName string `json:"imageName"`
 	IsOwner   bool   `json:"isOwner"`
+	HasAccount bool   `json:"hasAccount"`
 }
 
 type PlayerDTO struct {
@@ -97,6 +98,11 @@ type ChangeImageRequest struct {
 	ImageName string `json:"imageName"`
 }
 
+type JoinLobbyRequest struct {
+	Name    string `json:"name"`
+	LobbyID string `json:"lobbyID"`
+}
+
 func NewAccount(username, password string) (*Account, error) {
 	encpw, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -112,4 +118,13 @@ func NewAccount(username, password string) (*Account, error) {
 		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
 		Status:    "OFFLINE",
 	}, nil
+}
+
+func NewPlayer(name, lobbyID, imageName string, isOwner bool) *Player {
+	return &Player{
+		LobbyID:   lobbyID,
+		Name:      name,
+		ImageName: imageName,
+		IsOwner:   isOwner,
+	}
 }

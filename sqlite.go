@@ -58,6 +58,7 @@ func (s *SQLiteStore) createPlayerTable() error {
 		lobby_id text,
 		image_name,
 		is_owner boolean,
+		has_account boolean,
 		primary key (name, lobby_id)
 		)`
 	_, err := s.db.Exec(query)
@@ -101,14 +102,15 @@ func (s *SQLiteStore) CreateAccount(acc *Account) error {
 
 func (s *SQLiteStore) CreatePlayer(player *Player) error {
 	query := `insert into player 
-	(name, lobby_id, image_name, is_owner)
-	values (?, ?, ?, ?)`
+	(name, lobby_id, image_name, is_owner, has_account)
+	values (?, ?, ?, ?, ?)`
 	_, err := s.db.Exec(
 		query,
 		player.Name,
 		player.LobbyID,
 		player.ImageName,
 		player.IsOwner,
+		player.HasAccount,
 	)
 	if err != nil {
 		return err
@@ -228,7 +230,7 @@ func (s *SQLiteStore) GetImages() ([]*Image, error) {
 }
 
 
-func (s *SQLiteStore) NewImageForAccount(username string) string {
+func (s *SQLiteStore) NewImageForUsername(username string) string {
 	images, err := s.GetImages()
 	if err != nil {
 		return err.Error()
@@ -283,5 +285,16 @@ func (s *SQLiteStore) GetLobbyForOwner(owner string) (string, error) {
 
 func (s *SQLiteStore) DeleteLobby(lobbyID string) error {
 	_, err := s.db.Exec("delete from player where lobby_id = ?", lobbyID)
+	return err
+}
+
+func (s * SQLiteStore) AddPlayer(lobbyID string, player *Player) error {
+	_, err := s.db.Exec(
+		"insert into player (name, lobby_id, image_name, is_owner) values (?, ?, ?, ?)",
+		player.Name,
+		lobbyID,
+		player.ImageName,
+		player.IsOwner,
+	)
 	return err
 }

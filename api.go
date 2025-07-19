@@ -71,7 +71,7 @@ func (s *APIServer) Run() {
 	router.HandleFunc("/account/{username}/image", withJWTAuth(makeHTTPHandleFunc(s.handleChangeImage)))
 	router.HandleFunc("/account/{username}/lobby", withJWTAuth(makeHTTPHandleFunc(s.handleCreateLobby)))
 	router.HandleFunc("/lobbies", makeHTTPHandleFunc(s.handleGetLobbies))
-	//router.HandleFunc("/lobby/{lobbyID}", makeHTTPHandleFunc(s.handleDeleteLobby))
+	router.HandleFunc("/lobby/{lobbyID}/join", makeHTTPHandleFunc(s.handleJoinLobby))
 	//router.HandleFunc("/account/{username}", makeHTTPHandleFunc(s.handleUpdateAccount))
 
 	// Events
@@ -81,6 +81,12 @@ func (s *APIServer) Run() {
 	log.Fatal(http.ListenAndServe(s.listenAddr, router))
 
 }
+
+func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) error {
+	return nil
+}
+
+
 
 func (s *APIServer) handleCreateLobby(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
@@ -102,6 +108,7 @@ func (s *APIServer) handleCreateLobby(w http.ResponseWriter, r *http.Request) er
 	lobbyID := req.Name
 	owner.LobbyID = lobbyID
 	owner.IsOwner = true
+	owner.HasAccount = true
 	if err := s.store.CreatePlayer(owner); err != nil {
 		return err
 	}
@@ -188,7 +195,7 @@ func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error
 	if err != nil {
 		return err
 	}
-	imageName := s.store.NewImageForAccount(acc.Username)
+	imageName := s.store.NewImageForUsername(acc.Username)
 	acc.ImageName = imageName
 
 	if err := s.store.CreateAccount(acc); err != nil {
