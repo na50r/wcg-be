@@ -79,7 +79,7 @@ func (s *APIServer) Run() {
 	router.HandleFunc("/lobbies/{lobbyCode}/view/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleGetLobby)))
 	router.HandleFunc("/lobbies/{lobbyCode}/leave/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleLeaveLobby)))
 	router.HandleFunc("/lobbies/{lobbyCode}/games/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.Play)))
-	router.HandleFunc("/lobbies/{lobbyCode}/edit/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.EditGame)))
+	router.HandleFunc("/lobbies/{lobbyCode}/edit/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleEditGameMode)))
 
 	// Events
 	router.HandleFunc("/events/lobbies", s.broker.SSEHandler)
@@ -87,6 +87,26 @@ func (s *APIServer) Run() {
 	log.Fatal(http.ListenAndServe(s.listenAddr, router))
 }
 
+func (s *APIServer) handleEditGameMode(w http.ResponseWriter, r *http.Request) error {
+	token, err := retrieveToken(r)
+	if err != nil {
+		return err
+	}
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return fmt.Errorf("unauthorized")
+	}
+	isOwner := claims["isOwner"].(bool)
+	if !isOwner {
+		return fmt.Errorf("unauthorized")
+	}
+	req := new(ChangeGameModeRequest)
+	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+		return err
+	}
+	s.broker.Publish(sse.Message{Data: GameModeChangeEvent{GameMode: req.GameMode}})
+	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game mode changed"})
+}
 
 func (s *APIServer) handleGetLobby(w http.ResponseWriter, r *http.Request) error {
 	lobbyCode, err := getLobbyCode(r)
@@ -146,7 +166,6 @@ func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) err
 	s.broker.Publish(sse.Message{Data: "PLAYER_LEFT"})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Left Lobby"})
 }
-
 
 func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
@@ -224,7 +243,7 @@ func (s *APIServer) handleCreateLobby(w http.ResponseWriter, r *http.Request) er
 	}
 	lobbyName := req.Name
 	lobbyCode := uuid.New().String()[:6]
-	lobby := &Lobby{Name: lobbyName, ImageName: owner.ImageName, LobbyCode: lobbyCode, GameMode: "TBD", PlayerCount: 1}
+	lobby := NewLobby(lobbyName, lobbyCode, owner.ImageName)
 	if err := s.store.CreateLobby(lobby); err != nil {
 		return err
 	}
@@ -241,7 +260,7 @@ func (s *APIServer) handleCreateLobby(w http.ResponseWriter, r *http.Request) er
 	}
 	ownerDTO := &PlayerDTO{Name: owner.Name, Image: img}
 	playersDTO := []*PlayerDTO{ownerDTO}
-	lobbyDTO := &LobbyDTO{Owner: owner.Name, Players: playersDTO, Name: lobby.Name, GameMode: lobby.GameMode, LobbyCode: lobby.LobbyCode}
+	lobbyDTO := NewLobbyDTO(lobby, owner.Name, playersDTO)
 	token, err := createLobbyToken(owner)
 	if err != nil {
 		return err
@@ -522,9 +541,10 @@ func createJWT(account *Account) (string, error) {
 
 func createLobbyToken(player *Player) (string, error) {
 	claims := &jwt.MapClaims{
-		"exp":       time.Now().Add(time.Hour * 4).Unix(),
-		"playerName":  player.Name,
-		"lobbyCode": player.LobbyCode,
+		"exp":        time.Now().Add(time.Hour * 4).Unix(),
+		"playerName": player.Name,
+		"lobbyCode":  player.LobbyCode,
+		"isOwner":    player.IsOwner,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(JWT_SECRET))

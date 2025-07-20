@@ -371,3 +371,8 @@ func (s *SQLiteStore) GetLobbyByCode(lobbyCode string) (*Lobby, error) {
 	}
 	return nil, fmt.Errorf("lobby %s not found", lobbyCode)
 }
+
+func (s *SQLiteStore) EditGameMode(lobbyCode, gameMode string) error {
+	_, err := s.db.Exec("update lobby set game_mode = ? where lobby_code = ?", gameMode, lobbyCode)
+	return err
+}

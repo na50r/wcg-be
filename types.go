@@ -92,6 +92,7 @@ type LobbyDTO struct {
 	GameMode string       `json:"gameMode"`
 	Owner   string       `json:"owner"`
 	Players []*PlayerDTO `json:"players"`
+	GameModes []string     `json:"gameModes"`
 }
 
 type LobbiesDTO struct {
@@ -124,6 +125,14 @@ type JoinLobbyRequest struct {
 	LobbyCode  string `json:"lobbyCode"`
 }
 
+type ChangeGameModeRequest struct {
+	GameMode string `json:"gameMode"`
+}
+
+type GameModeChangeEvent struct {
+	GameMode string `json:"gameMode"`
+}
+
 func NewAccount(username, password string) (*Account, error) {
 	encpw, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -148,5 +157,31 @@ func NewPlayer(name, lobbyCode, imageName string, isOwner, hasAccount bool) *Pla
 		ImageName:  imageName,
 		IsOwner:    isOwner,
 		HasAccount: hasAccount,
+	}
+}
+
+func GameModes() []string {
+	return []string{"Vanilla", "Wombo Combo", "Lucky Rush"}
+}
+
+func NewLobby(name, lobbyCode, imageName string) *Lobby {
+	return &Lobby{
+		Name:        name,
+		ImageName:   imageName,
+		LobbyCode:   lobbyCode,
+		GameMode:    "Vanilla",
+		PlayerCount: 1,
+	}
+}
+
+
+func NewLobbyDTO(lobby *Lobby, owner string, players []*PlayerDTO) *LobbyDTO {
+	return &LobbyDTO{
+		LobbyCode: lobby.LobbyCode,
+		Name:     lobby.Name,
+		GameMode: lobby.GameMode,
+		Owner:    owner,
+		Players:  players,
+		GameModes: GameModes(),
 	}
 }

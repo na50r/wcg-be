@@ -25,6 +25,7 @@ type Storage interface {
 	DeleteLobby(lobbyCode string) error
 	GetLobbies() ([]*Lobby, error)
 	GetLobbyByCode(lobbyCode string) (*Lobby, error)
+	EditGameMode(lobbyCode, gameMode string) error
 }
 
 // Convert SQL rows into an defined Go types
