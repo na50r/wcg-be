@@ -55,12 +55,30 @@ type CreateLobbyRequest struct {
 	Name string `json:"name"`
 }
 
+type CreateLobbyResponse struct {
+	Token string `json:"token"`
+	LobbyDTO `json:"lobby"`
+}
+
+type JoinLobbyRespone struct {
+	Token string `json:"token"`
+	LobbyDTO `json:"lobby"`
+}
+
 type Player struct {
-	LobbyID   string `json:"lobbyID"`
-	Name      string `json:"name"`
-	ImageName string `json:"imageName"`
-	IsOwner   bool   `json:"isOwner"`
+	LobbyCode  string `json:"lobbyCode"`
+	Name       string `json:"name"`
+	ImageName  string `json:"imageName"`
+	IsOwner    bool   `json:"isOwner"`
 	HasAccount bool   `json:"hasAccount"`
+}
+
+type Lobby struct {
+	Name        string `json:"name"`
+	ImageName   string `json:"imageName"`
+	LobbyCode   string `json:"lobbyCode"`
+	GameMode    string `json:"gameMode"`
+	PlayerCount int    `json:"playerCount"`
 }
 
 type PlayerDTO struct {
@@ -69,14 +87,17 @@ type PlayerDTO struct {
 }
 
 type LobbyDTO struct {
-	Owner   PlayerDTO    `json:"owner"`
+	LobbyCode string       `json:"lobbyCode"`
+	Name     string       `json:"name"`
+	GameMode string       `json:"gameMode"`
+	Owner   string       `json:"owner"`
 	Players []*PlayerDTO `json:"players"`
 }
 
 type LobbiesDTO struct {
-	Owner PlayerDTO    `json:"owner"`
-	PlayerCount int      `json:"playerCount"`
-	LobbyID string     `json:"lobbyID"`
+	Image       []byte `json:"image"`
+	PlayerCount int    `json:"playerCount"`
+	LobbyCode   string `json:"lobbyCode"`
 }
 
 type UpdateAccountRequest struct {
@@ -99,8 +120,8 @@ type ChangeImageRequest struct {
 }
 
 type JoinLobbyRequest struct {
-	Name    string `json:"name"`
-	LobbyID string `json:"lobbyID"`
+	PlayerName string `json:"playerName"`
+	LobbyCode  string `json:"lobbyCode"`
 }
 
 func NewAccount(username, password string) (*Account, error) {
@@ -120,11 +141,12 @@ func NewAccount(username, password string) (*Account, error) {
 	}, nil
 }
 
-func NewPlayer(name, lobbyID, imageName string, isOwner bool) *Player {
+func NewPlayer(name, lobbyCode, imageName string, isOwner, hasAccount bool) *Player {
 	return &Player{
-		LobbyID:   lobbyID,
-		Name:      name,
-		ImageName: imageName,
-		IsOwner:   isOwner,
+		LobbyCode:  lobbyCode,
+		Name:       name,
+		ImageName:  imageName,
+		IsOwner:    isOwner,
+		HasAccount: hasAccount,
 	}
 }

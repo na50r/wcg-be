@@ -28,7 +28,6 @@ func NewSQLiteStore() (*SQLiteStore, error) {
 	return &SQLiteStore{db: db}, nil
 }
 
-
 func (s *SQLiteStore) createAccountTable() error {
 	query := `create table if not exists account (
 		username text primary key,
@@ -55,11 +54,24 @@ func (s *SQLiteStore) createImageTable() error {
 func (s *SQLiteStore) createPlayerTable() error {
 	query := `create table if not exists player (
 		name text,
-		lobby_id text,
+		lobby_code text,
 		image_name,
 		is_owner boolean,
 		has_account boolean,
-		primary key (name, lobby_id)
+		primary key (name, lobby_code)
+		)`
+	_, err := s.db.Exec(query)
+	return err
+}
+
+func (s *SQLiteStore) createLobbyTable() error {
+	query := `create table if not exists lobby (
+		name text,
+		image_name text,
+		lobby_code text,
+		game_mode text,
+		player_count integer,
+		primary key (lobby_code)
 		)`
 	_, err := s.db.Exec(query)
 	return err
@@ -74,6 +86,9 @@ func (s *SQLiteStore) Init() error {
 	}
 	if err := s.createPlayerTable(); err != nil {
 		fmt.Println(err)
+		return err
+	}
+	if err := s.createLobbyTable(); err != nil {
 		return err
 	}
 	return nil
@@ -102,12 +117,12 @@ func (s *SQLiteStore) CreateAccount(acc *Account) error {
 
 func (s *SQLiteStore) CreatePlayer(player *Player) error {
 	query := `insert into player 
-	(name, lobby_id, image_name, is_owner, has_account)
+	(name, lobby_code, image_name, is_owner, has_account)
 	values (?, ?, ?, ?, ?)`
 	_, err := s.db.Exec(
 		query,
 		player.Name,
-		player.LobbyID,
+		player.LobbyCode,
 		player.ImageName,
 		player.IsOwner,
 		player.HasAccount,
@@ -118,8 +133,26 @@ func (s *SQLiteStore) CreatePlayer(player *Player) error {
 	return nil
 }
 
-func (s *SQLiteStore) GetPlayerByLobbyIDAndName(name string, lobbyID string) (*Player, error) {
-	rows, err := s.db.Query("select * from player where name = ? and lobby_id = ?", name, lobbyID)
+func (s *SQLiteStore) CreateLobby(lobby *Lobby) error {
+	query := `insert into lobby 
+	(name, image_name, lobby_code, game_mode, player_count)
+	values (?, ?, ?, ?, ?)`
+	_, err := s.db.Exec(
+		query,
+		lobby.Name,
+		lobby.ImageName,
+		lobby.LobbyCode,
+		lobby.GameMode,
+		lobby.PlayerCount,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SQLiteStore) GetPlayerByLobbyCodeAndName(name, lobbyCode string) (*Player, error) {
+	rows, err := s.db.Query("select * from player where name = ? and lobby_code = ?", name, lobbyCode)
 	if err != nil {
 		return nil, err
 	}
@@ -130,13 +163,13 @@ func (s *SQLiteStore) GetPlayerByLobbyIDAndName(name string, lobbyID string) (*P
 	return nil, fmt.Errorf("player %s not found", name)
 }
 
-func (s *SQLiteStore) DeletePlayer(name string, lobbyID string) error {
-	_, err := s.db.Exec("delete from player where name = ? and lobby_id = ?", name, lobbyID)
+func (s *SQLiteStore) DeletePlayer(name, lobbyCode string) error {
+	_, err := s.db.Exec("delete from player where name = ? and lobby_code = ?", name, lobbyCode)
 	return err
 }
 
-func (s *SQLiteStore) GetPlayersByLobbyID(lobbyID string) ([]*Player, error) {
-	rows, err := s.db.Query("select * from player where lobby_id = ?", lobbyID)
+func (s *SQLiteStore) GetPlayersByLobbyCode(lobbyCode string) ([]*Player, error) {
+	rows, err := s.db.Query("select * from player where lobby_code = ?", lobbyCode)
 	if err != nil {
 		return nil, err
 	}
@@ -212,7 +245,6 @@ func (s *SQLiteStore) GetImage(name string) ([]byte, error) {
 	return nil, fmt.Errorf("image for account %s not found", name)
 }
 
-
 func (s *SQLiteStore) GetImages() ([]*Image, error) {
 	rows, err := s.db.Query("select * from image")
 	if err != nil {
@@ -228,7 +260,6 @@ func (s *SQLiteStore) GetImages() ([]*Image, error) {
 	}
 	return images, nil
 }
-
 
 func (s *SQLiteStore) NewImageForUsername(username string) string {
 	images, err := s.GetImages()
@@ -267,34 +298,75 @@ func (s *SQLiteStore) GetOwners() ([]*Player, error) {
 }
 
 func (s *SQLiteStore) GetLobbyForOwner(owner string) (string, error) {
-	rows, err := s.db.Query("select lobby_id from player where name = ? and is_owner = ?", owner, true)
+	rows, err := s.db.Query("select lobby_code from player where name = ? and is_owner = ?", owner, true)
 	if err != nil {
 		return "", err
 	}
-	defer rows.Close()
+	var lobbyCode string
 	for rows.Next() {
-		var lobbyID string
-		err := rows.Scan(&lobbyID)
+		defer rows.Close()
+		err := rows.Scan(&lobbyCode)
 		if err != nil {
 			return "", err
 		}
-		return lobbyID, nil
+		return lobbyCode, nil
 	}
 	return "", nil
 }
 
-func (s *SQLiteStore) DeleteLobby(lobbyID string) error {
-	_, err := s.db.Exec("delete from player where lobby_id = ?", lobbyID)
+func (s *SQLiteStore) DeletePlayersForLobby(lobbyCode string) error {
+	_, err := s.db.Exec("delete from player where lobby_code = ?", lobbyCode)
 	return err
 }
 
-func (s * SQLiteStore) AddPlayer(lobbyID string, player *Player) error {
+func (s *SQLiteStore) AddPlayerToLobby(lobbyCode string, player *Player) error {
 	_, err := s.db.Exec(
-		"insert into player (name, lobby_id, image_name, is_owner) values (?, ?, ?, ?)",
+		"insert into player (name, lobby_code, image_name, is_owner, has_account) values (?, ?, ?, ?, ?)",
 		player.Name,
-		lobbyID,
+		lobbyCode,
 		player.ImageName,
 		player.IsOwner,
+		player.HasAccount,
 	)
+	err = s.IncrementPlayerCount(lobbyCode)
 	return err
+}
+
+func (s * SQLiteStore) IncrementPlayerCount(lobbyCode string) error {
+	_, err := s.db.Exec("update lobby set player_count = player_count + 1 where lobby_code = ?", lobbyCode)
+	return err
+}
+
+func (s *SQLiteStore) GetLobbies() ([]*Lobby, error) {
+	rows, err := s.db.Query("select * from lobby")
+	if err != nil {
+		return nil, err
+	}
+	lobbies := []*Lobby{}
+	for rows.Next() {
+		lobby, err := scanIntoLobby(rows)
+		if err != nil {
+			return nil, err
+		}
+		lobbies = append(lobbies, lobby)
+	}
+	return lobbies, nil
+}
+
+func (s *SQLiteStore) DeleteLobby(lobbyCode string) error {
+	_, err := s.db.Exec("delete from lobby where lobby_code = ?", lobbyCode)
+	return err
+}
+
+
+func (s *SQLiteStore) GetLobbyByCode(lobbyCode string) (*Lobby, error) {
+	rows, err := s.db.Query("select * from lobby where lobby_code = ?", lobbyCode)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		defer rows.Close()
+		return scanIntoLobby(rows)
+	}
+	return nil, fmt.Errorf("lobby %s not found", lobbyCode)
 }

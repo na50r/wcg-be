@@ -5,20 +5,26 @@ import (
 )
 
 type Storage interface {
+	Init() error
+	CreateAccount(acc *Account) error
+	CreatePlayer(player *Player) error
+	CreateLobby(lobby *Lobby) error
+	GetPlayerByLobbyCodeAndName(name, lobbyCode string) (*Player, error)
+	DeletePlayer(name, lobbyCode string) error
+	GetPlayersByLobbyCode(lobbyCode string) ([]*Player, error)
 	GetAccountByUsername(username string) (*Account, error)
-	CreateAccount(a *Account) error
-	UpdateAccount(a *Account) error
+	UpdateAccount(acc *Account) error
 	AddImage(data []byte, name string) error
 	GetImage(name string) ([]byte, error)
 	GetImages() ([]*Image, error)
 	NewImageForUsername(username string) string
 	GetPlayerForAccount(username string) (*Player, error)
-	CreatePlayer(player *Player) error
-	GetPlayersByLobbyID(lobbyID string) ([]*Player, error)
-	GetOwners() ([]*Player, error)
 	GetLobbyForOwner(owner string) (string, error)
-	DeleteLobby(lobbyID string) error
-	Init() error
+	DeletePlayersForLobby(lobbyCode string) error
+	AddPlayerToLobby(lobbyCode string, player *Player) error
+	DeleteLobby(lobbyCode string) error
+	GetLobbies() ([]*Lobby, error)
+	GetLobbyByCode(lobbyCode string) (*Lobby, error)
 }
 
 // Convert SQL rows into an defined Go types
@@ -49,10 +55,22 @@ func scanIntoPlayer(rows *sql.Rows) (*Player, error) {
 	player := new(Player)
 	err := rows.Scan(
 		&player.Name,
-		&player.LobbyID,
+		&player.LobbyCode,
 		&player.ImageName,
 		&player.IsOwner,
 		&player.HasAccount,
 	)
 	return player, err
+}
+
+func scanIntoLobby(rows *sql.Rows) (*Lobby, error) {
+	lobby := new(Lobby)
+	err := rows.Scan(
+		&lobby.Name,
+		&lobby.ImageName,
+		&lobby.LobbyCode,
+		&lobby.GameMode,
+		&lobby.PlayerCount,
+	)
+	return lobby, err
 }
