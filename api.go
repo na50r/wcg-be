@@ -77,6 +77,7 @@ func (s *APIServer) Run() {
 
 	// Lobby Endpoints
 	router.HandleFunc("/lobbies/{lobbyCode}/view/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleGetLobby)))
+	router.HandleFunc("/lobbies/{lobbyCode}/leave/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleLeaveLobby)))
 	router.HandleFunc("/lobbies/{lobbyCode}/games/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.Play)))
 	router.HandleFunc("/lobbies/{lobbyCode}/edit/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.EditGame)))
 
@@ -114,6 +115,36 @@ func (s *APIServer) handleGetLobby(w http.ResponseWriter, r *http.Request) error
 	}
 	lobbyDTO := &LobbyDTO{Owner: ownerName, Players: playersDTO, Name: lobby.Name, GameMode: lobby.GameMode, LobbyCode: lobby.LobbyCode}
 	return WriteJSON(w, http.StatusOK, lobbyDTO)
+}
+
+func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) error {
+	lobbyCode, err := getLobbyCode(r)
+	if err != nil {
+		return err
+	}
+	playerName, err := getPlayername(r)
+	if err != nil {
+		return err
+	}
+	player, err := s.store.GetPlayerByLobbyCodeAndName(playerName, lobbyCode)
+	if err != nil {
+		return err
+	}
+	if player.IsOwner {
+		if err := s.store.DeleteLobby(lobbyCode); err != nil {
+			return err
+		}
+		if err := s.store.DeletePlayersForLobby(lobbyCode); err != nil {
+			return err
+		}
+		s.broker.Publish(sse.Message{Data: "LOBBY_DELETED"})
+		return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Lobby deleted"})
+	}
+	if err := s.store.DeletePlayer(playerName, lobbyCode); err != nil {
+		return err
+	}
+	s.broker.Publish(sse.Message{Data: "PLAYER_LEFT"})
+	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Left Lobby"})
 }
 
 
@@ -162,7 +193,7 @@ func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) erro
 	}
 	lobbyDTO := &LobbyDTO{LobbyCode: lobby.LobbyCode, Name: lobby.Name, GameMode: lobby.GameMode}
 
-	s.broker.Publish(sse.Message{Data: "LOBBY_JOINED"})
+	s.broker.Publish(sse.Message{Data: "PLAYER_JOINED"})
 	return WriteJSON(w, http.StatusOK, JoinLobbyRespone{Token: playerToken, LobbyDTO: *lobbyDTO})
 }
 

@@ -316,6 +316,7 @@ func (s *SQLiteStore) GetLobbyForOwner(owner string) (string, error) {
 
 func (s *SQLiteStore) DeletePlayersForLobby(lobbyCode string) error {
 	_, err := s.db.Exec("delete from player where lobby_code = ?", lobbyCode)
+	err = s.IncrementPlayerCount(lobbyCode, -1)
 	return err
 }
 
@@ -328,12 +329,12 @@ func (s *SQLiteStore) AddPlayerToLobby(lobbyCode string, player *Player) error {
 		player.IsOwner,
 		player.HasAccount,
 	)
-	err = s.IncrementPlayerCount(lobbyCode)
+	err = s.IncrementPlayerCount(lobbyCode, 1)
 	return err
 }
 
-func (s * SQLiteStore) IncrementPlayerCount(lobbyCode string) error {
-	_, err := s.db.Exec("update lobby set player_count = player_count + 1 where lobby_code = ?", lobbyCode)
+func (s * SQLiteStore) IncrementPlayerCount(lobbyCode string, increment int) error {
+	_, err := s.db.Exec("update lobby set player_count = player_count + ? where lobby_code = ?", lobbyCode, increment)
 	return err
 }
 
