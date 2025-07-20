@@ -156,8 +156,14 @@ func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) erro
 	if err != nil {
 		return err
 	}
+	lobby, err := s.store.GetLobbyByCode(req.LobbyCode)
+	if err != nil {
+		return err
+	}
+	lobbyDTO := &LobbyDTO{LobbyCode: lobby.LobbyCode, Name: lobby.Name, GameMode: lobby.GameMode}
+
 	s.broker.Publish(sse.Message{Data: "LOBBY_JOINED"})
-	return WriteJSON(w, http.StatusOK, JoinLobbyRespone{Token: playerToken})
+	return WriteJSON(w, http.StatusOK, JoinLobbyRespone{Token: playerToken, LobbyDTO: *lobbyDTO})
 }
 
 func (s *APIServer) Play(w http.ResponseWriter, r *http.Request) error {
