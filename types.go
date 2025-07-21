@@ -119,6 +119,14 @@ type ChangeImageRequest struct {
 	ImageName string `json:"imageName"`
 }
 
+type EditAccountRequest struct {
+	Type string `json:"type"`
+	Username string `json:"username"`
+	ImageName string `json:"imageName"`
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}
+
 type JoinLobbyRequest struct {
 	PlayerName string `json:"playerName"`
 	LobbyCode  string `json:"lobbyCode"`

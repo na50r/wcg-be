@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
+	"log"
 )
 
 type SQLiteStore struct {
@@ -92,7 +93,6 @@ func (s *SQLiteStore) Init() error {
 		return err
 	}
 	return nil
-
 }
 
 func (s *SQLiteStore) CreateAccount(acc *Account) error {
@@ -266,8 +266,7 @@ func (s *SQLiteStore) NewImageForUsername(username string) string {
 		return err.Error()
 	}
 	size := len(images)
-	//TODO: Use Radix
-	hash := int(username[0]) % size
+	hash := RadixHash(username, size)
 	image := images[hash]
 	return image.Name
 }
@@ -328,6 +327,10 @@ func (s *SQLiteStore) AddPlayerToLobby(lobbyCode string, player *Player) error {
 		player.IsOwner,
 		player.HasAccount,
 	)
+	log.Printf("insert error: %v", err)
+	if err != nil {
+		return err
+	}
 	err = s.IncrementPlayerCount(lobbyCode, 1)
 	return err
 }

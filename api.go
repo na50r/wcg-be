@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
-	"unicode"
 
 	jwt "github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
@@ -29,18 +27,18 @@ func makeHTTPHandleFunc(f APIFunc) http.HandlerFunc {
 }
 
 type APIServer struct {
-	listenAddr string
-	store      Storage
-	broker     *Broker
+	listenAddr      string
+	store           Storage
+	broker          *Broker
 	lobbies2clients map[string]map[int]bool
 	players2clients map[string]int
 }
 
 func NewAPIServer(listenAddr string, store Storage) *APIServer {
 	return &APIServer{
-		listenAddr: listenAddr,
-		store:      store,
-		broker:     NewBroker(),
+		listenAddr:      listenAddr,
+		store:           store,
+		broker:          NewBroker(),
 		lobbies2clients: make(map[string]map[int]bool),
 		players2clients: make(map[string]int),
 	}
@@ -67,16 +65,16 @@ func (s *APIServer) Run() {
 	router := mux.NewRouter()
 	router.Use(corsMiddleware)
 	//Endpoints
-	router.HandleFunc("/accounts", makeHTTPHandleFunc(s.handleRegister))
-	router.HandleFunc("/account/{username}", withJWTAuth(makeHTTPHandleFunc(s.handleGetAccount)))
 	router.HandleFunc("/login", makeHTTPHandleFunc(s.handleLogin))
 	router.HandleFunc("/logout", makeHTTPHandleFunc(s.handleLogout))
+
+	router.HandleFunc("/accounts", makeHTTPHandleFunc(s.handleRegister))
+	router.HandleFunc("/account/{username}", withJWTAuth(makeHTTPHandleFunc(s.handleAccount)))
 	router.HandleFunc("/account/{username}/images", withJWTAuth(makeHTTPHandleFunc(s.handleGetImages)))
-	router.HandleFunc("/account/{username}/image", withJWTAuth(makeHTTPHandleFunc(s.handleChangeImage)))
 	router.HandleFunc("/account/{username}/lobby", withJWTAuth(makeHTTPHandleFunc(s.handleCreateLobby)))
+
 	router.HandleFunc("/lobbies", makeHTTPHandleFunc(s.handleGetLobbies))
 	router.HandleFunc("/lobbies/join", makeHTTPHandleFunc(s.handleJoinLobby))
-	//router.HandleFunc("/account/{username}", makeHTTPHandleFunc(s.handleUpdateAccount))
 
 	// Lobby Endpoints
 	router.HandleFunc("/lobbies/{lobbyCode}/view/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleGetLobby)))
@@ -85,16 +83,18 @@ func (s *APIServer) Run() {
 	router.HandleFunc("/lobbies/{lobbyCode}/edit/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleEditGameMode)))
 
 	// Events
-	//router.HandleFunc("/events/lobby", makeHTTPHandleFunc(s.handleClients))
 	router.HandleFunc("/events/lobbies", s.SSEHandler)
 	router.HandleFunc("/events/publish", s.broker.PublishEndpoint)
 	log.Fatal(http.ListenAndServe(s.listenAddr, router))
 }
 
 func (s *APIServer) handleEditGameMode(w http.ResponseWriter, r *http.Request) error {
-	token, err := retrieveToken(r)
+	token, tokenExists, err := getToken(r)
 	if err != nil {
 		return err
+	}
+	if !tokenExists {
+		return fmt.Errorf("unauthorized")
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
@@ -183,11 +183,11 @@ func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) erro
 		return err
 	}
 	var hasAccount = false
-	token, err := retrieveTokenForLobbyJoin(r)
+	_, tokenExists, err := getToken(r)
 	if err != nil {
 		return err
 	}
-	if len(token.Raw) > 0 {
+	if tokenExists {
 		hasAccount = true
 	}
 
@@ -223,10 +223,6 @@ func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) erro
 }
 
 func (s *APIServer) Play(w http.ResponseWriter, r *http.Request) error {
-	return nil
-}
-
-func (s *APIServer) EditGame(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
@@ -305,28 +301,64 @@ func (s *APIServer) handleGetImages(w http.ResponseWriter, r *http.Request) erro
 	return WriteJSON(w, http.StatusOK, resp)
 }
 
-func (s *APIServer) handleChangeImage(w http.ResponseWriter, r *http.Request) error {
-	if r.Method != http.MethodPost {
+func (s *APIServer) handleAccount(w http.ResponseWriter, r *http.Request) error {
+	switch r.Method {
+	case http.MethodGet:
+		return s.handleGetAccount(w, r)
+	case http.MethodPut:
+		return s.handleEditAccount(w, r)
+	default:
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
 		return err
 	}
-	req := new(ChangeImageRequest)
+}
+
+func (s *APIServer) handleEditAccount(w http.ResponseWriter, r *http.Request) error {
+	if r.Method != http.MethodPut {
+		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		return err
+	}
+	req := new(EditAccountRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
-
 	username, err := getUsername(r)
+	if err != nil {
+		return err
+	}
 	acc, err := s.store.GetAccountByUsername(username)
 	if err != nil {
 		return err
 	}
-	log.Println("Changing image for", username, "to", req.ImageName)
-	acc.ImageName = req.ImageName
+	var msg string
+	if req.Type == "PASSWORD" {
+		if err := bcrypt.CompareHashAndPassword([]byte(acc.Password), []byte(req.OldPassword)); err != nil {
+			return fmt.Errorf("Incorrect password, please try again")
+		}
+		if err := passwordValid(req.NewPassword); err != nil {
+			return err
+		}
+		encpw, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
+		if err != nil {
+			return err
+		}
+		acc.Password = string(encpw)
+		msg = "Password changed"
+	}
+	if req.Type == "USERNAME" {
+		acc.Username = req.Username
+		msg = "Username changed"
+	}
+	if req.Type == "IMAGE" {
+		acc.ImageName = req.ImageName
+		msg = "Image changed"
+	}
 	if err := s.store.UpdateAccount(acc); err != nil {
 		return err
 	}
-	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Image changed, Reloading App..."})
+	return WriteJSON(w, http.StatusOK, GenericResponse{Message: msg})
 }
+
 
 func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
@@ -391,9 +423,12 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
 		return err
 	}
-	token, err := retrieveToken(r)
+	token, tokenExists, err := getToken(r)
 	if err != nil {
 		return err
+	}
+	if !tokenExists {
+		return fmt.Errorf("unauthorized")
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
@@ -454,26 +489,15 @@ func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) err
 	return WriteJSON(w, http.StatusOK, resp)
 }
 
-func getUsername(r *http.Request) (string, error) {
-	username := mux.Vars(r)["username"]
-	return username, nil
-}
-
-func getLobbyCode(r *http.Request) (string, error) {
-	lobbyCode := mux.Vars(r)["lobbyCode"]
-	return lobbyCode, nil
-}
-
-func getPlayername(r *http.Request) (string, error) {
-	playerName := mux.Vars(r)["playerName"]
-	return playerName, nil
-}
-
 // Authentication Middleware Adapted from Anthony GG's tutorial
 func withJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		token, err := retrieveToken(r)
+		token, tokenExists, err := getToken(r)
 		if err != nil {
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			return
+		}
+		if !tokenExists {
 			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
 			return
 		}
@@ -499,10 +523,15 @@ func withJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 
 func withLobbyAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		token, err := retrieveToken(r)
+		token, tokenExists, err := getToken(r)
 		if err != nil {
 			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
 			log.Println("Unauthorized (Outdated Token)", err)
+			return
+		}
+		if !tokenExists {
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			log.Println("Unauthorized (No Token)", err)
 			return
 		}
 
@@ -532,97 +561,4 @@ func withLobbyAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 		}
 		handlerFunc(w, r)
 	}
-}
-
-func createJWT(account *Account) (string, error) {
-	claims := &jwt.MapClaims{
-		"exp":      time.Now().Add(time.Hour * 12).Unix(),
-		"username": account.Username,
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	return token.SignedString([]byte(JWT_SECRET))
-}
-
-func createLobbyToken(player *Player) (string, error) {
-	claims := &jwt.MapClaims{
-		"exp":        time.Now().Add(time.Hour * 4).Unix(),
-		"playerName": player.Name,
-		"lobbyCode":  player.LobbyCode,
-		"isOwner":    player.IsOwner,
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(JWT_SECRET))
-}
-
-func parseJWT(tokenString string) (*jwt.Token, error) {
-	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte(JWT_SECRET), nil
-	})
-}
-
-func retrieveToken(r *http.Request) (jwt.Token, error) {
-	tokenString := r.Header.Get("Authorization")
-	if tokenString == "" {
-		return jwt.Token{}, fmt.Errorf("unauthorized")
-	}
-
-	token, err := parseJWT(tokenString)
-	if err != nil && token != nil && !token.Valid {
-		return jwt.Token{}, fmt.Errorf("unauthorized")
-	}
-	return *token, nil
-}
-
-func retrieveTokenForLobbyJoin(r *http.Request) (jwt.Token, error) {
-	tokenString := r.Header.Get("Authorization")
-	if tokenString == "" {
-		// Anon player
-		return jwt.Token{}, nil
-	}
-
-	token, err := parseJWT(tokenString)
-	if err != nil && token != nil && !token.Valid {
-		return jwt.Token{}, fmt.Errorf("unauthorized")
-	}
-	return *token, nil
-}
-
-func getToken(r *http.Request) (jwt.Token, bool, error) {
-	tokenString := r.Header.Get("Authorization")
-	if tokenString == "" {
-		// Anon player
-		return jwt.Token{}, false, nil
-	}
-
-	token, err := parseJWT(tokenString)
-	if err != nil && token != nil && !token.Valid {
-		return jwt.Token{}, true, fmt.Errorf("unauthorized")
-	}
-	return *token, true, nil
-}
-
-func passwordValid(password string) error {
-	if len(password) < 2 {
-		return fmt.Errorf("password must be at least 8 characters")
-	}
-	if len(password) > 20 {
-		return fmt.Errorf("password must be less than 20 characters")
-	}
-	if !IsLetter(password) {
-		return fmt.Errorf("password must contain a letter")
-	}
-	return nil
-}
-
-func IsLetter(s string) bool {
-	for _, r := range s {
-		if !unicode.IsLetter(r) {
-			return false
-		}
-	}
-	return true
 }
