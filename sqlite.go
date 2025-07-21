@@ -125,8 +125,7 @@ func (s *SQLiteStore) CreatePlayer(player *Player) error {
 		player.LobbyCode,
 		player.ImageName,
 		player.IsOwner,
-		player.HasAccount,
-	)
+		player.HasAccount)
 	if err != nil {
 		return err
 	}
@@ -278,7 +277,7 @@ func (s *SQLiteStore) GetPlayerForAccount(username string) (*Player, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Player{Name: acc.Username, ImageName: acc.ImageName, IsOwner: false}, nil
+	return NewPlayer(username, "", acc.ImageName, false, true), nil
 }
 
 func (s *SQLiteStore) GetOwners() ([]*Player, error) {

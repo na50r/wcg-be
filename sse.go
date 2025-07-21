@@ -1,4 +1,4 @@
-package sse
+package main
 
 // Original based on: https://github.com/plutov/packagemain/tree/master/30-sse
 // YouTube video: https://www.youtube.com/watch?v=nvijc5J-JAQ
@@ -6,10 +6,10 @@ package sse
 import (
 	"encoding/json"
 	"fmt"
+	jwt "github.com/golang-jwt/jwt"
 	"log"
 	"net/http"
 )
-
 
 type Message struct {
 	Data interface{} `json:"data"`
@@ -17,40 +17,55 @@ type Message struct {
 
 type Broker struct {
 	cnt            int
-	clientChannels map[int]chan []byte
+	ClientChannels map[int]chan []byte
 }
 
 func NewBroker() *Broker {
 	return &Broker{
-		clientChannels: make(map[int]chan []byte),
+		ClientChannels: make(map[int]chan []byte),
 		cnt:            0,
 	}
 }
 
-
-func (b *Broker) createChannel() int {
+func (b *Broker) CreateChannel() int {
 	b.cnt++
-	b.clientChannels[b.cnt] = make(chan []byte)
+	b.ClientChannels[b.cnt] = make(chan []byte)
 	return b.cnt
 }
 
-
-func (b *Broker) SSEHandler(w http.ResponseWriter, r *http.Request) {
+func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
+	b := s.broker
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Connection", "keep-alive")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-    token := r.URL.Query().Get("token")
-    log.Println("Received token:", token)
-	log.Println("Headers:", r.Header)
+	token, tokenExists, err := getToken(r)
+	if err != nil {
+		return
+	}
 
-	channelID := b.createChannel()
-	channel := b.clientChannels[channelID]
-	fmt.Printf("client connected (id=%d), total clients: %d\n", channelID, len(b.clientChannels))
+	channelID := b.CreateChannel()
+	channel := b.ClientChannels[channelID]
+	if tokenExists {
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok {
+			return
+		}
+		lobbyCode := claims["lobbyCode"].(string)
+		playerName := claims["playerName"].(string)
+		log.Println("Player connected: ", playerName, "to lobby: ", lobbyCode)
+		s.players2clients[playerName] = channelID
+		if s.lobbies2clients[lobbyCode] == nil {
+			s.lobbies2clients[lobbyCode] = make(map[int]bool)
+		}
+		s.lobbies2clients[lobbyCode][channelID] = true
+	}
+
+	fmt.Printf("client connected (id=%d), total clients: %d\n", channelID, len(b.ClientChannels))
 
 	defer func() {
-		delete(b.clientChannels, channelID)
+		delete(b.ClientChannels, channelID)
 	}()
 
 	clientGone := r.Context().Done()
@@ -60,7 +75,7 @@ func (b *Broker) SSEHandler(w http.ResponseWriter, r *http.Request) {
 	for {
 		select {
 		case <-clientGone:
-			fmt.Printf("client has disconnected (id=%d), total clients: %d\n", channelID, len(b.clientChannels))
+			fmt.Printf("client has disconnected (id=%d), total clients: %d\n", channelID, len(b.ClientChannels))
 			return
 		case data := <-channel:
 			if _, err := fmt.Fprintf(w, "event:msg\ndata:%s\n\n", data); err != nil {
@@ -80,8 +95,21 @@ func (b *Broker) Publish(msg Message) {
 	}
 	// Publish to all channels
 	// NOTE: Not concurrent
-	for _, channel := range b.clientChannels {
+	for _, channel := range b.ClientChannels {
 		channel <- data
+	}
+}
+
+func (s *APIServer) PublishToClients(lobbyCode string, msg Message) {
+	b := s.broker
+	clients := s.lobbies2clients[lobbyCode]
+	data, err := json.Marshal(msg.Data)
+	if err != nil {
+		log.Printf("unable to marshal: %s", err.Error())
+		return
+	}
+	for cli := range clients {
+		b.ClientChannels[cli] <- data
 	}
 }
 

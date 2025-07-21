@@ -11,7 +11,6 @@ import (
 	jwt "github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"github.com/na50r/wombo-combo-go-be/sse"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -32,14 +31,18 @@ func makeHTTPHandleFunc(f APIFunc) http.HandlerFunc {
 type APIServer struct {
 	listenAddr string
 	store      Storage
-	broker     *sse.Broker
+	broker     *Broker
+	lobbies2clients map[string]map[int]bool
+	players2clients map[string]int
 }
 
 func NewAPIServer(listenAddr string, store Storage) *APIServer {
 	return &APIServer{
 		listenAddr: listenAddr,
 		store:      store,
-		broker:     sse.NewBroker(),
+		broker:     NewBroker(),
+		lobbies2clients: make(map[string]map[int]bool),
+		players2clients: make(map[string]int),
 	}
 }
 
@@ -82,7 +85,8 @@ func (s *APIServer) Run() {
 	router.HandleFunc("/lobbies/{lobbyCode}/edit/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleEditGameMode)))
 
 	// Events
-	router.HandleFunc("/events/lobbies", s.broker.SSEHandler)
+	//router.HandleFunc("/events/lobby", makeHTTPHandleFunc(s.handleClients))
+	router.HandleFunc("/events/lobbies", s.SSEHandler)
 	router.HandleFunc("/events/publish", s.broker.PublishEndpoint)
 	log.Fatal(http.ListenAndServe(s.listenAddr, router))
 }
@@ -100,11 +104,16 @@ func (s *APIServer) handleEditGameMode(w http.ResponseWriter, r *http.Request) e
 	if !isOwner {
 		return fmt.Errorf("unauthorized")
 	}
+
+	lobbyCode, err := getLobbyCode(r)
+	if err != nil {
+		return err
+	}
 	req := new(ChangeGameModeRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
-	s.broker.Publish(sse.Message{Data: GameModeChangeEvent{GameMode: req.GameMode}})
+	s.PublishToClients(lobbyCode, Message{Data: GameModeChangeEvent{GameMode: req.GameMode}})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game mode changed"})
 }
 
@@ -157,13 +166,14 @@ func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) err
 		if err := s.store.DeletePlayersForLobby(lobbyCode); err != nil {
 			return err
 		}
-		s.broker.Publish(sse.Message{Data: "LOBBY_DELETED"})
+		s.broker.Publish(Message{Data: "LOBBY_DELETED"})
 		return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Lobby deleted"})
 	}
 	if err := s.store.DeletePlayer(playerName, lobbyCode); err != nil {
 		return err
 	}
-	s.broker.Publish(sse.Message{Data: "PLAYER_LEFT"})
+	delete(s.lobbies2clients[lobbyCode], s.players2clients[playerName])
+	s.broker.Publish(Message{Data: "PLAYER_LEFT"})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Left Lobby"})
 }
 
@@ -193,9 +203,6 @@ func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) erro
 			return err
 		}
 		player.LobbyCode = req.LobbyCode
-		player.ImageName = imageName
-		player.HasAccount = true
-		player.IsOwner = false
 	} else {
 		player = NewPlayer(req.PlayerName, req.LobbyCode, imageName, false, false)
 	}
@@ -211,8 +218,7 @@ func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) erro
 		return err
 	}
 	lobbyDTO := &LobbyDTO{LobbyCode: lobby.LobbyCode, Name: lobby.Name, GameMode: lobby.GameMode}
-
-	s.broker.Publish(sse.Message{Data: "PLAYER_JOINED"})
+	s.broker.Publish(Message{Data: "PLAYER_JOINED"})
 	return WriteJSON(w, http.StatusOK, JoinLobbyRespone{Token: playerToken, LobbyDTO: *lobbyDTO})
 }
 
@@ -249,7 +255,6 @@ func (s *APIServer) handleCreateLobby(w http.ResponseWriter, r *http.Request) er
 	}
 	owner.LobbyCode = lobbyCode
 	owner.IsOwner = true
-	owner.HasAccount = true
 	if err := s.store.CreatePlayer(owner); err != nil {
 		return err
 	}
@@ -266,7 +271,7 @@ func (s *APIServer) handleCreateLobby(w http.ResponseWriter, r *http.Request) er
 		return err
 	}
 	resp := CreateLobbyResponse{Token: token, LobbyDTO: *lobbyDTO}
-	s.broker.Publish(sse.Message{Data: "LOBBY_CREATED"})
+	s.broker.Publish(Message{Data: "LOBBY_CREATED"})
 	return WriteJSON(w, http.StatusOK, resp)
 }
 
@@ -419,7 +424,7 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		if err := s.store.DeletePlayersForLobby(lobbyCode); err != nil {
 			return err
 		}
-		s.broker.Publish(sse.Message{Data: "LOBBY_DELETED"})
+		s.broker.Publish(Message{Data: "LOBBY_DELETED"})
 	}
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Logout successful"})
 }
@@ -584,6 +589,20 @@ func retrieveTokenForLobbyJoin(r *http.Request) (jwt.Token, error) {
 		return jwt.Token{}, fmt.Errorf("unauthorized")
 	}
 	return *token, nil
+}
+
+func getToken(r *http.Request) (jwt.Token, bool, error) {
+	tokenString := r.Header.Get("Authorization")
+	if tokenString == "" {
+		// Anon player
+		return jwt.Token{}, false, nil
+	}
+
+	token, err := parseJWT(tokenString)
+	if err != nil && token != nil && !token.Valid {
+		return jwt.Token{}, true, fmt.Errorf("unauthorized")
+	}
+	return *token, true, nil
 }
 
 func passwordValid(password string) error {

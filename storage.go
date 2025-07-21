@@ -59,8 +59,7 @@ func scanIntoPlayer(rows *sql.Rows) (*Player, error) {
 		&player.LobbyCode,
 		&player.ImageName,
 		&player.IsOwner,
-		&player.HasAccount,
-	)
+		&player.HasAccount)
 	return player, err
 }
 

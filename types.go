@@ -70,8 +70,7 @@ type Player struct {
 	Name       string `json:"name"`
 	ImageName  string `json:"imageName"`
 	IsOwner    bool   `json:"isOwner"`
-	HasAccount bool   `json:"hasAccount"`
-}
+	HasAccount bool   `json:"hasAccount"`}
 
 type Lobby struct {
 	Name        string `json:"name"`
