@@ -32,6 +32,7 @@ type APIServer struct {
 	broker          *Broker
 	lobbies2clients map[string]map[int]bool
 	players2clients map[string]int
+	games           map[string]*Game
 }
 
 func NewAPIServer(listenAddr string, store Storage) *APIServer {
@@ -41,6 +42,7 @@ func NewAPIServer(listenAddr string, store Storage) *APIServer {
 		broker:          NewBroker(),
 		lobbies2clients: make(map[string]map[int]bool),
 		players2clients: make(map[string]int),
+		games:           make(map[string]*Game),
 	}
 }
 
@@ -77,15 +79,73 @@ func (s *APIServer) Run() {
 	router.HandleFunc("/lobbies/join", makeHTTPHandleFunc(s.handleJoinLobby))
 
 	// Lobby Endpoints
-	router.HandleFunc("/lobbies/{lobbyCode}/view/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleGetLobby)))
-	router.HandleFunc("/lobbies/{lobbyCode}/leave/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleLeaveLobby)))
-	router.HandleFunc("/lobbies/{lobbyCode}/games/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.Play)))
-	router.HandleFunc("/lobbies/{lobbyCode}/edit/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleEditGameMode)))
+	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleGetLobby)))
+	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/leave", withLobbyAuth(makeHTTPHandleFunc(s.handleLeaveLobby)))
+	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/game", withLobbyAuth(makeHTTPHandleFunc(s.handleCreateGame)))
+	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/edit", withLobbyAuth(makeHTTPHandleFunc(s.handleEditGameMode)))
+
+	// Game endpoints
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/element", withLobbyAuth(makeHTTPHandleFunc(s.handleMove)))
 
 	// Events
 	router.HandleFunc("/events/lobbies", s.SSEHandler)
 	router.HandleFunc("/events/publish", s.broker.PublishEndpoint)
 	log.Fatal(http.ListenAndServe(s.listenAddr, router))
+}
+
+func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) error {
+	token, tokenExists, err := getToken(r)
+	if err != nil {
+		return err
+	}
+	if !tokenExists {
+		return fmt.Errorf("unauthorized")
+	}
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return fmt.Errorf("unauthorized")
+	}
+	isOwner := claims["isOwner"].(bool)
+	if !isOwner {
+		return fmt.Errorf("unauthorized")
+	}
+	lobbyCode, err := getLobbyCode(r)
+	if err != nil {
+		return err
+	}
+	game, err := s.store.NewGame(lobbyCode)
+	if err != nil {
+		return err
+	}
+	s.games[lobbyCode] = game
+	return WriteJSON(w, http.StatusOK, game)
+}
+
+func (s *APIServer) handleMove(w http.ResponseWriter, r *http.Request) error {
+	if r.Method != http.MethodPost {
+		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		return err
+	}
+	lobbyCode, err := getLobbyCode(r)
+	if err != nil {
+		return err
+	}
+	game := s.games[lobbyCode]
+	if game == nil {
+		return fmt.Errorf("game not found")
+	}
+	req := new(ElementRequest)
+	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+		return err
+	}
+	result, err := s.store.GetElement(req.A, req.B)
+	if err != nil {
+		return err
+	}
+	if *result == game.EndElement {
+		s.PublishToClients(lobbyCode, Message{Data: "GAME_OVER"})
+	}
+	return WriteJSON(w, http.StatusOK, ElementResponse{Result: *result})
 }
 
 func (s *APIServer) handleEditGameMode(w http.ResponseWriter, r *http.Request) error {
@@ -358,7 +418,6 @@ func (s *APIServer) handleEditAccount(w http.ResponseWriter, r *http.Request) er
 	}
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: msg})
 }
-
 
 func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {

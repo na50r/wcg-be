@@ -56,12 +56,12 @@ type CreateLobbyRequest struct {
 }
 
 type CreateLobbyResponse struct {
-	Token string `json:"token"`
+	Token    string `json:"token"`
 	LobbyDTO `json:"lobby"`
 }
 
 type JoinLobbyRespone struct {
-	Token string `json:"token"`
+	Token    string `json:"token"`
 	LobbyDTO `json:"lobby"`
 }
 
@@ -70,7 +70,8 @@ type Player struct {
 	Name       string `json:"name"`
 	ImageName  string `json:"imageName"`
 	IsOwner    bool   `json:"isOwner"`
-	HasAccount bool   `json:"hasAccount"`}
+	HasAccount bool   `json:"hasAccount"`
+}
 
 type Lobby struct {
 	Name        string `json:"name"`
@@ -87,10 +88,10 @@ type PlayerDTO struct {
 
 type LobbyDTO struct {
 	LobbyCode string       `json:"lobbyCode"`
-	Name     string       `json:"name"`
-	GameMode string       `json:"gameMode"`
-	Owner   string       `json:"owner"`
-	Players []*PlayerDTO `json:"players"`
+	Name      string       `json:"name"`
+	GameMode  string       `json:"gameMode"`
+	Owner     string       `json:"owner"`
+	Players   []*PlayerDTO `json:"players"`
 	GameModes []string     `json:"gameModes"`
 }
 
@@ -120,9 +121,9 @@ type ChangeImageRequest struct {
 }
 
 type EditAccountRequest struct {
-	Type string `json:"type"`
-	Username string `json:"username"`
-	ImageName string `json:"imageName"`
+	Type        string `json:"type"`
+	Username    string `json:"username"`
+	ImageName   string `json:"imageName"`
 	OldPassword string `json:"oldPassword"`
 	NewPassword string `json:"newPassword"`
 }
@@ -138,6 +139,26 @@ type ChangeGameModeRequest struct {
 
 type GameModeChangeEvent struct {
 	GameMode string `json:"gameMode"`
+}
+
+type Game struct {
+	LobbyCode  string `json:"lobbyCode"`
+	EndElement string `json:"endElement"`
+}
+
+type Element struct {
+	A      string `json:"a"`
+	B      string `json:"b"`
+	Result string `json:"result"`
+}
+
+type ElementRequest struct {
+	A string `json:"a"`
+	B string `json:"b"`
+}
+
+type ElementResponse struct {
+	Result string `json:"result"`
 }
 
 func NewAccount(username, password string) (*Account, error) {
@@ -181,14 +202,13 @@ func NewLobby(name, lobbyCode, imageName string) *Lobby {
 	}
 }
 
-
 func NewLobbyDTO(lobby *Lobby, owner string, players []*PlayerDTO) *LobbyDTO {
 	return &LobbyDTO{
 		LobbyCode: lobby.LobbyCode,
-		Name:     lobby.Name,
-		GameMode: lobby.GameMode,
-		Owner:    owner,
-		Players:  players,
+		Name:      lobby.Name,
+		GameMode:  lobby.GameMode,
+		Owner:     owner,
+		Players:   players,
 		GameModes: GameModes(),
 	}
 }

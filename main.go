@@ -7,11 +7,13 @@ import (
 	"path/filepath"
 	"strings"
 	"flag"
+	"encoding/csv"
 )
 
 var JWT_SECRET string
 var CLIENT string
 var ICONS string
+var RECIPES string
 
 func init() {
 	err := godotenv.Load()
@@ -21,6 +23,7 @@ func init() {
 	JWT_SECRET = os.Getenv("JWT_SECRET")
 	CLIENT = os.Getenv("CLIENT")
 	ICONS = os.Getenv("ICONS")
+	RECIPES = os.Getenv("RECIPES")
 }
 
 func getImageFromFilePath(filePath string) (*Image, error) {
@@ -97,8 +100,40 @@ func setImages(store Storage) error {
 	return nil
 }
 
+func readCSV(filePath string) ([][]string, error) {
+	f, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	r := csv.NewReader(f)
+	records, err := r.ReadAll()
+	if err != nil {
+		return nil, err
+	}
+	return records[1:], nil
+}
+
+func setElements(store Storage) error {
+	records, err := readCSV(RECIPES)
+	if err != nil {
+		return err
+	}
+	for _, record := range records {
+		element := new(Element)
+		element.A = strings.ToLower(record[0])
+		element.B = strings.ToLower(record[1])
+		element.Result = strings.ToLower(record[2])
+		if err := store.AddElement(element); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+
 func main() {
-	seed := flag.Bool("seed", false, "seed images")
+	seed := flag.Bool("seed", false, "seed images & elements")
 	flag.Parse()
 
 	store, err := NewSQLiteStore()
@@ -113,6 +148,9 @@ func main() {
 	//./bin --seed
 	if *seed {
 		if err := setImages(store); err != nil {
+			log.Fatal(err)
+		}
+		if err := setElements(store); err != nil {
 			log.Fatal(err)
 		}
 	}

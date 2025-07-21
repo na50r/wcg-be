@@ -26,6 +26,9 @@ type Storage interface {
 	GetLobbies() ([]*Lobby, error)
 	GetLobbyByCode(lobbyCode string) (*Lobby, error)
 	EditGameMode(lobbyCode, gameMode string) error
+	GetElement(a, b string) (*string, error)
+	AddElement(element *Element) error
+	NewGame(lobbyCode string) (*Game, error)
 }
 
 // Convert SQL rows into an defined Go types
