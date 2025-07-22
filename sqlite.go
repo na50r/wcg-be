@@ -577,3 +577,41 @@ func (s * SQLiteStore) GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordC
 	}
 	return wordCounts, nil
 }
+
+func (s * SQLiteStore) GetPlayersWithAccount(lobbyCode string) ([]*Account, error) {
+	rows, err := s.db.Query("select * from player where lobby_code = ? and has_account = ?", lobbyCode, true)
+	if err != nil {
+		return nil, err
+	}
+	accounts := []*Account{}
+	for rows.Next() {
+		player, err := scanIntoPlayer(rows)
+		if err != nil {
+			return nil, err
+		}
+		acc, err := s.GetAccountByUsername(player.Name)
+		if err != nil {
+			return nil, err
+		}
+		accounts = append(accounts, acc)
+	}
+	return accounts, nil
+}
+
+func (s *SQLiteStore) UpdateAccountWinsAndLosses(lobbyCode, winner string) error {
+	accounts, err := s.GetPlayersWithAccount(lobbyCode)
+	if err != nil {
+		return err
+	}
+	for _, acc := range accounts {
+		if acc.Username == winner {
+			acc.Wins++
+		} else {
+			acc.Losses++
+		}
+		if err := s.UpdateAccount(acc); err != nil {
+			return err
+		}
+	}
+	return nil
+}

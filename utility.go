@@ -41,6 +41,7 @@ func createLobbyToken(player *Player) (string, error) {
 		"exp":        time.Now().Add(time.Hour * 4).Unix(),
 		"playerName": player.Name,
 		"lobbyCode":  player.LobbyCode,
+		"hasAccount": player.HasAccount,
 		"isOwner":    player.IsOwner,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

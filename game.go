@@ -47,7 +47,7 @@ func (s *APIServer) handleDeleteGame(w http.ResponseWriter, r *http.Request) err
 	if err := s.store.DeletePlayerWordsByLobbyCode(lobbyCode); err != nil {
 		return err
 	}
-	s.PublishToClients(lobbyCode, Message{Data: "GAME_DELETED"})
+	s.PublishToLobby(lobbyCode, Message{Data: "GAME_DELETED"})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game deleted"})
 }
 
@@ -108,8 +108,8 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 	log.Println("---")
 	log.Printf("Game created\nLobby code: %s\nTarget word: %s", lobbyCode, game.TargetWord)
 	log.Println("---")
-	s.PublishToClients(lobbyCode, Message{Data: "GAME_STARTED"})
-	s.PublishToClients(lobbyCode, Message{Data: StartGameResponse{TargetWord: game.TargetWord}})
+	s.PublishToLobby(lobbyCode, Message{Data: "GAME_STARTED"})
+	s.PublishToLobby(lobbyCode, Message{Data: StartGameResponse{TargetWord: game.TargetWord}})
 	return WriteJSON(w, http.StatusOK, resp)
 }
 
@@ -139,12 +139,14 @@ func (s *APIServer) handleMove(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 	log.Printf("Player %s played %s + %s = %s", playerName, req.A, req.B, *result)
-	winnerMsg := map[string]string{"WINNER": playerName}
 	if *result == game.TargetWord || *result == "clay" {
 		log.Println("Target Word Reached")
 		game.Winner = playerName
-		s.PublishToClients(lobbyCode, Message{Data: "GAME_OVER"})
-		s.PublishToClients(lobbyCode, Message{Data: winnerMsg})
+		if err := s.store.UpdateAccountWinsAndLosses(lobbyCode, playerName); err != nil {
+			return err
+		}
+		s.PublishToLobby(lobbyCode, Message{Data: "GAME_OVER"})
+		s.PublishToLobby(lobbyCode, Message{Data: "ACCOUNT_UPDATE"})
 		return WriteJSON(w, http.StatusOK, WordResponse{Result: *result})
 	}
 	if err := s.store.AddPlayerWord(playerName, *result, lobbyCode); err != nil {
@@ -206,6 +208,6 @@ func (s *APIServer) handleEditGameMode(w http.ResponseWriter, r *http.Request) e
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
-	s.PublishToClients(lobbyCode, Message{Data: GameModeChangeEvent{GameMode: req.GameMode}})
+	s.PublishToLobby(lobbyCode, Message{Data: GameModeChangeEvent{GameMode: req.GameMode}})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game mode changed"})
 }

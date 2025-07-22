@@ -5,11 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"golang.org/x/crypto/bcrypt"
 	jwt "github.com/golang-jwt/jwt"
+	"golang.org/x/crypto/bcrypt"
 )
-
-
 
 func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) error {
 	username, err := getUsername(r)
@@ -35,7 +33,6 @@ func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) err
 	resp.Status = acc.Status
 	return WriteJSON(w, http.StatusOK, resp)
 }
-
 
 func (s *APIServer) handleGetImages(w http.ResponseWriter, r *http.Request) error {
 	images, err := s.store.GetImages()
@@ -212,7 +209,7 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		}
 		delete(s.lobbyClients, lobbyCode)
 		delete(s.games, lobbyCode)
-		s.PublishToClients(lobbyCode, Message{Data: "GAME_DELETED"})
+		s.PublishToLobby(lobbyCode, Message{Data: "GAME_DELETED"})
 		s.broker.Publish(Message{Data: "LOBBY_DELETED"})
 	}
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Logout successful"})

@@ -101,7 +101,7 @@ func (b *Broker) Publish(msg Message) {
 	}
 }
 
-func (s *APIServer) PublishToClients(lobbyCode string, msg Message) {
+func (s *APIServer) PublishToLobby(lobbyCode string, msg Message) {
 	b := s.broker
 	clients := s.lobbyClients[lobbyCode]
 	data, err := json.Marshal(msg.Data)
@@ -112,6 +112,17 @@ func (s *APIServer) PublishToClients(lobbyCode string, msg Message) {
 	for cli := range clients {
 		b.ClientChannels[cli] <- data
 	}
+}
+
+func (s *APIServer) PublishToPlayer(playerName string, msg Message) {
+	b := s.broker
+	channelID := s.playerClient[playerName]
+	data, err := json.Marshal(msg.Data)
+	if err != nil {
+		log.Printf("unable to marshal: %s", err.Error())
+		return
+	}
+	b.ClientChannels[channelID] <- data
 }
 
 func (b *Broker) Broadcast(w http.ResponseWriter, r *http.Request) {

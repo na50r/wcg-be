@@ -36,6 +36,7 @@ type Storage interface {
 	DeletePlayerWordsByPlayerAndLobbyCode(playerName, lobbyCode string) error
 	SeedPlayerWords(lobbyCode string) error
 	GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCount, error)
+	UpdateAccountWinsAndLosses(lobbyCode, winner string) error
 }
 
 // Convert SQL rows into an defined Go types
