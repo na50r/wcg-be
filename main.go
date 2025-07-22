@@ -8,12 +8,14 @@ import (
 	"strings"
 	"flag"
 	"encoding/csv"
+	"strconv"
 )
 
 var JWT_SECRET string
 var CLIENT string
 var ICONS string
-var RECIPES string
+var COMBINATIONS string
+var WORDS string
 
 func init() {
 	err := godotenv.Load()
@@ -23,7 +25,8 @@ func init() {
 	JWT_SECRET = os.Getenv("JWT_SECRET")
 	CLIENT = os.Getenv("CLIENT")
 	ICONS = os.Getenv("ICONS")
-	RECIPES = os.Getenv("RECIPES")
+	COMBINATIONS = os.Getenv("COMBINATIONS")
+	WORDS = os.Getenv("WORDS")
 }
 
 func getImageFromFilePath(filePath string) (*Image, error) {
@@ -114,17 +117,35 @@ func readCSV(filePath string) ([][]string, error) {
 	return records[1:], nil
 }
 
-func setElements(store Storage) error {
-	records, err := readCSV(RECIPES)
+func setCombinations(store Storage) error {
+	records, err := readCSV(COMBINATIONS)
 	if err != nil {
 		return err
 	}
 	for _, record := range records {
-		element := new(Element)
-		element.A = strings.ToLower(record[0])
-		element.B = strings.ToLower(record[1])
-		element.Result = strings.ToLower(record[2])
-		if err := store.AddElement(element); err != nil {
+		combi := new(Combination)
+		combi.A = strings.ToLower(record[3])
+		combi.B = strings.ToLower(record[4])
+		combi.Result = strings.ToLower(record[2])
+		combi.Depth, _ = strconv.Atoi(record[1])
+		if err := store.AddCombination(combi); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func setWords(store Storage) error {
+	records, err := readCSV(WORDS)
+	if err != nil {
+		return err
+	}
+	for _, record := range records {
+		word := new(Word)
+		word.Word = strings.ToLower(record[0])
+		word.Depth, _ = strconv.Atoi(record[1])
+		word.Reachability, _ = strconv.ParseFloat(record[2], 64)
+		if err := store.AddWord(word); err != nil {
 			return err
 		}
 	}
@@ -150,7 +171,10 @@ func main() {
 		if err := setImages(store); err != nil {
 			log.Fatal(err)
 		}
-		if err := setElements(store); err != nil {
+		if err := setCombinations(store); err != nil {
+			log.Fatal(err)
+		}
+		if err := setWords(store); err != nil {
 			log.Fatal(err)
 		}
 	}

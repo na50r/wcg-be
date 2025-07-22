@@ -6,6 +6,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"strings"
+	"math/rand"
 )
 
 type SQLiteStore struct {
@@ -78,17 +79,38 @@ func (s *SQLiteStore) createLobbyTable() error {
 	_, err := s.db.Exec(query)
 	return err
 }
-func (s *SQLiteStore) createElementTable() error {
-	query := `create table if not exists element (
+func (s *SQLiteStore) createCombinationTable() error {
+	query := `create table if not exists combination (
 		a text,
 		b text,
 		result text,
-		unique(a, b)
+		depth integer,
+		primary key (a, b)
 		)`
 	_, err := s.db.Exec(query)
 	return err
 }
 
+func (s *SQLiteStore) createWordTable() error {
+	query := `create table if not exists word (
+		word text primary key,
+		depth integer,
+		reachability float
+		)`
+	_, err := s.db.Exec(query)
+	return err
+}
+
+func (s *SQLiteStore) createPlayerWordTable() error {
+	query := `create table if not exists player_word (
+		player_name text,
+		word text,
+		lobby_code text,
+		primary key (player_name, word, lobby_code)
+		)`
+	_, err := s.db.Exec(query)
+	return err
+}
 
 func (s *SQLiteStore) Init() error {
 	if err := s.createAccountTable(); err != nil {
@@ -104,7 +126,13 @@ func (s *SQLiteStore) Init() error {
 	if err := s.createLobbyTable(); err != nil {
 		return err
 	}
-	if err := s.createElementTable(); err != nil {
+	if err := s.createCombinationTable(); err != nil {
+		return err
+	}
+	if err := s.createWordTable(); err != nil {
+		return err
+	}
+	if err := s.createPlayerWordTable(); err != nil {
 		return err
 	}
 	return nil
@@ -394,7 +422,7 @@ func (s *SQLiteStore) EditGameMode(lobbyCode, gameMode string) error {
 	return err
 }
 
-func (s *SQLiteStore) GetElement(a, b string) (*string, error) {
+func (s *SQLiteStore) GetCombination(a, b string) (*string, error) {
 	a = strings.ToLower(a)
 	b = strings.ToLower(b)
 	sorted := a < b
@@ -402,35 +430,103 @@ func (s *SQLiteStore) GetElement(a, b string) (*string, error) {
 		a, b = b, a   
 	}
 	var result string
-	err := s.db.QueryRow("SELECT result FROM element WHERE a = ? AND b = ?", a, b).Scan(&result)
+	err := s.db.QueryRow("SELECT result FROM combination WHERE a = ? AND b = ?", a, b).Scan(&result)
 	if err == sql.ErrNoRows {
-		return nil, fmt.Errorf("element for %s and %s not found", a, b)
+		log.Printf("word for %s and %s not found", a, b)
+		placeholder := "star"
+		return &placeholder, nil
 	} else if err != nil {
 		return nil, err
 	}
 	return &result, nil
 }
 
-func (s *SQLiteStore) AddElement(element *Element) error {
-	a := strings.ToLower(element.A)
-	b := strings.ToLower(element.B)
+func (s *SQLiteStore) AddCombination(combi *Combination) error {
+	a := strings.ToLower(combi.A)
+	b := strings.ToLower(combi.B)
 	sorted := a < b
 	if !sorted {
 		a, b = b, a
 	}
 	_, err := s.db.Exec(
-		"insert or ignore into element (a, b, result) values (?, ?, ?)",
+		"insert or ignore into combination (a, b, result, depth) values (?, ?, ?, ?)",
 		a,
 		b,
-		element.Result,
+		combi.Result,
+		combi.Depth,
 	)
 	return err
+}
+
+func (s *SQLiteStore) AddWord(word *Word) error {
+	w := strings.ToLower(word.Word)
+	_, err := s.db.Exec(
+		"insert or ignore into word (word, depth, reachability) values (?, ?, ?)",
+		w,
+		word.Depth,
+		word.Reachability,
+	)
+	return err
+}
+
+func (s *SQLiteStore) GetTargetWords(minReachability, maxReachability float64, maxDepth int) ([]string, error) {
+	rows, err := s.db.Query("select * from word where reachability >= ? and reachability <= ? and depth <= ?", minReachability, maxReachability, maxDepth)
+	if err != nil {
+		return nil, err
+	}
+	targetWords := []string{}
+	for rows.Next() {
+		word, err := scanIntoWord(rows)
+		if err != nil {
+			return nil, err
+		}
+		targetWords = append(targetWords, word.Word)
+	}
+	return targetWords, nil
+}
+
+func (s *SQLiteStore) GetTargetWord(minReachability, maxReachability float64, maxDepth int) (string, error) {
+	targetWords, err := s.GetTargetWords(minReachability, maxReachability, maxDepth)
+	if err != nil {
+		return "", err
+	}
+	return targetWords[rand.Intn(len(targetWords))], nil
 }
 
 func (s *SQLiteStore) NewGame(lobbyCode string) (*Game, error) {
 	game := new(Game)
 	game.LobbyCode = lobbyCode
-	// TODO: Figure out an algo to determine a good end element!
-	game.EndElement = "cloud"
+	var err error
+	game.TargetWord, err = s.GetTargetWord(0.0625, 0.075, 10)
+	if err != nil {
+		return nil, err
+	}
 	return game, nil
+}
+
+func (s*SQLiteStore) AddPlayerWord(playerName, word, lobbyCode string) error {
+	_, err := s.db.Exec(
+		"insert into player_word (player_name, word, lobby_code) values (?, ?, ?)",
+		playerName,
+		word,
+		lobbyCode,
+	)
+	return err
+}
+
+func (s *SQLiteStore) GetPlayerWords(playerName, lobbyCode string) ([]string, error) {
+	rows, err := s.db.Query("select * from player_word where player_name = ? and lobby_code = ?", playerName, lobbyCode)
+	if err != nil {
+		return nil, err
+	}
+	words := []string{}
+	for rows.Next() {
+		var word string
+		err := rows.Scan(&word)
+		if err != nil {
+			return nil, err
+		}
+		words = append(words, word)
+	}
+	return words, nil
 }

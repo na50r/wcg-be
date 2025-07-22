@@ -143,22 +143,43 @@ type GameModeChangeEvent struct {
 
 type Game struct {
 	LobbyCode  string `json:"lobbyCode"`
-	EndElement string `json:"endElement"`
+	TargetWord string `json:"targetWord"`
 }
 
-type Element struct {
+type Combination struct {
 	A      string `json:"a"`
 	B      string `json:"b"`
 	Result string `json:"result"`
+	Depth  int    `json:"depth"`
 }
 
-type ElementRequest struct {
+type Word struct {
+	Word      string  `json:"word"`
+	Depth     int     `json:"depth"`
+	Reachability float64 `json:"reachability"`
+}
+
+type WordRequest struct {
 	A string `json:"a"`
 	B string `json:"b"`
 }
 
-type ElementResponse struct {
+type WordResponse struct {
 	Result string `json:"result"`
+}
+
+type StartGameRequest struct {
+	GameMode string `json:"gameMode"`
+}
+
+type StartGameResponse struct {
+	TargetWord string `json:"targetWord"`
+}
+
+type PlayerWord struct {
+	PlayerName string `json:"playerName"`
+	Word       string `json:"word"`
+	LobbyCode  string `json:"lobbyCode"`
 }
 
 func NewAccount(username, password string) (*Account, error) {

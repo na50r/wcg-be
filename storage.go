@@ -26,9 +26,12 @@ type Storage interface {
 	GetLobbies() ([]*Lobby, error)
 	GetLobbyByCode(lobbyCode string) (*Lobby, error)
 	EditGameMode(lobbyCode, gameMode string) error
-	GetElement(a, b string) (*string, error)
-	AddElement(element *Element) error
+	AddCombination(element *Combination) error
+	GetCombination(a, b string) (*string, error)
 	NewGame(lobbyCode string) (*Game, error)
+	AddWord(word *Word) error
+	AddPlayerWord(playerName, word, lobbyCode string) error
+	GetPlayerWords(playerName, lobbyCode string) ([]string, error)
 }
 
 // Convert SQL rows into an defined Go types
@@ -76,4 +79,14 @@ func scanIntoLobby(rows *sql.Rows) (*Lobby, error) {
 		&lobby.PlayerCount,
 	)
 	return lobby, err
+}
+
+func scanIntoWord(rows *sql.Rows) (*Word, error) {
+	word := new(Word)
+	err := rows.Scan(
+		&word.Word,
+		&word.Depth,
+		&word.Reachability,
+	)
+	return word, err
 }

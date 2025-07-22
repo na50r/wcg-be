@@ -85,12 +85,29 @@ func (s *APIServer) Run() {
 	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/edit", withLobbyAuth(makeHTTPHandleFunc(s.handleEditGameMode)))
 
 	// Game endpoints
-	router.HandleFunc("/games/{lobbyCode}/{playerName}/element", withLobbyAuth(makeHTTPHandleFunc(s.handleMove)))
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/combinations", withLobbyAuth(makeHTTPHandleFunc(s.handleMove)))
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/words", withLobbyAuth(makeHTTPHandleFunc(s.handleGetWords)))
 
 	// Events
 	router.HandleFunc("/events/lobbies", s.SSEHandler)
 	router.HandleFunc("/events/publish", s.broker.PublishEndpoint)
 	log.Fatal(http.ListenAndServe(s.listenAddr, router))
+}
+
+func (s *APIServer) handleGetWords(w http.ResponseWriter, r *http.Request) error {
+	lobbyCode, err := getLobbyCode(r)
+	if err != nil {
+		return err
+	}
+	playerName, err := getPlayername(r)
+	if err != nil {
+		return err
+	}
+	words, err := s.store.GetPlayerWords(playerName, lobbyCode)
+	if err != nil {
+		return err
+	}
+	return WriteJSON(w, http.StatusOK, words)
 }
 
 func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) error {
@@ -113,12 +130,25 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 	if err != nil {
 		return err
 	}
+	req := new(StartGameRequest)
+	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+		return err
+	}
+	if err := s.store.EditGameMode(lobbyCode, req.GameMode); err != nil {
+		return err
+	}
 	game, err := s.store.NewGame(lobbyCode)
 	if err != nil {
 		return err
 	}
 	s.games[lobbyCode] = game
-	return WriteJSON(w, http.StatusOK, game)
+	resp := StartGameResponse{TargetWord: game.TargetWord}
+	log.Println("---")
+	log.Printf("Game created\nLobby code: %s\nTarget word: %s", lobbyCode, game.TargetWord)
+	log.Println("---")
+	s.PublishToClients(lobbyCode, Message{Data: "GAME_STARTED"})
+	s.PublishToClients(lobbyCode, Message{Data: StartGameResponse{TargetWord: game.TargetWord}})
+	return WriteJSON(w, http.StatusOK, resp)
 }
 
 func (s *APIServer) handleMove(w http.ResponseWriter, r *http.Request) error {
@@ -134,18 +164,29 @@ func (s *APIServer) handleMove(w http.ResponseWriter, r *http.Request) error {
 	if game == nil {
 		return fmt.Errorf("game not found")
 	}
-	req := new(ElementRequest)
+	req := new(WordRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
-	result, err := s.store.GetElement(req.A, req.B)
+	result, err := s.store.GetCombination(req.A, req.B)
 	if err != nil {
 		return err
 	}
-	if *result == game.EndElement {
-		s.PublishToClients(lobbyCode, Message{Data: "GAME_OVER"})
+	playerName, err := getPlayername(r)
+	if err != nil {
+		return err
 	}
-	return WriteJSON(w, http.StatusOK, ElementResponse{Result: *result})
+	
+	winnerMsg := map[string]string{"WINNER": playerName}
+	if *result == game.TargetWord {
+		s.PublishToClients(lobbyCode, Message{Data: "GAME_OVER"})
+		s.PublishToClients(lobbyCode, Message{Data: winnerMsg})
+
+	}
+	if err := s.store.AddPlayerWord(playerName, *result, lobbyCode); err != nil {
+		return err
+	}
+	return WriteJSON(w, http.StatusOK, WordResponse{Result: *result})
 }
 
 func (s *APIServer) handleEditGameMode(w http.ResponseWriter, r *http.Request) error {
@@ -202,7 +243,7 @@ func (s *APIServer) handleGetLobby(w http.ResponseWriter, r *http.Request) error
 		}
 		playersDTO = append(playersDTO, &PlayerDTO{Name: player.Name, Image: img})
 	}
-	lobbyDTO := &LobbyDTO{Owner: ownerName, Players: playersDTO, Name: lobby.Name, GameMode: lobby.GameMode, LobbyCode: lobby.LobbyCode}
+	lobbyDTO := NewLobbyDTO(lobby, ownerName, playersDTO)
 	return WriteJSON(w, http.StatusOK, lobbyDTO)
 }
 
@@ -277,7 +318,7 @@ func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) erro
 	if err != nil {
 		return err
 	}
-	lobbyDTO := &LobbyDTO{LobbyCode: lobby.LobbyCode, Name: lobby.Name, GameMode: lobby.GameMode}
+	lobbyDTO := NewLobbyDTO(lobby, player.Name, []*PlayerDTO{})
 	s.broker.Publish(Message{Data: "PLAYER_JOINED"})
 	return WriteJSON(w, http.StatusOK, JoinLobbyRespone{Token: playerToken, LobbyDTO: *lobbyDTO})
 }
