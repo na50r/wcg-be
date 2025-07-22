@@ -6,9 +6,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	jwt "github.com/golang-jwt/jwt"
 	"log"
 	"net/http"
+
+	jwt "github.com/golang-jwt/jwt"
 )
 
 type Message struct {
@@ -55,11 +56,11 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 		lobbyCode := claims["lobbyCode"].(string)
 		playerName := claims["playerName"].(string)
 		log.Println("Player connected: ", playerName, "to lobby: ", lobbyCode)
-		s.players2clients[playerName] = channelID
-		if s.lobbies2clients[lobbyCode] == nil {
-			s.lobbies2clients[lobbyCode] = make(map[int]bool)
+		s.playerClient[playerName] = channelID
+		if s.lobbyClients[lobbyCode] == nil {
+			s.lobbyClients[lobbyCode] = make(map[int]bool)
 		}
-		s.lobbies2clients[lobbyCode][channelID] = true
+		s.lobbyClients[lobbyCode][channelID] = true
 	}
 
 	fmt.Printf("client connected (id=%d), total clients: %d\n", channelID, len(b.ClientChannels))
@@ -102,7 +103,7 @@ func (b *Broker) Publish(msg Message) {
 
 func (s *APIServer) PublishToClients(lobbyCode string, msg Message) {
 	b := s.broker
-	clients := s.lobbies2clients[lobbyCode]
+	clients := s.lobbyClients[lobbyCode]
 	data, err := json.Marshal(msg.Data)
 	if err != nil {
 		log.Printf("unable to marshal: %s", err.Error())
@@ -113,7 +114,7 @@ func (s *APIServer) PublishToClients(lobbyCode string, msg Message) {
 	}
 }
 
-func (b *Broker) PublishEndpoint(w http.ResponseWriter, r *http.Request) {
+func (b *Broker) Broadcast(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
