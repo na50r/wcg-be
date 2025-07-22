@@ -81,18 +81,59 @@ func (s *APIServer) Run() {
 	// Lobby Endpoints
 	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleGetLobby)))
 	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/leave", withLobbyAuth(makeHTTPHandleFunc(s.handleLeaveLobby)))
-	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/game", withLobbyAuth(makeHTTPHandleFunc(s.handleCreateGame)))
+	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/game", withLobbyAuth(makeHTTPHandleFunc(s.handleGame)))
 	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/edit", withLobbyAuth(makeHTTPHandleFunc(s.handleEditGameMode)))
 
 	// Game endpoints
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/combinations", withLobbyAuth(makeHTTPHandleFunc(s.handleMove)))
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/words", withLobbyAuth(makeHTTPHandleFunc(s.handleGetWords)))
-	router.HandleFunc("/games/{lobbyCode}/{playerName}/end", withLobbyAuth(makeHTTPHandleFunc(s.handleGetEndGame)))
 
 	// Events
 	router.HandleFunc("/events/lobbies", s.SSEHandler)
 	router.HandleFunc("/events/publish", s.broker.PublishEndpoint)
 	log.Fatal(http.ListenAndServe(s.listenAddr, router))
+}
+
+func (s *APIServer) handleGame(w http.ResponseWriter, r *http.Request) error {
+	switch r.Method {
+	case http.MethodGet:
+		return s.handleGetGameStats(w, r)
+	case http.MethodPost:
+		return s.handleCreateGame(w, r)
+	case http.MethodDelete:
+		return s.handleDeleteGame(w, r)
+	default:
+		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		return err
+	}
+}
+
+func (s *APIServer) handleDeleteGame(w http.ResponseWriter, r *http.Request) error {
+	token, tokenExists, err := getToken(r)
+	if err != nil {
+		return err
+	}
+	if !tokenExists {
+		return fmt.Errorf("unauthorized")
+	}
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return fmt.Errorf("unauthorized")
+	}
+	isOwner := claims["isOwner"].(bool)
+	if !isOwner {
+		return fmt.Errorf("unauthorized")
+	}
+	lobbyCode, err := getLobbyCode(r)
+	if err != nil {
+		return err
+	}
+	delete(s.games, lobbyCode)
+	if err := s.store.DeletePlayerWordsByLobbyCode(lobbyCode); err != nil {
+		return err
+	}
+	s.PublishToClients(lobbyCode, Message{Data: "GAME_DELETED"})
+	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game deleted"})
 }
 
 func (s *APIServer) handleGetWords(w http.ResponseWriter, r *http.Request) error {
@@ -108,7 +149,9 @@ func (s *APIServer) handleGetWords(w http.ResponseWriter, r *http.Request) error
 	if err != nil {
 		return err
 	}
-	return WriteJSON(w, http.StatusOK, words)
+	targetWord := s.games[lobbyCode].TargetWord
+	wordsDTO := Words{Words: words, TargetWord: targetWord}
+	return WriteJSON(w, http.StatusOK, wordsDTO)
 }
 
 func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) error {
@@ -195,14 +238,14 @@ func (s *APIServer) handleMove(w http.ResponseWriter, r *http.Request) error {
 	return WriteJSON(w, http.StatusOK, WordResponse{Result: *result})
 }
 
-func (s *APIServer) handleGetEndGame(w http.ResponseWriter, r *http.Request) error {
+func (s *APIServer) handleGetGameStats(w http.ResponseWriter, r *http.Request) error {
 	lobbyCode, err := getLobbyCode(r)
 	if err != nil {
 		return err
 	}
 	winner := s.games[lobbyCode].Winner
 	if winner == "" {
-		return fmt.Errorf("game not over")
+		return fmt.Errorf("Stats can only be requested after the game has ended")
 	}
 	playerWordCounts, err := s.store.GetWordCountByLobbyCode(lobbyCode)
 	if err != nil {
@@ -602,6 +645,9 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		if err := s.store.DeletePlayerWordsByLobbyCode(lobbyCode); err != nil {
 			return err
 		}
+		delete(s.lobbies2clients, lobbyCode)
+		delete(s.games, lobbyCode)
+		s.PublishToClients(lobbyCode, Message{Data: "GAME_DELETED"})
 		s.broker.Publish(Message{Data: "LOBBY_DELETED"})
 	}
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Logout successful"})

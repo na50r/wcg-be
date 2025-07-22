@@ -169,6 +169,11 @@ type WordResponse struct {
 	Result string `json:"result"`
 }
 
+type Words struct {
+	Words []string `json:"words"`
+	TargetWord string `json:"targetWord"`
+}
+
 type StartGameRequest struct {
 	GameMode string `json:"gameMode"`
 }
