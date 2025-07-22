@@ -32,6 +32,10 @@ type Storage interface {
 	AddWord(word *Word) error
 	AddPlayerWord(playerName, word, lobbyCode string) error
 	GetPlayerWords(playerName, lobbyCode string) ([]string, error)
+	DeletePlayerWordsByLobbyCode(lobbyCode string) error
+	DeletePlayerWordsByPlayerAndLobbyCode(playerName, lobbyCode string) error
+	SeedPlayerWords(lobbyCode string) error
+	GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCount, error)
 }
 
 // Convert SQL rows into an defined Go types
@@ -89,4 +93,25 @@ func scanIntoWord(rows *sql.Rows) (*Word, error) {
 		&word.Reachability,
 	)
 	return word, err
+}
+
+
+func scanIntoPlayerWord(rows *sql.Rows) (*PlayerWord, error) {
+	playerWord := new(PlayerWord)
+	err := rows.Scan(
+		&playerWord.PlayerName,
+		&playerWord.Word,
+		&playerWord.LobbyCode,
+		&playerWord.Timestamp,
+	)
+	return playerWord, err
+}
+
+func scanIntoPlayerWordCount(rows *sql.Rows) (*PlayerWordCount, error) {
+	wordCount := new(PlayerWordCount)
+	err := rows.Scan(
+		&wordCount.PlayerName,
+		&wordCount.WordCount,
+	)
+	return wordCount, err
 }

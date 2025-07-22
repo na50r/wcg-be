@@ -106,6 +106,7 @@ func (s *SQLiteStore) createPlayerWordTable() error {
 		player_name text,
 		word text,
 		lobby_code text,
+		timestamp datetime default current_timestamp,
 		primary key (player_name, word, lobby_code)
 		)`
 	_, err := s.db.Exec(query)
@@ -506,7 +507,7 @@ func (s *SQLiteStore) NewGame(lobbyCode string) (*Game, error) {
 
 func (s*SQLiteStore) AddPlayerWord(playerName, word, lobbyCode string) error {
 	_, err := s.db.Exec(
-		"insert into player_word (player_name, word, lobby_code) values (?, ?, ?)",
+		"insert or ignore into player_word (player_name, word, lobby_code) values (?, ?, ?)",
 		playerName,
 		word,
 		lobbyCode,
@@ -514,19 +515,65 @@ func (s*SQLiteStore) AddPlayerWord(playerName, word, lobbyCode string) error {
 	return err
 }
 
+func (s *SQLiteStore) SeedPlayerWords(lobbyCode string) error {
+	players, err := s.GetPlayersByLobbyCode(lobbyCode)
+	if err != nil {
+		return err
+	}
+	for _, player := range players {
+		s.AddPlayerWord(player.Name, "fire", lobbyCode)
+		s.AddPlayerWord(player.Name, "water", lobbyCode)
+		s.AddPlayerWord(player.Name, "earth", lobbyCode)
+		s.AddPlayerWord(player.Name, "air", lobbyCode)
+	}
+	return nil
+}
+
 func (s *SQLiteStore) GetPlayerWords(playerName, lobbyCode string) ([]string, error) {
-	rows, err := s.db.Query("select * from player_word where player_name = ? and lobby_code = ?", playerName, lobbyCode)
+	rows, err := s.db.Query("select * from player_word where player_name = ? and lobby_code = ? order by timestamp asc", playerName, lobbyCode)
 	if err != nil {
 		return nil, err
 	}
 	words := []string{}
 	for rows.Next() {
-		var word string
-		err := rows.Scan(&word)
+		playerWord, err := scanIntoPlayerWord(rows)
 		if err != nil {
 			return nil, err
 		}
-		words = append(words, word)
+		words = append(words, playerWord.Word)
 	}
 	return words, nil
+}
+
+func (s *SQLiteStore) DeletePlayerWordsByLobbyCode(lobbyCode string) error {
+	_, err := s.db.Exec("delete from player_word where lobby_code = ?", lobbyCode)
+	return err
+}
+
+func (s * SQLiteStore) DeletePlayerWordsByPlayerAndLobbyCode(playerName, lobbyCode string) error {
+	_, err := s.db.Exec("delete from player_word where player_name = ? and lobby_code = ?", playerName, lobbyCode)
+	return err
+}
+
+func (s * SQLiteStore) GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCount, error) {
+	query := `
+	select player_name, COUNT(*) as word_count
+	from player_word
+	where lobby_code = ?
+	group by player_name
+	order by word_count desc
+	`
+	rows, err := s.db.Query(query, lobbyCode)
+	if err != nil {
+		return nil, err
+	}
+	wordCounts := []*PlayerWordCount{}
+	for rows.Next() {
+		wordCount, err := scanIntoPlayerWordCount(rows)
+		if err != nil {
+			return nil, err
+		}
+		wordCounts = append(wordCounts, wordCount)
+	}
+	return wordCounts, nil
 }

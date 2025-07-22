@@ -87,6 +87,7 @@ func (s *APIServer) Run() {
 	// Game endpoints
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/combinations", withLobbyAuth(makeHTTPHandleFunc(s.handleMove)))
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/words", withLobbyAuth(makeHTTPHandleFunc(s.handleGetWords)))
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/end", withLobbyAuth(makeHTTPHandleFunc(s.handleGetEndGame)))
 
 	// Events
 	router.HandleFunc("/events/lobbies", s.SSEHandler)
@@ -142,6 +143,9 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 		return err
 	}
 	s.games[lobbyCode] = game
+	if err := s.store.SeedPlayerWords(lobbyCode); err != nil {
+		return err
+	}
 	resp := StartGameResponse{TargetWord: game.TargetWord}
 	log.Println("---")
 	log.Printf("Game created\nLobby code: %s\nTarget word: %s", lobbyCode, game.TargetWord)
@@ -176,17 +180,47 @@ func (s *APIServer) handleMove(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	
+	log.Printf("Player %s played %s + %s = %s", playerName, req.A, req.B, *result)
 	winnerMsg := map[string]string{"WINNER": playerName}
-	if *result == game.TargetWord {
+	if *result == game.TargetWord || *result == "clay" {
+		log.Println("Target Word Reached")
+		game.Winner = playerName
 		s.PublishToClients(lobbyCode, Message{Data: "GAME_OVER"})
 		s.PublishToClients(lobbyCode, Message{Data: winnerMsg})
-
+		return WriteJSON(w, http.StatusOK, WordResponse{Result: *result})
 	}
 	if err := s.store.AddPlayerWord(playerName, *result, lobbyCode); err != nil {
 		return err
 	}
 	return WriteJSON(w, http.StatusOK, WordResponse{Result: *result})
+}
+
+func (s *APIServer) handleGetEndGame(w http.ResponseWriter, r *http.Request) error {
+	lobbyCode, err := getLobbyCode(r)
+	if err != nil {
+		return err
+	}
+	winner := s.games[lobbyCode].Winner
+	if winner == "" {
+		return fmt.Errorf("game not over")
+	}
+	playerWordCounts, err := s.store.GetWordCountByLobbyCode(lobbyCode)
+	if err != nil {
+		return err
+	}
+	playerWordsDTO := []*PlayerWordDTO{}
+	for _, playerWordCount := range playerWordCounts {
+		player, err := s.store.GetPlayerByLobbyCodeAndName(playerWordCount.PlayerName, lobbyCode)
+		if err != nil {
+			return err
+		}
+		img, err := s.store.GetImage(player.ImageName)
+		if err != nil {
+			return err
+		}
+		playerWordsDTO = append(playerWordsDTO, &PlayerWordDTO{PlayerName: player.Name, Image: img, WordCount: playerWordCount.WordCount})
+	}
+	return WriteJSON(w, http.StatusOK, GameEndResponse{Winner: winner, PlayerWords: playerWordsDTO})
 }
 
 func (s *APIServer) handleEditGameMode(w http.ResponseWriter, r *http.Request) error {
@@ -267,10 +301,16 @@ func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) err
 		if err := s.store.DeletePlayersForLobby(lobbyCode); err != nil {
 			return err
 		}
+		if err := s.store.DeletePlayerWordsByLobbyCode(lobbyCode); err != nil {
+			return err
+		}
 		s.broker.Publish(Message{Data: "LOBBY_DELETED"})
 		return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Lobby deleted"})
 	}
 	if err := s.store.DeletePlayer(playerName, lobbyCode); err != nil {
+		return err
+	}
+	if err := s.store.DeletePlayerWordsByPlayerAndLobbyCode(playerName, lobbyCode); err != nil {
 		return err
 	}
 	delete(s.lobbies2clients[lobbyCode], s.players2clients[playerName])
@@ -557,6 +597,9 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 		if err := s.store.DeletePlayersForLobby(lobbyCode); err != nil {
+			return err
+		}
+		if err := s.store.DeletePlayerWordsByLobbyCode(lobbyCode); err != nil {
 			return err
 		}
 		s.broker.Publish(Message{Data: "LOBBY_DELETED"})

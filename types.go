@@ -144,6 +144,7 @@ type GameModeChangeEvent struct {
 type Game struct {
 	LobbyCode  string `json:"lobbyCode"`
 	TargetWord string `json:"targetWord"`
+	Winner     string `json:"winner"`
 }
 
 type Combination struct {
@@ -180,6 +181,23 @@ type PlayerWord struct {
 	PlayerName string `json:"playerName"`
 	Word       string `json:"word"`
 	LobbyCode  string `json:"lobbyCode"`
+	Timestamp  string `json:"timestamp"`
+}
+
+type PlayerWordCount struct {
+	PlayerName string `json:"playerName"`
+	WordCount  int    `json:"wordCount"`
+}
+
+type PlayerWordDTO struct {
+	PlayerName string `json:"playerName"`
+	Image        []byte `json:"image"`
+	WordCount  int    `json:"wordCount"`
+}
+
+type GameEndResponse struct {
+	Winner string `json:"winner"`
+	PlayerWords []*PlayerWordDTO `json:"playerWords"`
 }
 
 func NewAccount(username, password string) (*Account, error) {
