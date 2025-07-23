@@ -5,8 +5,8 @@ import (
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
-	"strings"
 	"math/rand"
+	"strings"
 )
 
 type SQLiteStore struct {
@@ -61,6 +61,7 @@ func (s *SQLiteStore) createPlayerTable() error {
 		image_name,
 		is_owner boolean,
 		has_account boolean,
+		target_word text,
 		primary key (name, lobby_code)
 		)`
 	_, err := s.db.Exec(query)
@@ -161,15 +162,17 @@ func (s *SQLiteStore) CreateAccount(acc *Account) error {
 
 func (s *SQLiteStore) CreatePlayer(player *Player) error {
 	query := `insert into player 
-	(name, lobby_code, image_name, is_owner, has_account)
-	values (?, ?, ?, ?, ?)`
+	(name, lobby_code, image_name, is_owner, has_account, target_word)
+	values (?, ?, ?, ?, ?, ?)`
 	_, err := s.db.Exec(
 		query,
 		player.Name,
 		player.LobbyCode,
 		player.ImageName,
 		player.IsOwner,
-		player.HasAccount)
+		player.HasAccount,
+		player.TargetWord,
+	)
 	if err != nil {
 		return err
 	}
@@ -364,12 +367,13 @@ func (s *SQLiteStore) DeletePlayersForLobby(lobbyCode string) error {
 
 func (s *SQLiteStore) AddPlayerToLobby(lobbyCode string, player *Player) error {
 	_, err := s.db.Exec(
-		"insert into player (name, lobby_code, image_name, is_owner, has_account) values (?, ?, ?, ?, ?)",
+		"insert into player (name, lobby_code, image_name, is_owner, has_account, target_word) values (?, ?, ?, ?, ?, ?)",
 		player.Name,
 		lobbyCode,
 		player.ImageName,
 		player.IsOwner,
 		player.HasAccount,
+		player.TargetWord,
 	)
 	log.Printf("insert error: %v", err)
 	if err != nil {
@@ -379,7 +383,7 @@ func (s *SQLiteStore) AddPlayerToLobby(lobbyCode string, player *Player) error {
 	return err
 }
 
-func (s * SQLiteStore) IncrementPlayerCount(lobbyCode string, increment int) error {
+func (s *SQLiteStore) IncrementPlayerCount(lobbyCode string, increment int) error {
 	_, err := s.db.Exec("update lobby set player_count = player_count + ? where lobby_code = ?", lobbyCode, increment)
 	return err
 }
@@ -405,7 +409,6 @@ func (s *SQLiteStore) DeleteLobby(lobbyCode string) error {
 	return err
 }
 
-
 func (s *SQLiteStore) GetLobbyByCode(lobbyCode string) (*Lobby, error) {
 	rows, err := s.db.Query("select * from lobby where lobby_code = ?", lobbyCode)
 	if err != nil {
@@ -428,7 +431,7 @@ func (s *SQLiteStore) GetCombination(a, b string) (*string, error) {
 	b = strings.ToLower(b)
 	sorted := a < b
 	if !sorted {
-		a, b = b, a   
+		a, b = b, a
 	}
 	var result string
 	err := s.db.QueryRow("SELECT result FROM combination WHERE a = ? AND b = ?", a, b).Scan(&result)
@@ -494,18 +497,37 @@ func (s *SQLiteStore) GetTargetWord(minReachability, maxReachability float64, ma
 	return targetWords[rand.Intn(len(targetWords))], nil
 }
 
-func (s *SQLiteStore) NewGame(lobbyCode string) (*Game, error) {
+func (s *SQLiteStore) NewGame(lobbyCode string, gameMode string, withTimer bool, duration int) (*Game, error) {
 	game := new(Game)
 	game.LobbyCode = lobbyCode
-	var err error
-	game.TargetWord, err = s.GetTargetWord(0.0625, 0.075, 10)
-	if err != nil {
-		return nil, err
+	game.GameMode = gameMode
+	game.WithTimer = withTimer
+	if withTimer {
+		game.Timer = NewTimer(duration)
 	}
-	return game, nil
+	if gameMode == "Vanilla" {
+		return game, nil
+	}
+	if gameMode == "Fusion Frenzy" {
+		var err error
+		game.TargetWord, err = s.GetTargetWord(0.0125, 0.0625, 10)
+		if err != nil {
+			return nil, err
+		}
+		return game, nil
+	}
+	if gameMode == "Wombo Combo" {
+		var err error
+		game.TargetWords, err = s.GetTargetWords(0.0625, 0.075, 10)
+		if err != nil {
+			return nil, err
+		}
+		return game, nil
+	}
+	return nil, fmt.Errorf("game mode %s not found", gameMode)
 }
 
-func (s*SQLiteStore) AddPlayerWord(playerName, word, lobbyCode string) error {
+func (s *SQLiteStore) AddPlayerWord(playerName, word, lobbyCode string) error {
 	_, err := s.db.Exec(
 		"insert or ignore into player_word (player_name, word, lobby_code) values (?, ?, ?)",
 		playerName,
@@ -515,12 +537,38 @@ func (s*SQLiteStore) AddPlayerWord(playerName, word, lobbyCode string) error {
 	return err
 }
 
-func (s *SQLiteStore) SeedPlayerWords(lobbyCode string) error {
+func (s *SQLiteStore) SetPlayerTargetWord(playerName, targetWord, lobbyCode string) error {
+	_, err := s.db.Exec(
+		"update player set target_word = ? where name = ? and lobby_code = ?",
+		targetWord,
+		playerName,
+		lobbyCode,
+	)
+	return err
+}
+
+func (s *SQLiteStore) GetPlayerTargetWord(playerName, lobbyCode string) (string, error) {
+	var targetWord string
+	err := s.db.QueryRow("select target_word from player where name = ? and lobby_code = ?", playerName, lobbyCode).Scan(&targetWord)
+	if err != nil {
+		return "", err
+	}
+	return targetWord, nil
+}
+
+func (s *SQLiteStore) SeedPlayerWords(lobbyCode string, game *Game) error {
 	players, err := s.GetPlayersByLobbyCode(lobbyCode)
 	if err != nil {
 		return err
 	}
 	for _, player := range players {
+		target, err := game.SetTarget()
+		if err != nil {
+			return err
+		}
+		if err := s.SetPlayerTargetWord(player.Name, target, lobbyCode); err != nil {
+			return err
+		}
 		s.AddPlayerWord(player.Name, "fire", lobbyCode)
 		s.AddPlayerWord(player.Name, "water", lobbyCode)
 		s.AddPlayerWord(player.Name, "earth", lobbyCode)
@@ -550,12 +598,12 @@ func (s *SQLiteStore) DeletePlayerWordsByLobbyCode(lobbyCode string) error {
 	return err
 }
 
-func (s * SQLiteStore) DeletePlayerWordsByPlayerAndLobbyCode(playerName, lobbyCode string) error {
+func (s *SQLiteStore) DeletePlayerWordsByPlayerAndLobbyCode(playerName, lobbyCode string) error {
 	_, err := s.db.Exec("delete from player_word where player_name = ? and lobby_code = ?", playerName, lobbyCode)
 	return err
 }
 
-func (s * SQLiteStore) GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCount, error) {
+func (s *SQLiteStore) GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCount, error) {
 	query := `
 	select player_name, COUNT(*) as word_count
 	from player_word
@@ -578,7 +626,7 @@ func (s * SQLiteStore) GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordC
 	return wordCounts, nil
 }
 
-func (s * SQLiteStore) GetPlayersWithAccount(lobbyCode string) ([]*Account, error) {
+func (s *SQLiteStore) GetPlayersWithAccount(lobbyCode string) ([]*Account, error) {
 	rows, err := s.db.Query("select * from player where lobby_code = ? and has_account = ?", lobbyCode, true)
 	if err != nil {
 		return nil, err

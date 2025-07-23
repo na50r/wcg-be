@@ -7,6 +7,7 @@ import (
 
 	jwt "github.com/golang-jwt/jwt"
 	"github.com/gorilla/mux"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func WriteJSON(w http.ResponseWriter, status int, v any) error {
@@ -43,10 +44,6 @@ func NewAPIServer(listenAddr string, store Storage) *APIServer {
 	}
 }
 
-// ChatGPT Aided
-// Reference 1: https://stackhawkwpc.wpcomstaging.com/golang-cors-guide-what-it-is-and-how-to-enable-it/ (Only sets first header)
-// Reference 2: https://stackoverflow.com/questions/61238680/access-to-fetch-at-from-origin-http-localhost3000-has-been-blocked-by-cors (Sets additional headers)
-// Reference 3: https://medium.com/@gaurang.m/allowing-cross-site-requests-in-your-gin-app-golang-1332543d91ed (Implement something similar with Gin)
 func corsMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", CLIENT)
@@ -70,26 +67,26 @@ func (s *APIServer) Run() {
 	router.HandleFunc("/accounts", makeHTTPHandleFunc(s.handleRegister))
 	router.HandleFunc("/account/{username}", withJWTAuth(makeHTTPHandleFunc(s.handleAccount)))
 	router.HandleFunc("/account/{username}/images", withJWTAuth(makeHTTPHandleFunc(s.handleGetImages)))
-	router.HandleFunc("/account/{username}/lobby", withJWTAuth(makeHTTPHandleFunc(s.handleCreateLobby)))
-
 
 	// Lobby Endpoints
-	router.HandleFunc("/lobbies", makeHTTPHandleFunc(s.handleGetLobbies))
-	router.HandleFunc("/lobbies/join", makeHTTPHandleFunc(s.handleJoinLobby))
-	
+	router.HandleFunc("/lobbies", makeHTTPHandleFunc(s.handleLobbies))
 	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleGetLobby)))
 	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/leave", withLobbyAuth(makeHTTPHandleFunc(s.handleLeaveLobby)))
-	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/game", withLobbyAuth(makeHTTPHandleFunc(s.handleGame)))
 	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/edit", withLobbyAuth(makeHTTPHandleFunc(s.handleEditGameMode)))
 
 	// Game endpoints
-	router.HandleFunc("/games/{lobbyCode}/{playerName}/combinations", withLobbyAuth(makeHTTPHandleFunc(s.handleMove)))
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/game", withLobbyAuth(makeHTTPHandleFunc(s.handleGame)))
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/combinations", withLobbyAuth(makeHTTPHandleFunc(s.handleCombination)))
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/words", withLobbyAuth(makeHTTPHandleFunc(s.handleGetWords)))
 
 	// Events
 	router.HandleFunc("/events", s.SSEHandler)
 	router.HandleFunc("/broadcast", s.broker.Broadcast)
+
+	// Swagger
+	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 	log.Fatal(http.ListenAndServe(s.listenAddr, router))
+
 }
 
 // Authentication Middleware Adapted from Anthony GG's tutorial

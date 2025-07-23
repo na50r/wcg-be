@@ -34,6 +34,16 @@ func (b *Broker) CreateChannel() int {
 	return b.cnt
 }
 
+// SSEHandler godoc
+// @Summary Server-Sent Events
+// @Description Server-Sent Events
+// @Tags events
+// @Accept json
+// @Produce json
+// @Success 200 {object} Message
+// @Failure 400 {object} APIError
+// @Failure 405 {object} APIError
+// @Router /events [get]
 func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 	b := s.broker
 	w.Header().Set("Content-Type", "text/event-stream")

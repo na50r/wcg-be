@@ -28,15 +28,17 @@ type Storage interface {
 	EditGameMode(lobbyCode, gameMode string) error
 	AddCombination(element *Combination) error
 	GetCombination(a, b string) (*string, error)
-	NewGame(lobbyCode string) (*Game, error)
+	NewGame(lobbyCode string, gameMode string, withTimer bool, duration int) (*Game, error)
 	AddWord(word *Word) error
 	AddPlayerWord(playerName, word, lobbyCode string) error
 	GetPlayerWords(playerName, lobbyCode string) ([]string, error)
 	DeletePlayerWordsByLobbyCode(lobbyCode string) error
 	DeletePlayerWordsByPlayerAndLobbyCode(playerName, lobbyCode string) error
-	SeedPlayerWords(lobbyCode string) error
+	SeedPlayerWords(lobbyCode string, game *Game) error
 	GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCount, error)
 	UpdateAccountWinsAndLosses(lobbyCode, winner string) error
+	SetPlayerTargetWord(playerName, targetWord, lobbyCode string) error
+	GetPlayerTargetWord(playerName, lobbyCode string) (string, error)
 }
 
 // Convert SQL rows into an defined Go types
@@ -70,7 +72,9 @@ func scanIntoPlayer(rows *sql.Rows) (*Player, error) {
 		&player.LobbyCode,
 		&player.ImageName,
 		&player.IsOwner,
-		&player.HasAccount)
+		&player.HasAccount,
+		&player.TargetWord,
+	)
 	return player, err
 }
 

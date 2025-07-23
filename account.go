@@ -9,6 +9,18 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// handleGetAccount godoc
+// @Summary Get an account
+// @Description Get an account
+// @Tags account
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param username path string true "Username"
+// @Success 200 {object} AccountDTO
+// @Failure 400 {object} APIError
+// @Failure 405 {object} APIError
+// @Router /account/{username} [get]
 func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) error {
 	username, err := getUsername(r)
 	if err != nil {
@@ -34,6 +46,16 @@ func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) err
 	return WriteJSON(w, http.StatusOK, resp)
 }
 
+// handleGetImages godoc
+// @Summary Get all potential profile pictures
+// @Description Get all potential profile pictures
+// @Tags account
+// @Accept json
+// @Produce json
+// @Success 200 {object} ImagesResponse
+// @Failure 400 {object} APIError
+// @Failure 405 {object} APIError
+// @Router /account/{username}/images [get]
 func (s *APIServer) handleGetImages(w http.ResponseWriter, r *http.Request) error {
 	images, err := s.store.GetImages()
 	if err != nil {
@@ -59,6 +81,17 @@ func (s *APIServer) handleAccount(w http.ResponseWriter, r *http.Request) error 
 	}
 }
 
+// handleEditAccount godoc
+// @Summary Edit an account
+// @Description Edit an account
+// @Tags account
+// @Accept json
+// @Produce json
+// @Param account body EditAccountRequest true "Account to edit"
+// @Success 200 {object} GenericResponse
+// @Failure 400 {object} APIError
+// @Failure 405 {object} APIError
+// @Router /account/{username} [put]
 func (s *APIServer) handleEditAccount(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPut {
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
@@ -105,6 +138,17 @@ func (s *APIServer) handleEditAccount(w http.ResponseWriter, r *http.Request) er
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: msg})
 }
 
+// handleRegister godoc
+// @Summary Register an account
+// @Description Register an account
+// @Tags account
+// @Accept json
+// @Produce json
+// @Param account body RegisterRequest true "Account to register"
+// @Success 201 {object} GenericResponse
+// @Failure 400 {object} APIError
+// @Failure 405 {object} APIError
+// @Router /accounts [post]
 func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
@@ -132,6 +176,17 @@ func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error
 	return WriteJSON(w, http.StatusCreated, GenericResponse{Message: "Account created"})
 }
 
+// handleLogin godoc
+// @Summary Log in an account
+// @Description Authenticates a user and returns a JWT token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param login body LoginRequest true "Username and password"
+// @Success 200 {object} LoginResponse
+// @Failure 400 {object} APIError
+// @Failure 405 {object} APIError
+// @Router /login [post]
 func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
@@ -163,6 +218,16 @@ func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
 	return WriteJSON(w, http.StatusOK, resp)
 }
 
+// handleLogout godoc
+// @Summary Log out an account
+// @Description Logs out a user
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Success 200 {object} GenericResponse
+// @Failure 400 {object} APIError
+// @Failure 405 {object} APIError
+// @Router /logout [post]
 func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
@@ -198,6 +263,10 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 	if lobbyCode != "" {
+		if game, ok := s.games[lobbyCode]; ok {
+			game.StopTimer()
+			delete(s.games, lobbyCode)
+		}
 		if err := s.store.DeleteLobby(lobbyCode); err != nil {
 			return err
 		}

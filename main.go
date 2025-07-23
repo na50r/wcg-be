@@ -1,5 +1,18 @@
 package main
 
+// @title WomboCombo Go API
+// @version 1.0
+// @description This is the API for Wombo Combo Go
+// @host localhost:3030
+// @BasePath /
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
+
+// Current: Authorization: <Token>
+// TODO: Authorization: Bearer <Token>
+// Because of Current, use securityDefinitions.apikey rather than securityDefinitions.bearer
+// https://swagger.io/docs/specification/v3_0/authentication/api-keys/
 import (
 	"log"
 	"os"
@@ -9,6 +22,7 @@ import (
 	"flag"
 	"encoding/csv"
 	"strconv"
+	_ "github.com/na50r/wombo-combo-go-be/docs"
 )
 
 var JWT_SECRET string
@@ -151,7 +165,6 @@ func setWords(store Storage) error {
 	}
 	return nil
 }
-
 
 func main() {
 	seed := flag.Bool("seed", false, "seed images & elements")

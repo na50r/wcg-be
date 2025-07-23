@@ -2,12 +2,17 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"strconv"
 	"time"
 	"unicode"
-	"strconv"
+
 	"github.com/gorilla/mux"
 
+	"math/rand"
+
+	"context"
 	jwt "github.com/golang-jwt/jwt"
 )
 
@@ -93,13 +98,101 @@ func IsLetter(s string) bool {
 	return true
 }
 
-
 func RadixHash(s string, size int) int {
 	result := ""
-    for _, ch := range s {
-        result += strconv.Itoa(int(ch))
-    }
-    resultInt, _ := strconv.Atoi(result)
+	for _, ch := range s {
+		result += strconv.Itoa(int(ch))
+	}
+	resultInt, _ := strconv.Atoi(result)
 	hash := resultInt % size
 	return hash
+}
+
+func (g *Game) SetTarget() (string, error) {
+	if g.GameMode == "Vanilla" {
+		return "", nil
+	}
+	if g.GameMode == "Wombo Combo" {
+		log.Println("Number of target words ", len(g.TargetWords))
+		targetWord := g.TargetWords[rand.Intn(len(g.TargetWords))]
+		return targetWord, nil
+	}
+	if g.GameMode == "Fusion Frenzy" {
+		return g.TargetWord, nil
+	}
+	return "", fmt.Errorf("game mode %s not found", g.GameMode)
+}
+
+// End game if target word is reached (for Wombo Combo and Fusion Frenzy)
+// If Game is Vanilla, Game End has to be triggered manually
+func (g *Game) EndGame(targetWord, result string) bool {
+	if g.GameMode == "Wombo Combo" || g.GameMode == "Fusion Frenzy" {
+		return targetWord == result
+	}
+	if g.GameMode == "Vanilla" {
+		return false
+	}
+	return false
+}
+
+func (g * Game) StartTimer(s *APIServer) {
+	if g.WithTimer {
+		g.Timer.Start(s, g.LobbyCode)
+	}
+}
+
+func (g * Game) StopTimer() {
+	if g.WithTimer {
+		g.Timer.Stop()
+	}
+}
+
+func (mt *MyTimer) Start(s *APIServer, lobbyCode string) error {
+	if mt.durationMinutes == 0 {
+		return nil
+	}
+	if mt.durationMinutes >= 5 {
+		return fmt.Errorf("duration must be less than or equal to 5 minutes")
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	mt.cancelFunc = cancel
+	ticker := time.NewTicker(time.Second)
+	total_duration := time.Duration(mt.durationMinutes) * 60 * time.Second
+	half_duration := total_duration / 2
+	quarter_duration := half_duration / 2
+	three_quarter_duration := half_duration + quarter_duration
+	now := time.Now()
+	go func() {
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ctx.Done():
+				s.PublishToLobby(lobbyCode, Message{Data: "TIMER_STOPPED"})
+				log.Printf("Timer %s stopped\n", lobbyCode)
+				return
+			case t := <-ticker.C:
+				log.Printf("Timer %s tick\n", lobbyCode)
+				elapsed := t.Sub(now)
+				switch {
+				case elapsed >= quarter_duration && elapsed <= quarter_duration:
+					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(int(total_duration - elapsed))})
+				case elapsed >= half_duration && elapsed <= half_duration:
+					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(int(total_duration - elapsed))})
+				case elapsed >= three_quarter_duration && elapsed <= three_quarter_duration:
+					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(int(total_duration - elapsed))})
+				case elapsed >= total_duration-10*time.Second && elapsed <= total_duration:
+					secondsLeft := int((total_duration - elapsed).Seconds())
+					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(secondsLeft)})
+				case elapsed >= total_duration:
+					s.PublishToLobby(lobbyCode, Message{Data: "GAME_OVER"})
+					return
+				}
+			}
+		}
+	}()
+	return nil
+}
+
+func (mt *MyTimer) Stop() {
+	mt.cancelFunc()
 }

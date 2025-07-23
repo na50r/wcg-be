@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
+	"context"
 )
 
 type APIFunc func(http.ResponseWriter, *http.Request) error
@@ -42,13 +43,13 @@ type LoginResponse struct {
 }
 
 type AccountDTO struct {
-	Username  string `json:"username"`
-	Wins      int    `json:"wins"`
-	Losses    int    `json:"losses"`
-	ImageName string `json:"imageName"`
-	Image     []byte `json:"image"`
-	CreatedAt string `json:"createdAt"`
-	Status    string `json:"status"`
+	Username  string `json:"username"` 	// Username of the account
+	Wins      int    `json:"wins"` 		// Number of wins
+	Losses    int    `json:"losses"`	// Number of losses
+	ImageName string `json:"imageName"`	// Name of the user's profile image
+	Image     []byte `json:"image"`		// Base64-encoded image
+	CreatedAt string `json:"createdAt"`	// ISO8601 creation timestamp
+	Status    string `json:"status"`	// ONLINE or OFFLINE
 }
 
 type CreateLobbyRequest struct {
@@ -71,6 +72,7 @@ type Player struct {
 	ImageName  string `json:"imageName"`
 	IsOwner    bool   `json:"isOwner"`
 	HasAccount bool   `json:"hasAccount"`
+	TargetWord string `json:"targetWord"`
 }
 
 type Lobby struct {
@@ -142,9 +144,13 @@ type GameModeChangeEvent struct {
 }
 
 type Game struct {
+	GameMode   string `json:"gameMode"`
 	LobbyCode  string `json:"lobbyCode"`
 	TargetWord string `json:"targetWord"`
+	TargetWords []string `json:"targetWords"`
 	Winner     string `json:"winner"`
+	WithTimer  bool   `json:"withTimer"`
+	Timer      *MyTimer `json:"timer"`
 }
 
 type Combination struct {
@@ -176,10 +182,8 @@ type Words struct {
 
 type StartGameRequest struct {
 	GameMode string `json:"gameMode"`
-}
-
-type StartGameResponse struct {
-	TargetWord string `json:"targetWord"`
+	WithTimer bool `json:"withTimer"`
+	Duration int `json:"duration"`
 }
 
 type PlayerWord struct {
@@ -203,6 +207,22 @@ type PlayerWordDTO struct {
 type GameEndResponse struct {
 	Winner string `json:"winner"`
 	PlayerWords []*PlayerWordDTO `json:"playerWords"`
+}
+
+type MyTimer struct {
+	durationMinutes int
+	cancelFunc      context.CancelFunc
+}
+type TimeEvent struct {
+	Type        string `json:"type"`
+	SecondsLeft int `json:"secondsLeft"`
+}
+
+func NewTimeEvent(s int) *TimeEvent {
+	return &TimeEvent{
+		Type:        "TIME_EVENT",
+		SecondsLeft: s,
+	}
 }
 
 func NewAccount(username, password string) (*Account, error) {
@@ -229,11 +249,12 @@ func NewPlayer(name, lobbyCode, imageName string, isOwner, hasAccount bool) *Pla
 		ImageName:  imageName,
 		IsOwner:    isOwner,
 		HasAccount: hasAccount,
+		TargetWord: "",
 	}
 }
 
 func GameModes() []string {
-	return []string{"Vanilla", "Wombo Combo", "Lucky Rush"}
+	return []string{"Vanilla", "Wombo Combo", "Fusion Frenzy"}
 }
 
 func NewLobby(name, lobbyCode, imageName string) *Lobby {
@@ -255,4 +276,9 @@ func NewLobbyDTO(lobby *Lobby, owner string, players []*PlayerDTO) *LobbyDTO {
 		Players:   players,
 		GameModes: GameModes(),
 	}
+}
+
+
+func NewTimer(durationMinutes int) *MyTimer {
+	return &MyTimer{durationMinutes: durationMinutes}
 }
