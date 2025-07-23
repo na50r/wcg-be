@@ -135,13 +135,13 @@ func (g *Game) EndGame(targetWord, result string) bool {
 	return false
 }
 
-func (g * Game) StartTimer(s *APIServer) {
+func (g *Game) StartTimer(s *APIServer) {
 	if g.WithTimer {
 		g.Timer.Start(s, g.LobbyCode)
 	}
 }
 
-func (g * Game) StopTimer() {
+func (g *Game) StopTimer() {
 	if g.WithTimer {
 		g.Timer.Stop()
 	}
@@ -171,17 +171,17 @@ func (mt *MyTimer) Start(s *APIServer, lobbyCode string) error {
 				log.Printf("Timer %s stopped\n", lobbyCode)
 				return
 			case t := <-ticker.C:
-				log.Printf("Timer %s tick\n", lobbyCode)
 				elapsed := t.Sub(now)
+				secondsLeft := int((total_duration - elapsed).Seconds())
+				log.Printf("Timer %s: %ds left\n", lobbyCode, secondsLeft)
 				switch {
 				case elapsed >= quarter_duration && elapsed <= quarter_duration:
-					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(int(total_duration - elapsed))})
+					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(secondsLeft)})
 				case elapsed >= half_duration && elapsed <= half_duration:
-					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(int(total_duration - elapsed))})
+					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(secondsLeft)})
 				case elapsed >= three_quarter_duration && elapsed <= three_quarter_duration:
-					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(int(total_duration - elapsed))})
+					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(secondsLeft)})
 				case elapsed >= total_duration-10*time.Second && elapsed <= total_duration:
-					secondsLeft := int((total_duration - elapsed).Seconds())
 					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(secondsLeft)})
 				case elapsed >= total_duration:
 					s.PublishToLobby(lobbyCode, Message{Data: "GAME_OVER"})
