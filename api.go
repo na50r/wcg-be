@@ -81,7 +81,7 @@ func (s *APIServer) Run() {
 
 	// Events
 	router.HandleFunc("/events", s.SSEHandler)
-	router.HandleFunc("/broadcast", s.broker.Broadcast)
+	router.HandleFunc("/broadcast", s.Broadcast)
 
 	// Swagger
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)

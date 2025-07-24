@@ -65,7 +65,7 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		lobbyCode := claims["lobbyCode"].(string)
 		playerName := claims["playerName"].(string)
-		log.Println("Player connected: ", playerName, "to lobby: ", lobbyCode)
+		log.Printf("Player %s connected to lobby %s", playerName, lobbyCode)
 		s.playerClient[playerName] = channelID
 		if s.lobbyClients[lobbyCode] == nil {
 			s.lobbyClients[lobbyCode] = make(map[int]bool)
@@ -98,7 +98,8 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (b *Broker) Publish(msg Message) {
+func (s *APIServer) Publish(msg Message) {
+	b := s.broker
 	data, err := json.Marshal(msg.Data)
 	if err != nil {
 		log.Printf("unable to marshal: %s", err.Error())
@@ -135,7 +136,7 @@ func (s *APIServer) PublishToPlayer(playerName string, msg Message) {
 	b.ClientChannels[channelID] <- data
 }
 
-func (b *Broker) Broadcast(w http.ResponseWriter, r *http.Request) {
+func (s *APIServer) Broadcast(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -146,6 +147,6 @@ func (b *Broker) Broadcast(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return
 	}
-	b.Publish(m)
+	s.Publish(m)
 	w.Write([]byte("Msg sent\n"))
 }

@@ -173,6 +173,7 @@ func (mt *MyTimer) Start(s *APIServer, lobbyCode string) error {
 			case t := <-ticker.C:
 				elapsed := t.Sub(now)
 				secondsLeft := int((total_duration - elapsed).Seconds())
+				s.Publish(Message{Data: "TICK"})
 				log.Printf("Timer %s: %ds left\n", lobbyCode, secondsLeft)
 				switch {
 				case elapsed >= quarter_duration && elapsed <= quarter_duration:

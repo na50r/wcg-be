@@ -279,7 +279,7 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		delete(s.lobbyClients, lobbyCode)
 		delete(s.games, lobbyCode)
 		s.PublishToLobby(lobbyCode, Message{Data: "GAME_DELETED"})
-		s.broker.Publish(Message{Data: "LOBBY_DELETED"})
+		s.Publish(Message{Data: "LOBBY_DELETED"})
 	}
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Logout successful"})
 }
