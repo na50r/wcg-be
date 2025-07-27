@@ -62,6 +62,7 @@ func (s *SQLiteStore) createPlayerTable() error {
 		is_owner boolean,
 		has_account boolean,
 		target_word text,
+		points integer,
 		primary key (name, lobby_code)
 		)`
 	_, err := s.db.Exec(query)
@@ -162,8 +163,8 @@ func (s *SQLiteStore) CreateAccount(acc *Account) error {
 
 func (s *SQLiteStore) CreatePlayer(player *Player) error {
 	query := `insert into player 
-	(name, lobby_code, image_name, is_owner, has_account, target_word)
-	values (?, ?, ?, ?, ?, ?)`
+	(name, lobby_code, image_name, is_owner, has_account, target_word, points)
+	values (?, ?, ?, ?, ?, ?, ?)`
 	_, err := s.db.Exec(
 		query,
 		player.Name,
@@ -172,6 +173,7 @@ func (s *SQLiteStore) CreatePlayer(player *Player) error {
 		player.IsOwner,
 		player.HasAccount,
 		player.TargetWord,
+		player.Points,
 	)
 	if err != nil {
 		return err
@@ -510,7 +512,7 @@ func (s *SQLiteStore) NewGame(lobbyCode string, gameMode string, withTimer bool,
 	}
 	if gameMode == "Fusion Frenzy" {
 		var err error
-		game.TargetWord, err = s.GetTargetWord(0.0125, 0.0625, 10)
+		game.TargetWord, err = s.GetTargetWord(0.4, 10, 10)
 		if err != nil {
 			return nil, err
 		}
@@ -518,7 +520,7 @@ func (s *SQLiteStore) NewGame(lobbyCode string, gameMode string, withTimer bool,
 	}
 	if gameMode == "Wombo Combo" {
 		var err error
-		game.TargetWords, err = s.GetTargetWords(0.0625, 0.075, 10)
+		game.TargetWords, err = s.GetTargetWords(0.4, 10, 10)
 		if err != nil {
 			return nil, err
 		}
@@ -535,6 +537,15 @@ func (s *SQLiteStore) AddPlayerWord(playerName, word, lobbyCode string) error {
 		lobbyCode,
 	)
 	return err
+}
+
+func (s *SQLiteStore) IsPlayerWord(playerName, word, lobbyCode string) (bool, error) {
+	var count int
+	err := s.db.QueryRow("select count(*) from player_word where player_name = ? and word = ? and lobby_code = ?", playerName, word, lobbyCode).Scan(&count)
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
 }
 
 func (s *SQLiteStore) SetPlayerTargetWord(playerName, targetWord, lobbyCode string) error {
@@ -662,4 +673,9 @@ func (s *SQLiteStore) UpdateAccountWinsAndLosses(lobbyCode, winner string) error
 		}
 	}
 	return nil
+}
+
+func (s *SQLiteStore) IncrementPlayerPoints(playerName, lobbyCode string, points int) error {
+	_, err := s.db.Exec("update player set points = points + ? where name = ? and lobby_code = ?", points, playerName, lobbyCode)
+	return err
 }

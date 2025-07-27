@@ -78,6 +78,7 @@ func (s *APIServer) Run() {
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/game", withLobbyAuth(makeHTTPHandleFunc(s.handleGame)))
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/combinations", withLobbyAuth(makeHTTPHandleFunc(s.handleCombination)))
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/words", withLobbyAuth(makeHTTPHandleFunc(s.handleGetWords)))
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/end", withLobbyAuth(makeHTTPHandleFunc(s.handleManualGameEnd)))
 
 	// Events
 	router.HandleFunc("/events", s.SSEHandler)

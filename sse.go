@@ -55,17 +55,19 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-
+	var lobbyCode string
+	var playerName string
 	channelID := b.CreateChannel()
 	channel := b.ClientChannels[channelID]
+	log.Printf("Channel address: %p (id: %d)", channel, channelID)
 	if tokenExists {
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
 			return
 		}
-		lobbyCode := claims["lobbyCode"].(string)
-		playerName := claims["playerName"].(string)
-		log.Printf("Player %s connected to lobby %s", playerName, lobbyCode)
+		lobbyCode = claims["lobbyCode"].(string)
+		playerName = claims["playerName"].(string)
+		log.Printf("Player %s connected to lobby %s (channel: %d)", playerName, lobbyCode, channelID)
 		s.playerClient[playerName] = channelID
 		if s.lobbyClients[lobbyCode] == nil {
 			s.lobbyClients[lobbyCode] = make(map[int]bool)
@@ -73,11 +75,7 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 		s.lobbyClients[lobbyCode][channelID] = true
 	}
 
-	fmt.Printf("client connected (id=%d), total clients: %d\n", channelID, len(b.ClientChannels))
-
-	defer func() {
-		delete(b.ClientChannels, channelID)
-	}()
+	log.Printf("client connected (id=%d), total clients: %d\n", channelID, len(b.ClientChannels))
 
 	clientGone := r.Context().Done()
 
@@ -86,14 +84,25 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 	for {
 		select {
 		case <-clientGone:
-			fmt.Printf("client has disconnected (id=%d), total clients: %d\n", channelID, len(b.ClientChannels))
+			delete(b.ClientChannels, channelID)
+			log.Printf("client has disconnected (id=%d), total clients: %d\n", channelID, len(b.ClientChannels))
+			close(channel)
+			if tokenExists {
+				delete(s.lobbyClients[lobbyCode], channelID)
+			}
 			return
 		case data := <-channel:
-			if _, err := fmt.Fprintf(w, "event:msg\ndata:%s\n\n", data); err != nil {
+			written, err := fmt.Fprintf(w, "event:msg\ndata:%s\n\n", data) 
+			log.Printf("written %d bytes", written)
+			if err != nil {
 				log.Printf("unable to write: %s", err.Error())
 				return
 			}
-			rc.Flush()
+			err = rc.Flush()
+			if err != nil {
+				log.Printf("unable to flush: %s", err.Error())
+				return
+			}
 		}
 	}
 }
@@ -107,7 +116,8 @@ func (s *APIServer) Publish(msg Message) {
 	}
 	// Publish to all channels
 	// NOTE: Not concurrent
-	for _, channel := range b.ClientChannels {
+	for key, channel := range b.ClientChannels {
+		log.Printf("Channel value: %p (key: %d)", channel, key)
 		channel <- data
 	}
 }

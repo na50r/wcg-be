@@ -123,17 +123,52 @@ func (g *Game) SetTarget() (string, error) {
 	return "", fmt.Errorf("game mode %s not found", g.GameMode)
 }
 
-// End game if target word is reached (for Wombo Combo and Fusion Frenzy)
-// If Game is Vanilla, Game End has to be triggered manually
-func (g *Game) EndGame(targetWord, result string) bool {
-	if g.GameMode == "Wombo Combo" || g.GameMode == "Fusion Frenzy" {
-		return targetWord == result
+func ProcessMove(server *APIServer, game *Game, player *Player, result string) (error) {
+	if game.GameMode == "Fusion Frenzy" && player.TargetWord == result {
+			game.StopTimer()
+			game.Winner = player.Name
+			if err := server.store.UpdateAccountWinsAndLosses(game.LobbyCode, player.Name); err != nil {
+				return err
+			}
+			server.PublishToLobby(game.LobbyCode, Message{Data: "GAME_OVER"})
+			server.PublishToLobby(game.LobbyCode, Message{Data: "ACCOUNT_UPDATE"})
+			return nil
+		}
+	if game.GameMode == "Wombo Combo" && player.TargetWord == result {
+		var newTargetWord string
+		var err error
+		for {
+			newTargetWord, err = game.SetTarget()
+			if err != nil {
+				return err
+			}
+			if newTargetWord != player.TargetWord {
+				break
+			}
+		}
+		log.Printf("Player %s reached target word %s, new target word is %s", player.Name, player.TargetWord, newTargetWord)
+		if err := server.store.SetPlayerTargetWord(player.Name, newTargetWord, game.LobbyCode); err != nil {
+			return err
+		}
+		if err := server.store.IncrementPlayerPoints(player.Name, game.LobbyCode, 10); err != nil {
+			return err
+		}
+		server.PublishToLobby(game.LobbyCode, Message{Data: "WOMBO_COMBO"})
 	}
-	if g.GameMode == "Vanilla" {
-		return false
+	isPlayerWord, err := server.store.IsPlayerWord(player.Name, result, game.LobbyCode)
+	if err != nil {
+		return err
 	}
-	return false
-}
+	if isPlayerWord {
+		if err := server.store.IncrementPlayerPoints(player.Name, game.LobbyCode, 1); err != nil {
+			return err
+		}
+	}
+	if err := server.store.AddPlayerWord(player.Name, result, game.LobbyCode); err != nil {
+		return err
+	}
+	return nil
+	}
 
 func (g *Game) StartTimer(s *APIServer) {
 	if g.WithTimer {
@@ -173,7 +208,6 @@ func (mt *MyTimer) Start(s *APIServer, lobbyCode string) error {
 			case t := <-ticker.C:
 				elapsed := t.Sub(now)
 				secondsLeft := int((total_duration - elapsed).Seconds())
-				s.Publish(Message{Data: "TICK"})
 				log.Printf("Timer %s: %ds left\n", lobbyCode, secondsLeft)
 				switch {
 				case elapsed >= quarter_duration && elapsed <= quarter_duration:

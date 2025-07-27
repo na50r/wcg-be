@@ -4,8 +4,9 @@ import (
 	"net/http"
 	"time"
 
-	"golang.org/x/crypto/bcrypt"
 	"context"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type APIFunc func(http.ResponseWriter, *http.Request) error
@@ -43,13 +44,13 @@ type LoginResponse struct {
 }
 
 type AccountDTO struct {
-	Username  string `json:"username"` 	// Username of the account
-	Wins      int    `json:"wins"` 		// Number of wins
-	Losses    int    `json:"losses"`	// Number of losses
-	ImageName string `json:"imageName"`	// Name of the user's profile image
-	Image     []byte `json:"image"`		// Base64-encoded image
-	CreatedAt string `json:"createdAt"`	// ISO8601 creation timestamp
-	Status    string `json:"status"`	// ONLINE or OFFLINE
+	Username  string `json:"username"`  // Username of the account
+	Wins      int    `json:"wins"`      // Number of wins
+	Losses    int    `json:"losses"`    // Number of losses
+	ImageName string `json:"imageName"` // Name of the user's profile image
+	Image     []byte `json:"image"`     // Base64-encoded image
+	CreatedAt string `json:"createdAt"` // ISO8601 creation timestamp
+	Status    string `json:"status"`    // ONLINE or OFFLINE
 }
 
 type CreateLobbyRequest struct {
@@ -73,6 +74,7 @@ type Player struct {
 	IsOwner    bool   `json:"isOwner"`
 	HasAccount bool   `json:"hasAccount"`
 	TargetWord string `json:"targetWord"`
+	Points     int    `json:"points"`
 }
 
 type Lobby struct {
@@ -144,13 +146,13 @@ type GameModeChangeEvent struct {
 }
 
 type Game struct {
-	GameMode   string `json:"gameMode"`
-	LobbyCode  string `json:"lobbyCode"`
-	TargetWord string `json:"targetWord"`
+	GameMode    string   `json:"gameMode"`
+	LobbyCode   string   `json:"lobbyCode"`
+	TargetWord  string   `json:"targetWord"`
 	TargetWords []string `json:"targetWords"`
-	Winner     string `json:"winner"`
-	WithTimer  bool   `json:"withTimer"`
-	Timer      *MyTimer `json:"timer"`
+	Winner      string   `json:"winner"`
+	WithTimer   bool     `json:"withTimer"`
+	Timer       *MyTimer `json:"timer"`
 }
 
 type Combination struct {
@@ -161,8 +163,8 @@ type Combination struct {
 }
 
 type Word struct {
-	Word      string  `json:"word"`
-	Depth     int     `json:"depth"`
+	Word         string  `json:"word"`
+	Depth        int     `json:"depth"`
 	Reachability float64 `json:"reachability"`
 }
 
@@ -176,14 +178,14 @@ type WordResponse struct {
 }
 
 type Words struct {
-	Words []string `json:"words"`
-	TargetWord string `json:"targetWord"`
+	Words      []string `json:"words"`
+	TargetWord string   `json:"targetWord"`
 }
 
 type StartGameRequest struct {
-	GameMode string `json:"gameMode"`
-	WithTimer bool `json:"withTimer"`
-	Duration int `json:"duration"`
+	GameMode  string `json:"gameMode"`
+	WithTimer bool   `json:"withTimer"`
+	Duration  int    `json:"duration"`
 }
 
 type PlayerWord struct {
@@ -198,15 +200,16 @@ type PlayerWordCount struct {
 	WordCount  int    `json:"wordCount"`
 }
 
-type PlayerWordDTO struct {
+type PlayerResultDTO struct {
 	PlayerName string `json:"playerName"`
-	Image        []byte `json:"image"`
+	Image      []byte `json:"image"`
 	WordCount  int    `json:"wordCount"`
+	Points     int    `json:"points"`
 }
 
 type GameEndResponse struct {
-	Winner string `json:"winner"`
-	PlayerWords []*PlayerWordDTO `json:"playerWords"`
+	Winner      string             `json:"winner"`
+	PlayerWords []*PlayerResultDTO `json:"playerResults"`
 }
 
 type MyTimer struct {
@@ -215,7 +218,7 @@ type MyTimer struct {
 }
 type TimeEvent struct {
 	Type        string `json:"type"`
-	SecondsLeft int `json:"secondsLeft"`
+	SecondsLeft int    `json:"secondsLeft"`
 }
 
 func NewTimeEvent(s int) *TimeEvent {
@@ -277,7 +280,6 @@ func NewLobbyDTO(lobby *Lobby, owner string, players []*PlayerDTO) *LobbyDTO {
 		GameModes: GameModes(),
 	}
 }
-
 
 func NewTimer(durationMinutes int) *MyTimer {
 	return &MyTimer{durationMinutes: durationMinutes}
