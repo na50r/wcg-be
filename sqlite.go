@@ -20,6 +20,10 @@ func NewSQLiteStore() (*SQLiteStore, error) {
 		return nil, err
 	}
 
+	_, err = db.Exec("PRAGMA journal_mode = WAL")
+	if err != nil {
+		return nil, err
+	}
 	// Release lock in 5 seconds
 	// Reference: https://stackoverflow.com/questions/66909180/increase-the-lock-timeout-with-sqlite-and-what-is-the-default-values
 	_, err = db.Exec("PRAGMA busy_timeout = 5000")
@@ -39,7 +43,8 @@ func (s *SQLiteStore) createAccountTable() error {
 		wins integer,
 		losses integer,
 		created_at datetime,
-		status text
+		status text,
+		is_owner boolean
 		)`
 	_, err := s.db.Exec(query)
 	return err
@@ -143,8 +148,8 @@ func (s *SQLiteStore) Init() error {
 
 func (s *SQLiteStore) CreateAccount(acc *Account) error {
 	query := `insert into account 
-	(username, image_name, password, wins, losses, created_at, status)
-	values (?, ?, ?, ?, ?, ?,?)`
+	(username, image_name, password, wins, losses, created_at, status, is_owner)
+	values (?, ?, ?, ?, ?, ?, ?, ?)`
 	_, err := s.db.Exec(
 		query,
 		acc.Username,
@@ -154,6 +159,7 @@ func (s *SQLiteStore) CreateAccount(acc *Account) error {
 		acc.Losses,
 		acc.CreatedAt,
 		acc.Status,
+		acc.IsOwner,
 	)
 	if err != nil {
 		return err
@@ -222,6 +228,7 @@ func (s *SQLiteStore) GetPlayersByLobbyCode(lobbyCode string) ([]*Player, error)
 		return nil, err
 	}
 	players := []*Player{}
+	defer rows.Close()
 	for rows.Next() {
 		player, err := scanIntoPlayer(rows)
 		if err != nil {
@@ -299,6 +306,7 @@ func (s *SQLiteStore) GetImages() ([]*Image, error) {
 		return nil, err
 	}
 	images := []*Image{}
+	defer rows.Close()
 	for rows.Next() {
 		img, err := scanIntoImage(rows)
 		if err != nil {
@@ -334,6 +342,7 @@ func (s *SQLiteStore) GetOwners() ([]*Player, error) {
 		return nil, err
 	}
 	owners := []*Player{}
+	defer rows.Close()
 	for rows.Next() {
 		owner, err := scanIntoPlayer(rows)
 		if err != nil {
@@ -350,6 +359,7 @@ func (s *SQLiteStore) GetLobbyForOwner(owner string) (string, error) {
 		return "", err
 	}
 	var lobbyCode string
+	defer rows.Close()
 	for rows.Next() {
 		defer rows.Close()
 		err := rows.Scan(&lobbyCode)
@@ -369,13 +379,14 @@ func (s *SQLiteStore) DeletePlayersForLobby(lobbyCode string) error {
 
 func (s *SQLiteStore) AddPlayerToLobby(lobbyCode string, player *Player) error {
 	_, err := s.db.Exec(
-		"insert into player (name, lobby_code, image_name, is_owner, has_account, target_word) values (?, ?, ?, ?, ?, ?)",
+		"insert into player (name, lobby_code, image_name, is_owner, has_account, target_word, points) values (?, ?, ?, ?, ?, ?, ?)",
 		player.Name,
 		lobbyCode,
 		player.ImageName,
 		player.IsOwner,
 		player.HasAccount,
 		player.TargetWord,
+		player.Points,
 	)
 	log.Printf("insert error: %v", err)
 	if err != nil {
@@ -386,7 +397,7 @@ func (s *SQLiteStore) AddPlayerToLobby(lobbyCode string, player *Player) error {
 }
 
 func (s *SQLiteStore) IncrementPlayerCount(lobbyCode string, increment int) error {
-	_, err := s.db.Exec("update lobby set player_count = player_count + ? where lobby_code = ?", lobbyCode, increment)
+	_, err := s.db.Exec("update lobby set player_count = player_count + ? where lobby_code = ?", increment, lobbyCode)
 	return err
 }
 
@@ -396,6 +407,7 @@ func (s *SQLiteStore) GetLobbies() ([]*Lobby, error) {
 		return nil, err
 	}
 	lobbies := []*Lobby{}
+	defer rows.Close()
 	for rows.Next() {
 		lobby, err := scanIntoLobby(rows)
 		if err != nil {
@@ -481,6 +493,7 @@ func (s *SQLiteStore) GetTargetWords(minReachability, maxReachability float64, m
 		return nil, err
 	}
 	targetWords := []string{}
+	defer rows.Close()
 	for rows.Next() {
 		word, err := scanIntoWord(rows)
 		if err != nil {
@@ -594,6 +607,7 @@ func (s *SQLiteStore) GetPlayerWords(playerName, lobbyCode string) ([]string, er
 		return nil, err
 	}
 	words := []string{}
+	defer rows.Close()
 	for rows.Next() {
 		playerWord, err := scanIntoPlayerWord(rows)
 		if err != nil {
@@ -627,6 +641,7 @@ func (s *SQLiteStore) GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCo
 		return nil, err
 	}
 	wordCounts := []*PlayerWordCount{}
+	defer rows.Close()
 	for rows.Next() {
 		wordCount, err := scanIntoPlayerWordCount(rows)
 		if err != nil {
@@ -643,6 +658,7 @@ func (s *SQLiteStore) GetPlayersWithAccount(lobbyCode string) ([]*Account, error
 		return nil, err
 	}
 	accounts := []*Account{}
+	defer rows.Close()
 	for rows.Next() {
 		player, err := scanIntoPlayer(rows)
 		if err != nil {
@@ -678,4 +694,39 @@ func (s *SQLiteStore) UpdateAccountWinsAndLosses(lobbyCode, winner string) error
 func (s *SQLiteStore) IncrementPlayerPoints(playerName, lobbyCode string, points int) error {
 	_, err := s.db.Exec("update player set points = points + ? where name = ? and lobby_code = ?", points, playerName, lobbyCode)
 	return err
+}
+
+func (s *SQLiteStore) SetIsOwner(username string, setOwner bool) error {
+	if !setOwner {
+		_, err := s.db.Exec("update account set is_owner = ? where username = ?", setOwner, username)
+		return err
+	}
+
+	var isOwner bool
+	err := s.db.QueryRow("select is_owner from account where username = ?", username).Scan(&isOwner)
+	if err != nil {
+		return err
+	}
+	if isOwner {
+		return fmt.Errorf("user is already owner!")
+	}
+	_, err = s.db.Exec("update account set is_owner = ? where username = ?", setOwner, username)
+	return err
+}
+
+func (s *SQLiteStore) SelectWinnerByPoints(lobbyCode string) (string, error) {
+	rows, err := s.db.Query("select name from player where lobby_code = ? order by points desc", lobbyCode)
+	if err != nil {
+		return "", err
+	}
+	var winner string
+	defer rows.Close()
+	for rows.Next() {
+		err := rows.Scan(&winner)
+		if err != nil {
+			return "", err
+		}
+		return winner, nil
+	}
+	return "", nil
 }

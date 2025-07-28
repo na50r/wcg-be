@@ -1,6 +1,7 @@
 .env
 icons/
 store.db
+store.db*
 bin/
 recipes.csv
 Combinations.csv

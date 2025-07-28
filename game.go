@@ -53,15 +53,15 @@ func (s *APIServer) handleDeleteGame(w http.ResponseWriter, r *http.Request) err
 	if err != nil {
 		return err
 	}
-	game := s.games[lobbyCode]
-	if game != nil {
+	if game, ok := s.games[lobbyCode]; ok {
 		game.StopTimer()
+		delete(s.games, lobbyCode)
 	}
-	delete(s.games, lobbyCode)
 	if err := s.store.DeletePlayerWordsByLobbyCode(lobbyCode); err != nil {
+		log.Printf("Error deleting player words before returning to lobby: %v", err)
 		return err
 	}
-	s.PublishToLobby(lobbyCode, Message{Data: "GAME_DELETED"})
+	s.PublishToLobby(lobbyCode, Message{Data: GAME_DELETED})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game deleted"})
 }
 
@@ -139,6 +139,10 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 		return err
 	}
 	s.games[lobbyCode] = game
+	if err := s.store.DeletePlayerWordsByLobbyCode(lobbyCode); err != nil {
+		log.Printf("Error deleting player words before game start: %v", err)
+		return err
+	}
 	if err := s.store.SeedPlayerWords(lobbyCode, game); err != nil {
 		return err
 	}
@@ -146,7 +150,7 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 	log.Printf("Game mode: %s", game.GameMode)
 	log.Printf("Timer: %v", game.WithTimer)
 	log.Println("Target words: ", game.TargetWords)
-	s.PublishToLobby(lobbyCode, Message{Data: "GAME_STARTED"})
+	s.PublishToLobby(lobbyCode, Message{Data: GAME_STARTED})
 	game.StartTimer(s)
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game started"})
 }
@@ -231,10 +235,19 @@ func (s *APIServer) handleGetGameStats(w http.ResponseWriter, r *http.Request) e
 		}
 		playerWordsDTO = append(playerWordsDTO, &PlayerResultDTO{PlayerName: player.Name, Image: img, WordCount: playerWordCount.WordCount, Points: player.Points})
 	}
-	return WriteJSON(w, http.StatusOK, GameEndResponse{Winner: winner, PlayerWords: playerWordsDTO})
+	return WriteJSON(w, http.StatusOK, GameEndResponse{Winner: winner, PlayerWords: playerWordsDTO, GameMode: s.games[lobbyCode].GameMode})
 }
 
-
+// handleManualGameEnd godoc
+// @Summary End a game (owner)
+// @Description End a game
+// @Tags game
+// @Accept json
+// @Produce json
+// @Success 200 {object} GenericResponse
+// @Failure 400 {object} APIError
+// @Failure 405 {object} APIError
+// @Router /games/{lobbyCode}/{playerName}/end [post]
 func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
@@ -264,6 +277,15 @@ func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) 
 		return fmt.Errorf("game not found")
 	}
 	game.StopTimer()
-	s.PublishToLobby(lobbyCode, Message{Data: "GAME_OVER"})
+	winner, err := s.store.SelectWinnerByPoints(lobbyCode)
+	if err != nil {
+		return err
+	}
+	if err := s.store.UpdateAccountWinsAndLosses(lobbyCode, winner); err != nil {
+		return err
+	}
+	s.PublishToLobby(lobbyCode, Message{Data: ACCOUNT_UPDATE})
+	game.Winner = winner
+	s.PublishToLobby(lobbyCode, Message{Data: GAME_OVER})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game ended"})
 }

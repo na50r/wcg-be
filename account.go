@@ -210,7 +210,7 @@ func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	acc.Status = "ONLINE"
+	acc.Status = ONLINE
 	if err := s.store.UpdateAccount(acc); err != nil {
 		return err
 	}
@@ -249,10 +249,10 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	if acc.Status == "OFFLINE" {
+	if acc.Status == OFFLINE {
 		return WriteJSON(w, http.StatusBadRequest, APIError{Error: "Already logged out"})
 	}
-	acc.Status = "OFFLINE"
+	acc.Status = OFFLINE
 	if err := s.store.UpdateAccount(acc); err != nil {
 		return err
 	}
@@ -276,10 +276,14 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		if err := s.store.DeletePlayerWordsByLobbyCode(lobbyCode); err != nil {
 			return err
 		}
+		err = s.store.SetIsOwner(username, false)
+		if err != nil {
+			return err
+		}
 		delete(s.lobbyClients, lobbyCode)
 		delete(s.games, lobbyCode)
-		s.PublishToLobby(lobbyCode, Message{Data: "GAME_DELETED"})
-		s.Publish(Message{Data: "LOBBY_DELETED"})
+		s.PublishToLobby(lobbyCode, Message{Data: GAME_DELETED})
+		s.Publish(Message{Data: LOBBY_DELETED})
 	}
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Logout successful"})
 }

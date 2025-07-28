@@ -13,6 +13,7 @@ import (
 	"math/rand"
 
 	"context"
+
 	jwt "github.com/golang-jwt/jwt"
 )
 
@@ -123,17 +124,17 @@ func (g *Game) SetTarget() (string, error) {
 	return "", fmt.Errorf("game mode %s not found", g.GameMode)
 }
 
-func ProcessMove(server *APIServer, game *Game, player *Player, result string) (error) {
+func ProcessMove(server *APIServer, game *Game, player *Player, result string) error {
 	if game.GameMode == "Fusion Frenzy" && player.TargetWord == result {
-			game.StopTimer()
-			game.Winner = player.Name
-			if err := server.store.UpdateAccountWinsAndLosses(game.LobbyCode, player.Name); err != nil {
-				return err
-			}
-			server.PublishToLobby(game.LobbyCode, Message{Data: "GAME_OVER"})
-			server.PublishToLobby(game.LobbyCode, Message{Data: "ACCOUNT_UPDATE"})
-			return nil
+		game.StopTimer()
+		game.Winner = player.Name
+		if err := server.store.UpdateAccountWinsAndLosses(game.LobbyCode, player.Name); err != nil {
+			return err
 		}
+		server.PublishToLobby(game.LobbyCode, Message{Data: "GAME_OVER"})
+		server.PublishToLobby(game.LobbyCode, Message{Data: "ACCOUNT_UPDATE"})
+		return nil
+	}
 	if game.GameMode == "Wombo Combo" && player.TargetWord == result {
 		var newTargetWord string
 		var err error
@@ -168,11 +169,11 @@ func ProcessMove(server *APIServer, game *Game, player *Player, result string) (
 		return err
 	}
 	return nil
-	}
+}
 
 func (g *Game) StartTimer(s *APIServer) {
 	if g.WithTimer {
-		g.Timer.Start(s, g.LobbyCode)
+		g.Timer.Start(s, g.LobbyCode, g)
 	}
 }
 
@@ -182,7 +183,7 @@ func (g *Game) StopTimer() {
 	}
 }
 
-func (mt *MyTimer) Start(s *APIServer, lobbyCode string) error {
+func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
 	if mt.durationMinutes == 0 {
 		return nil
 	}
@@ -197,30 +198,42 @@ func (mt *MyTimer) Start(s *APIServer, lobbyCode string) error {
 	quarter_duration := half_duration / 2
 	three_quarter_duration := half_duration + quarter_duration
 	now := time.Now()
+
+	publishTimeEvent := func (secondsLeft int) {
+		s.PublishToLobby(lobbyCode, Message{Data: TimeEvent{SecondsLeft: secondsLeft}})
+	}
+
 	go func() {
 		defer ticker.Stop()
 		for {
 			select {
 			case <-ctx.Done():
-				s.PublishToLobby(lobbyCode, Message{Data: "TIMER_STOPPED"})
+				s.PublishToLobby(lobbyCode, Message{Data: TIMER_STOPPED})
 				log.Printf("Timer %s stopped\n", lobbyCode)
 				return
 			case t := <-ticker.C:
 				elapsed := t.Sub(now)
 				secondsLeft := int((total_duration - elapsed).Seconds())
 				log.Printf("Timer %s: %ds left\n", lobbyCode, secondsLeft)
-				switch {
-				case elapsed >= quarter_duration && elapsed <= quarter_duration:
-					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(secondsLeft)})
-				case elapsed >= half_duration && elapsed <= half_duration:
-					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(secondsLeft)})
-				case elapsed >= three_quarter_duration && elapsed <= three_quarter_duration:
-					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(secondsLeft)})
-				case elapsed >= total_duration-10*time.Second && elapsed <= total_duration:
-					s.PublishToLobby(lobbyCode, Message{Data: NewTimeEvent(secondsLeft)})
-				case elapsed >= total_duration:
-					s.PublishToLobby(lobbyCode, Message{Data: "GAME_OVER"})
+				switch elapsed {
+				case quarter_duration:
+					publishTimeEvent(secondsLeft)
+				case half_duration:
+					publishTimeEvent(secondsLeft)
+				case three_quarter_duration:
+					publishTimeEvent(secondsLeft)
+				case total_duration:
+					s.PublishToLobby(lobbyCode, Message{Data: GAME_OVER})
+					var err error
+					game.Winner, err = s.store.SelectWinnerByPoints(lobbyCode)
+					if err != nil {
+						log.Printf("Error selecting winner: %v", err)
+					}
 					return
+				default:
+					if secondsLeft <= 10 {
+					publishTimeEvent(secondsLeft)
+					}
 				}
 			}
 		}
@@ -228,6 +241,6 @@ func (mt *MyTimer) Start(s *APIServer, lobbyCode string) error {
 	return nil
 }
 
-func (mt *MyTimer) Stop() {
+func (mt *Timer) Stop() {
 	mt.cancelFunc()
 }

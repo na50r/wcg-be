@@ -41,6 +41,8 @@ type Storage interface {
 	GetPlayerTargetWord(playerName, lobbyCode string) (string, error)
 	IsPlayerWord(playerName, word, lobbyCode string) (bool, error)
 	IncrementPlayerPoints(playerName, lobbyCode string, points int) error
+	SetIsOwner(username string, setOwner bool) error
+	SelectWinnerByPoints(lobbyCode string) (string, error)
 }
 
 // Convert SQL rows into an defined Go types
@@ -54,6 +56,7 @@ func scanIntoAccount(rows *sql.Rows) (*Account, error) {
 		&acc.Losses,
 		&acc.CreatedAt,
 		&acc.Status,
+		&acc.IsOwner,
 	)
 	return acc, err
 }

@@ -26,7 +26,8 @@ type Account struct {
 	Losses    int    `json:"losses"`
 	ImageName string `json:"imageName"`
 	CreatedAt string `json:"createdAt"`
-	Status    string `json:"status"`
+	Status    Status `json:"status"`
+	IsOwner   bool   `json:"isOwner"`
 }
 
 type RegisterRequest struct {
@@ -50,7 +51,7 @@ type AccountDTO struct {
 	ImageName string `json:"imageName"` // Name of the user's profile image
 	Image     []byte `json:"image"`     // Base64-encoded image
 	CreatedAt string `json:"createdAt"` // ISO8601 creation timestamp
-	Status    string `json:"status"`    // ONLINE or OFFLINE
+	Status    Status `json:"status"`    // ONLINE or OFFLINE
 }
 
 type CreateLobbyRequest struct {
@@ -96,7 +97,7 @@ type LobbyDTO struct {
 	GameMode  string       `json:"gameMode"`
 	Owner     string       `json:"owner"`
 	Players   []*PlayerDTO `json:"players"`
-	GameModes []string     `json:"gameModes"`
+	GameModes []GameMode   `json:"gameModes"`
 }
 
 type LobbiesDTO struct {
@@ -137,12 +138,14 @@ type JoinLobbyRequest struct {
 	LobbyCode  string `json:"lobbyCode"`
 }
 
-type ChangeGameModeRequest struct {
+type EditGameRequest struct {
 	GameMode string `json:"gameMode"`
+	Duration int    `json:"duration"`
 }
 
-type GameModeChangeEvent struct {
+type GameEditEvent struct {
 	GameMode string `json:"gameMode"`
+	Duration int    `json:"duration"`
 }
 
 type Game struct {
@@ -152,7 +155,7 @@ type Game struct {
 	TargetWords []string `json:"targetWords"`
 	Winner      string   `json:"winner"`
 	WithTimer   bool     `json:"withTimer"`
-	Timer       *MyTimer `json:"timer"`
+	Timer       *Timer   `json:"timer"`
 }
 
 type Combination struct {
@@ -208,24 +211,17 @@ type PlayerResultDTO struct {
 }
 
 type GameEndResponse struct {
+	GameMode    string             `json:"gameMode"`
 	Winner      string             `json:"winner"`
 	PlayerWords []*PlayerResultDTO `json:"playerResults"`
 }
 
-type MyTimer struct {
+type Timer struct {
 	durationMinutes int
 	cancelFunc      context.CancelFunc
 }
 type TimeEvent struct {
-	Type        string `json:"type"`
-	SecondsLeft int    `json:"secondsLeft"`
-}
-
-func NewTimeEvent(s int) *TimeEvent {
-	return &TimeEvent{
-		Type:        "TIME_EVENT",
-		SecondsLeft: s,
-	}
+	SecondsLeft int `json:"secondsLeft"`
 }
 
 func NewAccount(username, password string) (*Account, error) {
@@ -241,7 +237,8 @@ func NewAccount(username, password string) (*Account, error) {
 		Losses:    0,
 		ImageName: imageName,
 		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
-		Status:    "OFFLINE",
+		Status:    OFFLINE,
+		IsOwner:   false,
 	}, nil
 }
 
@@ -253,11 +250,12 @@ func NewPlayer(name, lobbyCode, imageName string, isOwner, hasAccount bool) *Pla
 		IsOwner:    isOwner,
 		HasAccount: hasAccount,
 		TargetWord: "",
+		Points:     0,
 	}
 }
 
-func GameModes() []string {
-	return []string{"Vanilla", "Wombo Combo", "Fusion Frenzy"}
+func NewGameModes() []GameMode {
+	return []GameMode{VANILLA, WOMBO_COMBO, FUSION_FRENZY}
 }
 
 func NewLobby(name, lobbyCode, imageName string) *Lobby {
@@ -277,10 +275,10 @@ func NewLobbyDTO(lobby *Lobby, owner string, players []*PlayerDTO) *LobbyDTO {
 		GameMode:  lobby.GameMode,
 		Owner:     owner,
 		Players:   players,
-		GameModes: GameModes(),
+		GameModes: NewGameModes(),
 	}
 }
 
-func NewTimer(durationMinutes int) *MyTimer {
-	return &MyTimer{durationMinutes: durationMinutes}
+func NewTimer(durationMinutes int) *Timer {
+	return &Timer{durationMinutes: durationMinutes}
 }
