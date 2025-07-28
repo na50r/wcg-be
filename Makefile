@@ -10,3 +10,12 @@ seed:
 
 run: build
 	@./bin/wc
+
+docker-build:
+	@docker build -t wc-be .
+
+docker-run:
+	@docker run --rm -p 3030:3030 -e CLIENT="http://localhost:5173" wc-be
+
+docker-seed:
+	@docker run --rm -p 3030:3030 -e CLIENT="http://localhost:5173" -e JWT_SECRET="secret" wc-be ./wombo-combo-go-be --seed=true 

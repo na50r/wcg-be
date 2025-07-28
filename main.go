@@ -14,14 +14,15 @@ package main
 // Because of Current, use securityDefinitions.apikey rather than securityDefinitions.bearer
 // https://swagger.io/docs/specification/v3_0/authentication/api-keys/
 import (
+	"encoding/csv"
+	"flag"
 	"log"
 	"os"
-	"github.com/joho/godotenv"
 	"path/filepath"
-	"strings"
-	"flag"
-	"encoding/csv"
 	"strconv"
+	"strings"
+
+	"github.com/joho/godotenv"
 	_ "github.com/na50r/wombo-combo-go-be/docs"
 )
 
@@ -41,6 +42,21 @@ func init() {
 	ICONS = os.Getenv("ICONS")
 	COMBINATIONS = os.Getenv("COMBINATIONS")
 	WORDS = os.Getenv("WORDS")
+	if JWT_SECRET == "" {
+		log.Fatal("JWT_SECRET not set")
+	}
+	if CLIENT == "" {
+		log.Fatal("CLIENT not set")
+	}
+	if ICONS == "" {
+		log.Fatal("ICONS not set")
+	}
+	if COMBINATIONS == "" {
+		log.Fatal("COMBINATIONS not set")
+	}
+	if WORDS == "" {
+		log.Fatal("WORDS not set")
+	}
 }
 
 func getImageFromFilePath(filePath string) (*Image, error) {
