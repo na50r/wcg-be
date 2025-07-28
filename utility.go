@@ -131,8 +131,8 @@ func ProcessMove(server *APIServer, game *Game, player *Player, result string) e
 		if err := server.store.UpdateAccountWinsAndLosses(game.LobbyCode, player.Name); err != nil {
 			return err
 		}
-		server.PublishToLobby(game.LobbyCode, Message{Data: "GAME_OVER"})
-		server.PublishToLobby(game.LobbyCode, Message{Data: "ACCOUNT_UPDATE"})
+		server.PublishToLobby(game.LobbyCode, Message{Data: GAME_OVER})
+		server.PublishToLobby(game.LobbyCode, Message{Data: ACCOUNT_UPDATE})
 		return nil
 	}
 	if game.GameMode == "Wombo Combo" && player.TargetWord == result {
@@ -154,7 +154,7 @@ func ProcessMove(server *APIServer, game *Game, player *Player, result string) e
 		if err := server.store.IncrementPlayerPoints(player.Name, game.LobbyCode, 10); err != nil {
 			return err
 		}
-		server.PublishToLobby(game.LobbyCode, Message{Data: "WOMBO_COMBO"})
+		server.PublishToLobby(game.LobbyCode, Message{Data: WOMBO_COMBO_EVENT})
 	}
 	isPlayerWord, err := server.store.IsPlayerWord(player.Name, result, game.LobbyCode)
 	if err != nil {

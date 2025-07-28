@@ -264,7 +264,7 @@ func (s *APIServer) handleGetLobbies(w http.ResponseWriter, r *http.Request) err
 // @Tags lobby
 // @Accept json
 // @Produce json
-// @Param game body ChangeGameModeRequest true "Game mode to change to"
+// @Param game body EditGameRequest true "Game mode to change to"
 // @Success 200 {object} GenericResponse
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError
