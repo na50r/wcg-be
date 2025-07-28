@@ -1,0 +1,735 @@
+basePath: /
+definitions:
+  main.APIError:
+    properties:
+      error:
+        type: string
+    type: object
+  main.AccountDTO:
+    properties:
+      createdAt:
+        description: ISO8601 creation timestamp
+        type: string
+      image:
+        description: Base64-encoded image
+        items:
+          type: integer
+        type: array
+      imageName:
+        description: Name of the user's profile image
+        type: string
+      losses:
+        description: Number of losses
+        type: integer
+      status:
+        allOf:
+        - $ref: '#/definitions/main.Status'
+        description: ONLINE or OFFLINE
+      username:
+        description: Username of the account
+        type: string
+      wins:
+        description: Number of wins
+        type: integer
+    type: object
+  main.CreateLobbyRequest:
+    properties:
+      name:
+        type: string
+    type: object
+  main.CreateLobbyResponse:
+    properties:
+      lobby:
+        $ref: '#/definitions/main.LobbyDTO'
+      token:
+        type: string
+    type: object
+  main.EditAccountRequest:
+    properties:
+      imageName:
+        type: string
+      newPassword:
+        type: string
+      oldPassword:
+        type: string
+      type:
+        type: string
+      username:
+        type: string
+    type: object
+  main.EditGameRequest:
+    properties:
+      duration:
+        type: integer
+      gameMode:
+        type: string
+    type: object
+  main.GameEndResponse:
+    properties:
+      gameMode:
+        type: string
+      playerResults:
+        items:
+          $ref: '#/definitions/main.PlayerResultDTO'
+        type: array
+      winner:
+        type: string
+    type: object
+  main.GameMode:
+    enum:
+    - Vanilla
+    - Wombo Combo
+    - Fusion Frenzy
+    type: string
+    x-enum-varnames:
+    - VANILLA
+    - WOMBO_COMBO
+    - FUSION_FRENZY
+  main.GenericResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  main.ImagesResponse:
+    properties:
+      names:
+        items:
+          type: string
+        type: array
+    type: object
+  main.JoinLobbyRequest:
+    properties:
+      lobbyCode:
+        type: string
+      playerName:
+        type: string
+    type: object
+  main.JoinLobbyRespone:
+    properties:
+      lobby:
+        $ref: '#/definitions/main.LobbyDTO'
+      token:
+        type: string
+    type: object
+  main.LobbiesDTO:
+    properties:
+      image:
+        items:
+          type: integer
+        type: array
+      lobbyCode:
+        type: string
+      playerCount:
+        type: integer
+    type: object
+  main.LobbyDTO:
+    properties:
+      gameMode:
+        type: string
+      gameModes:
+        items:
+          $ref: '#/definitions/main.GameMode'
+        type: array
+      lobbyCode:
+        type: string
+      name:
+        type: string
+      owner:
+        type: string
+      players:
+        items:
+          $ref: '#/definitions/main.PlayerDTO'
+        type: array
+    type: object
+  main.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  main.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  main.Message:
+    properties:
+      data: {}
+    type: object
+  main.PlayerDTO:
+    properties:
+      image:
+        items:
+          type: integer
+        type: array
+      name:
+        type: string
+    type: object
+  main.PlayerResultDTO:
+    properties:
+      image:
+        items:
+          type: integer
+        type: array
+      playerName:
+        type: string
+      points:
+        type: integer
+      wordCount:
+        type: integer
+    type: object
+  main.RegisterRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  main.StartGameRequest:
+    properties:
+      duration:
+        type: integer
+      gameMode:
+        type: string
+      withTimer:
+        type: boolean
+    type: object
+  main.Status:
+    enum:
+    - ONLINE
+    - OFFLINE
+    type: string
+    x-enum-varnames:
+    - ONLINE
+    - OFFLINE
+  main.WordRequest:
+    properties:
+      a:
+        type: string
+      b:
+        type: string
+    type: object
+  main.WordResponse:
+    properties:
+      result:
+        type: string
+    type: object
+  main.Words:
+    properties:
+      targetWord:
+        type: string
+      words:
+        items:
+          type: string
+        type: array
+    type: object
+host: localhost:3030
+info:
+  contact: {}
+  description: This is the API for Wombo Combo Go
+  title: WomboCombo Go API
+  version: "1.0"
+paths:
+  /account/{username}:
+    get:
+      consumes:
+      - application/json
+      description: Get an account
+      parameters:
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.AccountDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      security:
+      - ApiKeyAuth: []
+      summary: Get an account
+      tags:
+      - account
+    put:
+      consumes:
+      - application/json
+      description: Edit an account
+      parameters:
+      - description: Account to edit
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/main.EditAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Edit an account
+      tags:
+      - account
+  /account/{username}/images:
+    get:
+      consumes:
+      - application/json
+      description: Get all potential profile pictures
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.ImagesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Get all potential profile pictures
+      tags:
+      - account
+  /accounts:
+    post:
+      consumes:
+      - application/json
+      description: Register an account
+      parameters:
+      - description: Account to register
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/main.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Register an account
+      tags:
+      - account
+  /events:
+    get:
+      consumes:
+      - application/json
+      description: Server-Sent Events
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Server-Sent Events
+      tags:
+      - events
+  /games/{lobbyCode}/{playerName}/combinations:
+    post:
+      consumes:
+      - application/json
+      description: Make a move
+      parameters:
+      - description: Move to make
+        in: body
+        name: move
+        required: true
+        schema:
+          $ref: '#/definitions/main.WordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.WordResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Make a move
+      tags:
+      - game
+  /games/{lobbyCode}/{playerName}/end:
+    post:
+      consumes:
+      - application/json
+      description: End a game
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: End a game (owner)
+      tags:
+      - game
+  /games/{lobbyCode}/{playerName}/game:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a game
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Delete a game (owner)
+      tags:
+      - game
+    get:
+      consumes:
+      - application/json
+      description: Get game stats
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.GameEndResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Get game stats
+      tags:
+      - game
+    post:
+      consumes:
+      - application/json
+      description: Start a game
+      parameters:
+      - description: Game to start
+        in: body
+        name: game
+        required: true
+        schema:
+          $ref: '#/definitions/main.StartGameRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Start a game (owner)
+      tags:
+      - game
+  /games/{lobbyCode}/{playerName}/words:
+    get:
+      consumes:
+      - application/json
+      description: Get a player's words
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Words'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Get a player's words
+      tags:
+      - game
+  /lobbies:
+    get:
+      consumes:
+      - application/json
+      description: Get all lobbies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.LobbiesDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Get all lobbies
+      tags:
+      - lobby
+    post:
+      consumes:
+      - application/json
+      description: Create a lobby
+      parameters:
+      - description: Lobby to create
+        in: body
+        name: lobby
+        required: true
+        schema:
+          $ref: '#/definitions/main.CreateLobbyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.CreateLobbyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Create a lobby (requires account)
+      tags:
+      - lobby
+    put:
+      consumes:
+      - application/json
+      description: Join a lobby
+      parameters:
+      - description: Lobby to join
+        in: body
+        name: lobby
+        required: true
+        schema:
+          $ref: '#/definitions/main.JoinLobbyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.JoinLobbyRespone'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Join a lobby
+      tags:
+      - lobby
+  /lobbies/{lobbyCode}/{playerName}:
+    get:
+      consumes:
+      - application/json
+      description: Get a lobby
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.LobbyDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Get a lobby
+      tags:
+      - lobby
+  /lobbies/{lobbyCode}/{playerName}/edit:
+    put:
+      consumes:
+      - application/json
+      description: Edit a game mode in the lobby
+      parameters:
+      - description: Game mode to change to
+        in: body
+        name: game
+        required: true
+        schema:
+          $ref: '#/definitions/main.EditGameRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Edit a game mode in the lobby (owner)
+      tags:
+      - lobby
+  /lobbies/{lobbyCode}/{playerName}/leave:
+    post:
+      consumes:
+      - application/json
+      description: Leave a lobby
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Leave a lobby
+      tags:
+      - lobby
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user and returns a JWT token
+      parameters:
+      - description: Username and password
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/main.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Log in an account
+      tags:
+      - auth
+  /logout:
+    post:
+      consumes:
+      - application/json
+      description: Logs out a user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Log out an account
+      tags:
+      - auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
