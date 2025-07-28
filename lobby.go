@@ -237,7 +237,7 @@ func (s *APIServer) handleCreateLobby(w http.ResponseWriter, r *http.Request) er
 // @Tags lobby
 // @Accept json
 // @Produce json
-// @Success 200 {object} LobbiesDTO
+// @Success 200 {array} LobbiesDTO
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError
 // @Router /lobbies [get]

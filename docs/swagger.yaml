@@ -528,7 +528,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.LobbiesDTO'
+            items:
+              $ref: '#/definitions/main.LobbiesDTO'
+            type: array
         "400":
           description: Bad Request
           schema:

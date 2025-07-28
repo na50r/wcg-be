@@ -222,17 +222,18 @@ func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
 					publishTimeEvent(secondsLeft)
 				case three_quarter_duration:
 					publishTimeEvent(secondsLeft)
-				case total_duration:
-					s.PublishToLobby(lobbyCode, Message{Data: GAME_OVER})
-					var err error
-					game.Winner, err = s.store.SelectWinnerByPoints(lobbyCode)
-					if err != nil {
-						log.Printf("Error selecting winner: %v", err)
-					}
-					return
 				default:
 					if secondsLeft <= 10 {
 					publishTimeEvent(secondsLeft)
+					}
+					if secondsLeft < 0 {
+						var err error
+						game.Winner, err = s.store.SelectWinnerByPoints(lobbyCode)
+						if err != nil {
+							log.Printf("Error selecting winner: %v", err)
+						}
+						s.PublishToLobby(lobbyCode, Message{Data: GAME_OVER})
+						return
 					}
 				}
 			}

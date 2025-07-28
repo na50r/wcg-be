@@ -469,7 +469,10 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.LobbiesDTO"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.LobbiesDTO"
+                            }
                         }
                     },
                     "400": {
