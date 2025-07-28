@@ -223,7 +223,7 @@ func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
 				case three_quarter_duration:
 					publishTimeEvent(secondsLeft)
 				default:
-					if secondsLeft <= 10 {
+					if secondsLeft <= 10 && secondsLeft > 0{
 					publishTimeEvent(secondsLeft)
 					}
 					if secondsLeft < 0 {
