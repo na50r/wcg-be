@@ -1,9 +1,5 @@
 .env
-icons/
 store.db
 store.db*
 bin/
-recipes.csv
-Combinations.csv
-Words.csv
 docs/

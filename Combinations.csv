@@ -1,0 +1,2748 @@
+ID,Depth,Result,Word1,Word2
+1,1,lake,water,water
+2,1,mud,water,earth
+3,1,steam,water,fire
+4,1,mist,water,air
+5,1,hill,earth,earth
+6,1,lava,earth,fire
+7,1,dust,earth,air
+8,1,wildfire,fire,fire
+9,1,smoke,fire,air
+10,1,wind,air,air
+11,2,ash,fire,dust
+12,2,ocean,lake,lake
+13,2,mountain,hill,hill
+14,2,magma,lava,lava
+15,3,charcoal,fire,ash
+16,3,rock,earth,magma
+1332,1,mist,breeze,water
+18,4,metal,fire,rock
+19,4,coal,charcoal,charcoal
+1333,2,island,sea,hill
+22,5,carbon,coal,coal
+2997,2,volcano,geyser,smoke
+1335,1,lava,inferno,fire
+36,2,soil,earth,mud
+37,2,fog,steam,steam
+38,3,plant,air,soil
+39,3,plant,water,soil
+40,3,plant,soil,soil
+41,4,growth,water,plant
+42,4,growth,plant,sun
+43,5,life,earth,growth
+27,6,animal,air,life
+29,7,human,animal,animal
+90,6,diamondweed,diamond,algae
+30,8,man,earth,huma
+32,9,father,man,family
+33,10,dad,man,father
+34,11,daddy,dad,dad
+35,12,zaddy,swag,daddy
+44,5,life,growth,growth
+45,6,animal,earth,life
+1337,4,vase,pottery,pottery
+1487,1,wildfire,forest,fire
+52,2,ocean,lake,water
+53,2,mountain,hill,land
+54,1,mist,fog,steam
+55,4,volcano,smoke,island
+56,2,ash,volcano,smoke
+57,4,volcano,venus,ash
+58,2,fog,family,smoke
+62,8,swag,swag,swag
+64,2,mountain,growth,hill
+68,2,fog,animal,mist
+69,1,mist,water,wildfire
+25,5,life,water,sun
+71,3,charcoal,dust,coal
+72,6,diamond,human,carbon
+74,1,mist,wind,smoke
+75,4,obsidian,rock,magma
+76,2,mountain,hill,coal
+77,5,algae,lake,growth
+78,6,diamond,moonstone,coal
+79,1,mist,sun,fog
+80,2,fog,smoke,growth
+81,7,gold,goldmine,soil
+82,11,daddy,planet,daddy
+83,12,zaddy,zaddy,ecosystem
+85,8,darkness,dust,solar eclipse
+86,9,father,dad,human
+87,4,moss,soil,plant
+88,2,magma,lake,lava
+97,6,family,life,life
+127,5,tsunami,planet,ocean
+98,6,fish,life,water
+101,3,volcano,mountain,mountain
+105,3,volcano,sun,rock
+107,2,fog,steam,water
+108,3,cloud,fog,mist
+109,2,fog,cloud,mist
+115,5,breeze,growth,air
+119,5,algae,growth,water
+120,3,island,hill,ocean
+122,4,continent,island,earth
+124,3,island,lagoon,earth
+125,4,atoll,lagoon,island
+126,3,continent,ocean,earth
+116,4,archipelago,continent,island
+117,4,world,continent,continent
+21,4,planet,ocean,continent
+23,5,sun,fire,planet
+50,6,solar eclipse,sun,sun
+59,7,moonstone,solar eclipse,lake
+61,7,darkness,mud,solar eclipse
+26,6,gold,metal,sun
+63,7,goldmine,gold,volcano
+84,7,ore,gold,earth
+89,8,metalhead,animal,ore
+28,7,swag,diamond,gold
+46,5,venus,fog,planet
+49,6,woman,venus,venus
+73,7,mother,woman,family
+60,7,aphrodite,venus,woman
+66,5,ecosystem,growth,planet
+128,3,bay,ocean,lake
+129,4,peninsula,bay,continent
+132,3,clay,soil,earth
+135,1,mud,dust,water
+136,2,sludge,mist,mud
+137,2,fog,sludge,mist
+138,2,geyser,lava,steam
+139,1,mist,fog,geyser
+140,3,volcano,sludge,geyser
+141,2,magma,volcano,fire
+142,3,obsidian,magma,water
+143,3,volcano,magma,geyser
+144,2,geyser,obsidian,steam
+145,1,mist,obsidian,fog
+146,2,ash,obsidian,dust
+148,2,sludge,mud,water
+149,1,lake,mountain,water
+150,4,world,planet,continent
+151,7,earthworm,animal,earth
+153,2,island,earth,lake
+51,3,land,island,soil
+154,3,volcano,island,steam
+155,3,volcano,magma,lava
+157,6,solar system,sun,earth
+159,8,galaxy,nebula,solar system
+162,7,nebula,lava,galaxy
+65,3,atoll,island,water
+67,4,cinder,ash,atoll
+121,3,atlantis,island,ocean
+123,3,lagoon,island,lake
+156,1,lava,volcano,earth
+160,3,atlantis,galaxy,island
+161,7,nebula,ocean,galaxy
+163,4,planet,solar system,magma
+171,2,magma,lava,earth
+174,1,lava,fire,magma
+176,2,hurricane,wind,wind
+179,3,obsidian,volcanic ash,rock
+180,4,glass,rock,obsidian
+181,2,hurricane,glass,tornado
+158,6,nebula,solar system,sun
+165,7,comet,dust,nebula
+167,6,galaxy,earth,solar system
+1338,5,vase of clouds,cloud,vase
+1488,2,ash,tree,fire
+1491,6,phoenix,animal,fire
+1492,6,fish,animal,water
+1495,7,gargoyle,rock,animal
+1497,4,terrarium,clay,animal
+1499,5,greenhouse,human,terrarium
+1501,5,jungle,greenhouse,growth
+1502,6,biome,greenhouse,terrarium
+1503,4,terrarium,biome,earth
+1505,7,ecosphere,atmosphere,biome
+1507,4,atmosphere,ecosphere,air
+1518,1,mist,cloud,fog
+1520,2,hurricane,fog,storm
+1522,2,tornado,duststorm,cloud
+1525,2,volcano,mountain,obsidian
+1538,6,bunker,fortress,brickade
+1539,5,fortress,brickade,bunker
+1543,3,pottery,clay,ceramics
+1664,2,sandstorm,duststorm,earth
+1665,3,desert,oasis,oasis
+1666,1,lake,oasis,water
+1667,1,mist,oasis,air
+1669,2,sandstorm,desert,hurricane
+1670,4,oasis,desert,lake
+1671,4,oasis,desert,ocean
+1672,3,desert,oasis,earth
+1673,4,oasis,mud,oasis
+1674,3,desert,dirt,oasis
+1675,2,clay,mud,dirt
+1676,2,sandstorm,wind,oasis
+1677,2,fog,mist,wind
+1678,3,dune,sandstorm,hill
+1679,2,breeze,family,air
+1680,7,legacy,family,life
+1683,9,joy,happiness,happiness
+1684,9,euphoria,happiness,oasis
+1685,10,nirvana,euphoria,euphoria
+1691,7,paradise,eden,eden
+1692,8,heaven,eden,paradise
+1695,10,bliss,euphoria,paradise
+1698,7,paradise,heaven,heaven
+1699,8,heaven,elysium,elysium
+1701,11,enlightenment,nirvana,nirvana
+1702,12,wisdom,enlightenment,enlightenment
+1704,13,knowledge,eden,wisdom
+1706,9,euphoria,joy,happiness
+1707,10,bliss,euphoria,joy
+1709,6,eden,wall,paradise
+1711,7,utopia,paradise,life
+1688,8,elysium,paradise,heaven
+1846,4,bayou,antenna,bay
+1847,2,tornado,dust,storm
+1848,2,sandstorm,tornado,dust
+1849,2,tornado,sandstorm,wind
+1850,3,desert,sahara,dune
+1851,4,sahara,sahara,desert
+1852,2,sandstorm,desert,wind
+1906,3,smoked glass,smoke,obsidian
+1907,2,fog,smoked glass,air
+1910,4,window,fog,glass
+1911,3,mirror,window,diamond
+1915,4,chimney,fireplace,fire
+1916,5,smokestack,chimney,chimney
+1917,5,smokestack,chimney,fire
+1920,6,galaxy,solar system,ocean
+1922,3,tsunami,world,ocean
+1924,6,sea of stars,universe,ocean
+1927,7,milky way,sea of stars,ocean
+1928,7,canopy,skylight,dome
+1929,4,chimney,skylight,fireplace
+1932,7,periscope,telescope,chimney
+1933,7,observatory,telescope,dome
+1936,2,volcano,atlantis,mountain
+1937,6,telescope,telescope,spaceship
+1938,7,shuttle,skylight,spaceship
+1940,5,andes,mountain range,mountain range
+1945,8,stargazer,astronomer,observatory
+1948,7,observatory,astronomer,skylight
+1950,8,stargazer,planetarium,astronomer
+1952,8,stargazer,astronomer,astronomer
+1954,3,atlantis,cloud,atlantis
+1956,6,spaceship,stargazer,shuttle
+1957,7,observatory,stargazer,skyscraper
+1961,7,observatory,stargazer,skylight
+2171,1,lava,magma,sludge
+2173,4,mudbrick,brick,sludge
+2174,3,terracotta,brick,clay
+2175,4,vase,terracotta,brick
+2177,1,dust,brick,air
+2178,4,mudbrick,brick,water
+2179,4,wall,mudbrick,brick
+2180,5,waterfall,wall,water
+2181,4,chimney,wall,fire
+2182,5,castle,wall,earth
+2183,3,fountain,castle,waterfall
+2184,4,fountainhead,fountain,brick
+2185,5,ziggurat,fountainhead,mudbrick
+2187,6,pyramid,urn,ziggurat
+2188,7,obelisk,pyramid,fountainhead
+2189,5,ziggurat,obelisk,pyramid
+2190,5,ziggurat,obelisk,mudbrick
+2191,3,fountain,obelisk,waterfall
+2192,6,pyramid,obelisk,wall
+2193,4,chimney,obelisk,volcano
+2194,2,volcano,obelisk,lava
+164,2,ocean,water,planet
+172,3,volcano,magma,air
+1339,2,storm,vase of clouds,vase of clouds
+166,7,meteor,water,comet
+1340,2,mudslide,mountain,sludge
+1341,3,sludgeslide,mudslide,sludge
+1343,3,avalanche,landslide,mudslide
+1344,3,windmill,boulder,air
+1345,5,urn,pottery,vase
+1346,5,urn,urn,urn
+1348,2,tornado,volcano,hurricane
+1349,2,inferno,eruption,wildfire
+1351,2,volcano,inferno,hill
+1353,2,tornado,windmill,vase of clouds
+1354,4,vase,windmill,pottery
+1355,6,windurn,windmill,urn
+1356,2,hurricane,windurn,inferno
+1357,3,firestorm,windurn,wildfire
+1358,4,vase,tornado,ceramics
+1360,2,duststorm,sludge,sandstorm
+1361,2,hurricane,sandstorm,firestorm
+1362,3,dustbowl,sandstorm,duststorm
+1364,3,dustdevil,eruption,sandstorm
+1366,3,windmill,windurn,rock
+1368,2,tornado,windmill,avalanche
+1369,4,turbine,windmill,fog
+1370,4,turbine,windmill,wind
+1371,4,turbine,windmill,water
+1544,7,floor,bunker,tile
+1545,5,tile,floor,pottery
+1550,9,vault,nuclear winter,bunker
+1553,8,vault,bunker,fallout
+1551,9,safehouse,bunker,vault
+1555,9,nuclear holocaust,nuclear winter,nuclear winter
+1559,7,fallout,apocalypse,nuclear holocaust
+1560,6,armageddon,doomsday,nuclear holocaust
+1562,7,fallout,wasteland,nuclear holocaust
+1565,6,bunker,nuclear winter,fortress
+1569,11,bailout,bankrupt,bank
+1573,3,mirror,reflection,fire
+1668,4,mirage,oasis,mist
+1682,8,happiness,family,sunshine
+1687,8,heaven,paradise,paradise
+1690,7,paradise,eden,oasis
+1694,8,heaven,nirvana,paradise
+1697,6,eden,sunshine,paradise
+1700,10,nirvana,bliss,bliss
+1703,4,oasis,wisdom,oasis
+1853,2,sandstorm,desert,dust
+1854,3,desert,sandstorm,dust
+1925,2,smokescreen,skylight,smoked glass
+1930,6,telescope,skylight,mirror
+1935,6,telescope,observatory,diamond
+1943,9,astronomer,stargazer,telescope
+1946,10,astrologer,stargazer,astronomer
+1951,3,atlantis,mountaintis,atlantis
+1960,4,archipelago,mountain range,island
+1962,6,aurora,stargazer,glimmer
+2172,2,magma,lava,sludge
+2176,2,clay,brick,earth
+2196,6,pyramid,obelisk,brick
+2204,5,watering can,fountainhead,vase
+2298,5,asteroid,dust,meteorite
+2300,5,moon,asteroid,terraform
+2301,6,terramoon,moon,terraform
+2302,7,ring of fire,orbit,volcano
+2303,5,satellite,continent,orbit
+2305,3,lagoon,satellite,lake
+2306,5,darkness,eclipse,eclipse
+2331,2,volcano,boulder,magma
+2475,4,boulder,nightmare,rock
+2476,3,tsunami,waterfall,horror
+2477,5,acid rain,daddy issues,acidic soil
+2478,8,lavawoman,volcanic rock,woman
+2479,6,lavacloud,cloud,lavalamp
+2480,5,cave,lahar,grotto
+2481,2,volcano,depression,geyser
+2482,7,twilight,cloudy,dusk
+2483,6,galaxy,solar system,mountainous
+2484,8,forest of dreams,daydream,forest
+2485,6,bunker,rubble,safehouse
+2486,4,canyon,golem,gorge
+2487,8,civilization,biome,human
+2488,8,iceberg,ice age,darkroom
+2489,1,lava,fire,crocodile
+2490,2,hurricane,earth,peninsular breeze
+2491,5,coral,limestone,reef
+2492,2,island,volcanic ash,archipelago
+2493,1,lava,algae,fireball
+2494,3,tsunami,earthquake,atoll
+2516,3,desert,earth,dune
+2517,4,sandstone,mud,desert
+2597,6,aurora,mirage,solar storm
+2598,4,window,stainedglass,soda
+2599,7,claymore,dad,claymore
+2600,5,acid rain,catapult,acidic mudslide
+2601,10,hellfire,hellgate,power
+2602,4,porcelain,dreamland,ceramics
+2603,2,sludge,algae,debris
+2604,8,goldrush,goldmine,gold
+2605,3,desert,dustbowl,algae
+2606,3,cloud,air,elysium
+2607,3,atlantis,reef,utopia
+2608,8,dreamcatcher,melancholy,balloon
+2609,12,revelation,enlightenment,thunderstorm
+2610,9,nuclear fallout,mud,nuclear winter
+2611,11,daddy,taser,daddy
+2612,2,fog,mist,forest
+2613,6,telescope,sludgeslide,observatory
+2614,13,depression,glimmer,recession
+2615,2,volcano,bonfire,geothermal
+2691,2,clay,rock,mud
+2695,5,diamond,crystal,crystal
+2697,8,blade golem,golem,doubleedged sword
+2698,8,swordfern,fern,claymore
+2699,2,volcano,thunder,lava
+2700,3,hell,paradise,lava lake
+2701,7,lantern,bamboo,nightlight
+169,1,lake,water,lagoon
+190,5,solar system,planet,planet
+1342,3,landslide,sludgeslide,mudslide
+1347,2,tornado,hurricane,fire
+1350,2,hurricane,inferno,tornado
+1352,2,tornado,windmill,windmill
+1359,2,sandstorm,wind,dust
+1363,2,volcano,duststorm,eruption
+1365,2,magma,firestorm,rock
+1367,2,volcano,windmill,magma
+1372,3,windmill,turbine,turbine
+1546,4,terrarium,floor,terrarium
+1548,7,fallout,wildfire,bunker
+1549,8,nuclear winter,fallout,fallout
+1552,9,vault,bunker,safehouse
+1554,9,wasteland,fallout,nuclear winter
+1558,7,apocalypse,armageddon,armageddon
+1561,7,apocalypse,doomsday,wasteland
+1563,6,bunker,wasteland,safehouse
+1566,7,fallout,nuclear winter,vault
+1567,9,bank,vault,vault
+1568,10,bankrupt,bank,doomsday
+1570,12,recession,bailout,bankrupt
+1572,3,mirror,window,glass
+1574,3,valley,breeze,hill
+1681,7,sunshine,family,sun
+1686,7,paradise,euphoria,oasis
+1689,6,eden,paradise,oasis
+1693,8,heaven,elysium,paradise
+1696,9,euphoria,joy,paradise
+1705,12,wisdom,knowledge,knowledge
+1708,10,bliss,euphoria,happiness
+1710,7,home,paradise,family
+1855,6,satellite dish,window,satellite
+1856,6,telescope,glass,satellite
+1963,7,northern lights,aurora,skylight
+1966,6,aurora,northern lights,stargazer
+2186,5,urn,ziggurat,vase
+2202,2,geyser,urn,waterspout
+2211,6,pyramid,tower,obelisk
+2299,6,meteor,asteroid,mountain
+2304,5,moon,satellite,planet
+2333,3,eruption,storm,volcano
+2334,2,hurricane,eruption,storm
+2335,2,hurricane,tsunami,tornado
+2336,4,typhoon,tsunami,hurricane
+2496,5,steel,metal,fire
+2497,5,rust,metal,water
+2498,2,magma,metal,lava
+2500,3,windmill,metal,air
+2518,3,dune,sandcastle,desert
+2519,4,mirage,sandcastle,fog
+2520,3,dune,sandcastle,sandstorm
+2521,5,illusion,castle,mirage
+2522,4,mirage,illusion,earth
+2523,4,oasis,sahara,water
+2524,2,volcano,oasis,lava
+2525,4,mirage,volcano,oasis
+2526,6,sandstone castle,sandcastle,sandstone
+2527,5,sandcastle,sandstone castle,sandstone
+2528,5,fortress,sandcastle,sandstone castle
+2529,3,desert,sandstorm,sandstone castle
+2530,3,dune,duststorm,sandstone castle
+2531,7,citadel,fortress,sandstone castle
+2532,5,fortress,citadel,sandstone castle
+2533,4,castle,fortress,citadel
+2534,2,sandstorm,duststorm,citadel
+2625,3,pottery,water,ceramics
+2628,4,vase,jar,urn
+2629,4,vase,jar,clay
+2630,4,vase,jar,mud
+2631,5,lavalamp,magma,jar
+2632,6,lavastone,lavalamp,soil
+2633,4,vase,lavastone,jar
+2634,3,terracotta,lavastone,ceramics
+2635,3,brick,terracotta,lavastone
+2636,4,vase,brick,jar
+2637,5,flowerpot,brick,vase
+2639,4,terrarium,flowerpot,jar
+2641,3,mudpot,flowerpot,sludge
+2642,7,terrajar,terrarium,jar
+2643,4,terrarium,flowerpot,terrajar
+2645,3,terracotta,lavastone,terrajar
+2647,5,lavalamp,lavajar,lavastone
+2648,9,pot,lavajar,terracotta
+2649,2,volcano,pot,lavajar
+2650,10,cauldron,lavastone,pot
+2651,9,pot,cauldron,cauldron
+2653,3,terracotta,brick,pottery
+2655,9,pot,kettle,cauldron
+2656,10,cauldron,kettle,earth
+2657,12,tea,kettle,water
+2658,13,teapot,kettle,tea
+2659,14,teatime,tea,teapot
+2660,15,tea party,teapot,teatime
+2662,13,teapot,tea party,lavajar
+2663,14,teatime,tea party,tea party
+2664,16,teacup,tea party,water
+2665,17,teacupful,lake,teacup
+2666,16,teakettle,lake,tea party
+2667,12,tea,teakettle,teacupful
+2670,13,teapot,teakettle,teakettle
+2671,13,teapot,teacupful,teacupful
+2672,13,teapot,teacupful,teacup
+2673,13,teapot,teacup,teacup
+2674,13,teapot,tea party,teacup
+2675,14,teatime,sea,tea party
+2676,5,wave,sea,tide
+2677,16,teabag,wave,tea party
+2678,14,teatime,teabag,teacup
+2681,17,steamer,teakettle,ocean
+2682,13,teapot,steamer,teacup
+2683,13,teapot,steamer,tea party
+2684,13,teapot,teacupful,cauldron
+2685,4,tide,ocean,teatime
+2686,13,teapot,terrajar,teatime
+2687,13,teapot,steamer,teacupful
+2688,12,tea,teabag,steamer
+2692,3,terracotta,rock,clay
+2696,10,bankshot,shuttle,bank
+170,1,lava,ocean,fire
+173,2,magma,air,lava
+175,2,magma,fire,lava
+177,3,volcanic ash,magma,wind
+178,3,tornado,wildfire,hurricane
+191,6,sunlight,sun,air
+195,2,dirt,mud,dust
+196,2,mountain,dirt,hill
+197,3,sea,ocean,ocean
+198,4,world,life,planet
+199,6,universe,life,world
+200,2,soil,dirt,earth
+201,4,forest,plant,plant
+202,5,jungle,forest,forest
+203,5,jungle,forest,plant
+204,4,moss,plant,air
+205,5,terraform,plant,planet
+206,3,volcano,mountain,lake
+210,2,mountain,earth,hill
+211,3,cloud,mountain,air
+212,3,volcano,mountain,fire
+213,2,geyser,volcano,water
+214,2,volcano,fire,hill
+215,2,obsidian,lava,water
+216,1,smoke,air,obsidian
+217,2,volcano,obsidian,earth
+218,3,glass,obsidian,water
+219,4,mirror,glass,obsidian
+1373,3,windmill,turbine,windmill
+221,3,glass,ash,mirror
+222,5,window,glass,mirror
+223,1,dust,wind,ash
+224,3,glass,wind,obsidian
+225,1,mist,smoke,cloud
+226,4,thunderstorm,cloud,volcano
+1375,3,windmill,turbine,air
+229,3,cloud,skylight,air
+230,1,mist,skylight,dust
+234,3,tornado,inferno,air
+235,3,tornado,inferno,wind
+237,2,magma,inferno,lava
+238,2,volcano,magma,lightning
+1377,2,tornado,turbine,dustdevil
+240,2,volcano,magma,skylight
+242,3,tornado,sunspot,wind
+243,2,hurricane,sunspot,tornado
+245,2,volcano,solar storm,earth
+246,2,hurricane,solar storm,tornado
+248,1,dust,meteorite,air
+249,7,comet,meteorite,solar storm
+254,2,magma,sludge,fire
+255,2,mountain,rock,earth
+256,2,volcano,mountain,earth
+257,2,ash,volcano,air
+258,2,soil,ash,earth
+270,2,dirt,earth,dust
+271,2,volcano,earth,smoke
+272,3,clay,dirt,soil
+273,2,fog,dust,smoke
+274,2,obsidian,mud,lava
+275,2,obsidian,dust,magma
+276,2,fog,air,dust
+277,2,fog,air,smoke
+278,2,sludge,air,mud
+279,1,dust,air,dirt
+281,1,mist,air,fog
+282,2,fog,air,mist
+283,2,fog,air,sludge
+284,1,dust,air,ash
+286,3,mudslide,fog,earth
+287,3,clay,earth,sludge
+288,4,tree,earth,plant
+289,4,pottery,earth,terracotta
+290,4,forest,earth,moss
+291,5,steel,earth,metal
+294,4,forest,earth,tree
+295,5,jungle,earth,forest
+296,6,sword,earth,steel
+297,4,terracotta,earth,ceramics
+298,3,mudslide,earth,landslide
+299,6,rainforest,earth,jungle
+300,7,claymore,earth,sword
+301,5,jungle,earth,rainforest
+302,6,sword,earth,claymore
+303,5,universe,world,world
+304,6,cosmos,universe,world
+305,2,tornado,fire,wind
+307,5,solar system,planet,sun
+308,5,solar system,planet,solar eclipse
+309,6,galaxy,planet,solar system
+310,5,solar system,galaxy,planet
+311,5,solar system,galaxy,earth
+312,5,sun,solar system,fire
+313,2,ocean,solar system,water
+314,6,atmosphere,solar system,air
+315,0,earth,atmosphere,planet
+317,2,magma,obsidian,fire
+318,1,mist,lake,air
+319,1,lava,lake,fire
+320,2,storm,lake,wind
+321,2,volcano,smoke,hill
+322,2,tornado,smoke,storm
+323,2,fog,smoke,sun
+324,1,lava,magma,magma
+325,4,aquarium,glass,water
+326,4,window,glass,earth
+228,5,skylight,cloud,window
+231,6,bonfire,skylight,fire
+232,7,campfire,bonfire,earth
+233,8,inferno,campfire,wildfire
+454,6,nebula,universe,fire
+445,4,porcelain,ceramics,magma
+456,3,pottery,fire,ceramics
+293,3,landslide,earth,mudslide
+280,3,terracotta,air,clay
+285,3,pottery,earth,clay
+292,4,ceramics,earth,pottery
+448,7,asteroid,meteor,satellite
+453,2,inferno,wildfire,wildfire
+236,5,lightning,inferno,thunderstorm
+241,6,sunspot,inferno,skylight
+244,7,solar storm,hurricane,sunspot
+457,3,ceramics,pottery,fire
+459,4,vase,vase,vase
+449,6,comet,asteroid,solar system
+316,5,weather,atmosphere,earth
+247,11,meteorite,solar storm,obsidian
+327,4,window,glass,air
+328,4,window,wind,glass
+329,3,crater,mountain,volcano
+330,2,volcano,crater,crater
+331,5,moon,crater,planet
+332,6,satellite,moon,planet
+334,2,fog,island,mist
+335,3,eruption,island,volcano
+336,2,mountain,hill,air
+337,1,lake,hill,water
+338,2,breeze,hill,wind
+339,2,island,hill,lake
+2998,1,mist,smoke,water
+341,2,island,peninsular breeze,peninsula
+343,2,tornado,eruption,windship
+345,2,volcano,venus,smoke
+346,2,volcano,magma,smoke
+347,3,glass,magma,obsidian
+348,6,nebula,magma,galaxy
+349,7,black hole,solar system,solar eclipse
+350,5,atmosphere,planet,air
+351,1,mud,clay,water
+352,4,terrarium,plant,clay
+353,4,moss,plant,sludge
+354,3,clay,mud,sludge
+355,2,clay,mud,mud
+356,1,lava,soil,fire
+357,6,mushroom,soil,life
+358,7,slime,mushroom,sludge
+359,3,terracotta,soil,clay
+360,3,pottery,terracotta,terracotta
+361,4,vase,pottery,air
+362,4,windmill,terracotta,air
+363,5,fern,moss,plant
+364,5,baywindow,bay,window
+365,5,skylight,nebula,baywindow
+366,4,terrarium,skylight,terracotta
+367,4,vase,pottery,terracotta
+368,2,island,sludge,peninsula
+369,1,mist,wind,water
+370,2,island,hill,continent
+371,5,terraform,hill,planet
+372,6,eden,terraform,planet
+373,2,mountain,hill,volcano
+374,2,volcano,mountain,lava
+375,7,nightfire,volcano,solar eclipse
+376,2,storm,cloud,cloud
+377,2,volcano,cloud,mountain
+378,3,eruption,volcano,volcano
+379,2,volcano,lava,wind
+380,2,volcano,lava,hill
+381,2,volcano,lava,ocean
+382,2,island,lava,continent
+383,3,glass,lava,obsidian
+384,2,volcano,lava,tornado
+385,2,volcano,lava,venus
+386,1,mist,lava,fog
+387,2,volcano,lava,island
+388,2,volcano,lava,mist
+389,2,obsidian,lava,volcanic ash
+390,2,hurricane,obsidian,tornado
+391,6,meteorite,obsidian,venus
+392,7,asteroid,meteorite,meteorite
+1374,2,tornado,turbine,firestorm
+1390,2,volcano,ballista,magma
+395,6,meteorite,meteor,meteor
+396,7,asteroid,meteorite,meteor
+397,6,meteorite,asteroid,meteor
+1399,2,fog,smokebomb,smokescreen
+399,10,meteor shower,meteorite,asteroid field
+400,7,asteroid,meteorite,planet
+401,7,asteroid,meteor,planet
+402,8,meteor,asteroid,planet
+403,7,asteroid,asteroid belt,planet
+404,2,volcano,geyser,terraform
+405,4,ceramics,meteor,pottery
+406,3,terracotta,meteor,clay
+407,6,moonrock,moon,crater
+408,6,meteorite,moonrock,atmosphere
+409,7,moondust,moonrock,air
+410,7,asteroid,moonrock,planet
+411,3,crater,meteor,earth
+412,9,fireball,meteor,fire
+1411,5,powerplant,generator,generator
+414,2,tornado,meteor,wind
+415,7,meteor shower,meteorite,water
+416,7,fireball,meteorite,fire
+417,7,asteroid,meteorite,earth
+418,2,duststorm,dust,dust
+419,2,clay,dirt,dirt
+420,3,sandstorm,dirt,dust
+421,2,hurricane,sandstorm,sandstorm
+422,4,dustdevil,sandstorm,air
+426,3,sandstorm,desert,air
+427,2,volcano,desert,fire
+428,5,oasis,desert,water
+429,4,desert,dune,oasis
+430,4,desert,dune,dune
+432,2,magma,dirt,lava
+433,1,lava,magma,dirt
+434,3,muck,fog,dirt
+435,3,dustdevil,tornado,dirt
+436,7,asteroid,meteor,dirt
+437,8,meteor,asteroid,dirt
+438,7,spaceship,ceramics,meteor
+439,7,asteroid,meteor,terraform
+1422,8,energy,powerhouse,powerplant
+333,6,spaceship,satellite,satellite
+442,3,crater,meteor,lake
+443,3,crater,continent,meteor
+444,3,crater,meteorite,continent
+446,3,lagoon,bay,breeze
+447,8,meteor,galaxy,asteroid
+455,3,ceramics,fire,clay
+458,3,ceramics,pottery,water
+423,3,desert,sandstorm,earth
+424,4,oasis,desert,desert
+425,4,dune,desert,earth
+431,4,sahara,dune,desert
+460,4,archipelago,vase,continent
+461,4,cinder,plant,lava
+462,3,mirror,obsidian,obsidian
+220,4,reflection,mirror,mirror
+227,4,mirrorball,cloud,mirror
+239,5,lavalamp,magma,mirrorball
+463,3,glass,obsidian,cinder
+464,4,window,glass,glass
+465,5,urn,obsidian,vase
+466,1,lava,obsidian,volcano
+467,3,mirror,lake,obsidian
+468,5,black hole,world,obsidian
+469,6,singularity,black hole,universe
+470,5,black hole,singularity,universe
+471,5,black hole,urn,singularity
+472,5,black hole,singularity,singularity
+473,6,singularity,black hole,black hole
+474,7,wormhole,singularity,black hole
+475,5,black hole,wormhole,singularity
+476,5,black hole,wormhole,wormhole
+478,3,mirror,window,window
+481,2,volcano,hurricane,magma
+482,2,tornado,hurricane,hurricane
+483,2,hurricane,tornado,tornado
+484,2,tornado,air,hurricane
+485,2,hurricane,tornado,air
+486,3,whirlwind,fire,tornado
+487,2,tornado,fire,whirlwind
+488,2,tornado,whirlwind,whirlwind
+489,2,hurricane,whirlwind,tornado
+490,2,volcano,eruption,eruption
+491,1,lava,eruption,fire
+492,2,tornado,eruption,whirlwind
+493,2,tornado,earth,whirlwind
+494,2,tornado,inferno,whirlwind
+495,2,tornado,wildfire,whirlwind
+496,2,storm,tornado,hurricane
+497,2,hurricane,storm,storm
+498,2,tornado,storm,whirlwind
+499,3,firestorm,wildfire,inferno
+500,2,hurricane,firestorm,storm
+501,2,tornado,storm,air
+502,2,tornado,storm,wind
+503,4,firework,firestorm,firestorm
+504,5,explosion,firework,firework
+505,6,detonation,explosion,explosion
+506,6,thunder,explosion,air
+507,2,tornado,thunder,storm
+508,5,lightning,detonation,thunder
+509,4,thunderstorm,lightning,storm
+510,2,storm,lightning,thunderstorm
+511,5,lightning,thunderstorm,firework
+512,5,lightning,thunderstorm,explosion
+513,7,bang,detonation,explosion
+514,5,explosion,thunder,bang
+515,5,explosion,bang,bang
+516,6,thunder,bang,lightning
+517,2,volcano,hill,mud
+518,4,forest,tree,water
+519,5,swamp,forest,water
+520,4,forest,swamp,swamp
+521,5,jungle,forest,swamp
+522,2,volcano,jungle,fire
+523,5,jungle,tree,forest
+524,4,forest,tree,plant
+525,5,mossy,moss,moss
+526,4,moss,mossy,mossy
+527,5,fern,mossy,plant
+528,7,tribe,family,family
+529,8,culture,tribe,tribe
+530,7,home,family,earth
+531,9,society,home,culture
+539,5,asteroid,dust,planet
+394,6,meteor,asteroid,asteroid
+413,7,waterspout,meteor,water
+440,7,terracotta pot,meteor,terracotta
+441,7,mudball,meteor,sludge
+393,7,asteroid belt,meteorite,asteroid
+398,8,asteroid field,asteroid,asteroid belt
+540,6,meteor,asteroid,comet
+541,6,meteor,comet,comet
+542,5,asteroid,asteroid belt,asteroid belt
+544,2,breeze,wind,air
+545,1,wind,breeze,air
+546,2,tornado,hurricane,wind
+547,3,dustdevil,tornado,earth
+548,2,tornado,dustdevil,earth
+551,2,fog,steam,dust
+552,1,mist,fog,dust
+553,2,fog,fire,mist
+554,2,fog,mist,earth
+555,1,mist,magma,fog
+556,2,sludge,steam,mud
+557,3,mudslide,water,sludge
+558,3,mudslide,lava,landslide
+1376,3,windmill,mist,turbine
+560,2,magma,mud,lavaflow
+561,2,volcano,steam,lavaflow
+562,2,ash,fog,volcano
+563,2,obsidian,ash,magma
+564,3,hell,inferno,inferno
+565,4,purgatory,hell,hell
+566,2,ocean,sea,sea
+567,3,hell,purgatory,purgatory
+568,2,tornado,purgatory,hurricane
+569,5,hellmouth,purgatory,sea
+570,4,abyss,sea,hell
+571,2,volcano,abyss,mountain
+572,3,hell,inferno,abyss
+573,4,world,planet,earth
+574,5,universe,sun,world
+575,6,cosmos,life,universe
+576,4,tree,plant,life
+577,7,mushroom tree,mushroom,tree
+578,4,windmill,breeze,life
+579,8,society,human,family
+532,9,civilization,society,society
+580,9,civilization,society,man
+581,8,society,family,civilization
+582,8,culture,father,civilization
+583,10,fatherhood,father,family
+584,10,patriarch,tribe,father
+585,1,lava,fire,mudslide
+586,7,toadstool,animal,mushroom
+587,2,obsidian,dust,lava
+592,3,waterspout,ash,ocean
+593,2,magma,inferno,mud
+596,2,volcano,magma,mountain
+597,1,lava,inferno,ocean
+599,4,hellscape,hell,earth
+1378,3,windmill,turbine,boulder
+1381,3,windmill,catapult,turbine
+1383,8,trebuchet,catapult,boulder
+1384,9,ballista,trebuchet,catapult
+1386,7,catapult,ballista,ballista
+1388,3,windmill,ballista,turbine
+1403,2,smokescreen,inferno,smokebomb
+1407,4,turbine,generator,watermill
+1409,3,windmill,generator,turbine
+1415,9,jam,traffic,traffic
+1423,5,powerplant,energy,generator
+1426,10,electricity,power,energy
+1427,5,lightning,electricity,energy
+1432,2,tornado,powerhouse,sandstorm
+1435,4,turbine,watermill,powerhouse
+1436,5,lightning,electricity,electricity
+1439,12,electric eel,lightning,jellyfish
+1440,5,lightning,electric eel,thunder
+1442,5,lightning,taser,energy
+1446,16,death,electrocution,electrocution
+1452,5,lightning,shock,shock
+1454,18,spirit,soul,air
+1547,5,tile,floor,terracotta
+1556,6,armageddon,nuclear winter,nuclear holocaust
+1557,7,fallout,nuclear holocaust,armageddon
+1564,6,bunker,safehouse,nuclear holocaust
+1571,7,apocalypse,volcano,doomsday
+1732,5,universe,omniverse,multiverse
+1858,6,sunglass,mirror,sun
+1859,5,satellite,mirror,planet
+342,7,windship,spaceship,peninsular breeze
+344,8,steamship,fog,windship
+1133,9,mothership,alienship,space station
+1860,4,terrarium,glass,planet
+1861,6,telescope,black hole,glass
+1964,6,aurora,skylight,northern lights
+1965,6,aurora,northern lights,astronomer
+2195,2,volcano,obelisk,magma
+2197,5,fortress,obelisk,castle
+2198,5,castle,obelisk,fortress
+2199,3,waterspout,obelisk,fountain
+2200,2,geyser,obelisk,waterspout
+2201,2,volcano,pyramid,geyser
+2203,6,watertower,ziggurat,fountain
+2205,2,geyser,fountainhead,chimney
+2206,6,skyscraper,ziggurat,watertower
+2207,3,fountain,watering can,pyramid
+2208,8,tower,obelisk,skyscraper
+2209,5,ziggurat,tower,mudbrick
+2210,5,waterfall,tower,fountainhead
+2212,5,watermill,tower,watertower
+2213,3,fountain,watering can,ziggurat
+2309,5,asteroid,wildfire,planet
+2310,6,meteor,asteroid,wildfire
+2337,2,hurricane,typhoon,eruption
+2338,2,hurricane,typhoon,air
+2339,2,hurricane,typhoon,typhoon
+2340,2,hurricane,typhoon,tsunami
+2341,4,disaster,typhoon,hurricane
+2342,6,apocalypse,catastrophe,catastrophe
+2499,5,steel,metal,magma
+2535,5,fortress,earth,citadel
+2536,3,cloud,air,citadel
+2537,4,castle,cloud,fortress
+2538,5,castle in the sky,cloud,castle
+2539,6,dreamland,castle in the sky,cloud
+2540,3,cloud,castle in the sky,air
+2541,5,balloon,air,castle
+2542,6,laputa,balloon,castle in the sky
+2543,7,dirigible,laputa,balloon
+2544,8,blimp,dirigible,fortress
+2545,9,airship,blimp,balloon
+2546,7,dirigible,blimp,airship
+2547,8,blimp,airship,dirigible
+2548,8,airship,laputa,dirigible
+2549,8,airship,fortress,blimp
+2550,9,skycastle,airship,fortress
+2551,5,balloon,airship,air
+2552,4,mirage,skycastle,illusion
+2553,10,cloudcastle,sandstone castle,skycastle
+2554,8,blimp,cloudcastle,balloon
+2555,9,dream,sandcastle,cloudcastle
+2556,9,nightmare,dream,dream
+2557,8,hallucination,dream,illusion
+2558,8,hallucination,nightmare,illusion
+2559,8,dreamcatcher,nightmare,hallucination
+2560,5,castle in the sky,dreamcatcher,cloudcastle
+2561,9,windcatcher,dreamcatcher,air
+2562,3,windmill,windcatcher,earth
+2563,3,windmill,windmill,cloudcastle
+2564,3,windmill,laputa,windmill
+2565,4,mirage,oasis,illusion
+2566,9,hope,oasis,dreamcatcher
+2567,8,despair,hope,hope
+2569,9,hope,faith,faith
+2570,9,hope,faith,dreamcatcher
+2571,5,illusion,faith,hallucination
+2572,9,hope,blimp,faith
+2573,9,hope,faith,dream
+2626,4,vase,pottery,mud
+2638,4,vase,flowerpot,urn
+2644,4,terrarium,terrajar,jar
+2652,9,pot,jar,cauldron
+2661,13,teapot,tea party,pot
+2668,2,ocean,teacupful,lake
+2679,12,tea,teakettle,teabag
+2693,7,katana,sword,steel
+2694,6,sword,rock,katana
+2568,9,faith,despair,hope
+588,1,lava,magma,volcano
+590,3,mudslide,landslide,lake
+594,2,volcano,earth,wildfire
+598,2,hurricane,fog,tornado
+589,3,avalanche,mist,mudslide
+1379,6,turret,turbine,urn
+1380,7,catapult,turret,turret
+1382,4,boulder,catapult,rock
+1385,7,catapult,ballista,trebuchet
+1387,7,catapult,ballista,turret
+1389,7,catapult,ballista,rock
+1391,2,smokescreen,ballista,mist
+1392,2,smokescreen,ballista,fog
+1393,8,trebuchet,urn,catapult
+1394,2,fog,urn,smokescreen
+1395,7,catapult,ballista,urn
+1396,2,tornado,turbine,smokescreen
+1397,3,smokebomb,smokescreen,wildfire
+1398,2,smokescreen,smokebomb,smokebomb
+1400,1,mist,fog,fog
+1401,2,fog,smokebomb,mist
+1402,2,smokescreen,turbine,smokebomb
+1404,3,windmill,earth,turbine
+1405,5,generator,fire,turbine
+1406,5,watermill,water,turbine
+1408,7,catapult,generator,trebuchet
+1410,3,windmill,watermill,windmill
+1412,6,powergrid,powerplant,powerplant
+1413,7,gridlock,powergrid,powergrid
+1414,8,traffic,gridlock,gridlock
+1416,10,jelly,jam,jam
+1417,11,jellyfish,jelly,jelly
+1418,10,jelly,jellyfish,jellyfish
+1419,7,gridlock,jam,traffic
+1420,7,powerhouse,powergrid,powerplant
+1421,5,powerplant,powerhouse,powerhouse
+1424,9,power,energy,energy
+1425,8,energy,power,power
+1428,6,thunder,lightning,lightning
+1429,5,lightning,electricity,power
+1430,9,electricity,energy,powerplant
+1431,5,generator,turbine,electricity
+1433,2,volcano,powerhouse,eruption
+1434,4,turbine,windurn,powerhouse
+1437,2,storm,lightning,thunder
+1438,5,lightning,thunder,energy
+1441,13,taser,smokebomb,electric eel
+1443,14,stun gun,taser,power
+1444,13,taser,stun gun,electricity
+1445,15,electrocution,stun gun,jellyfish
+1447,17,oblivion,death,death
+1449,18,nothing,nothing,nothing
+1451,17,shock,death,electrocution
+1453,17,soul,death,energy
+1575,1,wind,valley,air
+1733,5,universe,galaxy,multiverse
+1734,5,universe,world,multiverse
+1735,5,universe,multiverse,cosmos
+1736,5,universe,world,cosmos
+1737,2,storm,nebula,cloud
+1738,2,fog,tornado,mist
+1739,2,fog,atmosphere,mist
+1740,2,hurricane,atmosphere,tornado
+1741,2,tornado,atmosphere,hurricane
+1742,1,mist,tsunami,fog
+1743,2,hurricane,tsunami,cloud
+1744,6,tidalwave,nebula,tsunami
+1745,3,tsunami,tidalwave,tidalwave
+1746,5,black hole,solar eclipse,solar eclipse
+1864,4,pollution,smog,ash
+1865,3,smog,pollution,air
+1866,3,smog,earth,pollution
+1867,3,fountain,geyser,water
+1868,2,geyser,fountain,lava
+1967,7,polar bear,blizzard,animal
+1969,5,cataclysm,terror,devastation
+1970,7,heaven,hill,bliss
+1971,8,avalon,sword,paradise
+1972,5,terrapical,terrarium,archipelago
+1973,2,obsidian,obsidian,mother
+1974,2,magma,windurn,lava
+1975,8,imagination,daydream,daydream
+1976,10,carbon credit,greenhouse gas,bank
+1977,6,spaceship,ufo,baywindow
+1978,2,obsidian,pacifist,volcanic rock
+1979,8,sunset,lagoon,horizon
+1980,4,vase,rainbow,terracotta pot
+1981,5,fortress,tsunami,castle
+1983,10,marriage,stainedglass,couple
+1984,7,rapidsand,sandblast,rapids
+1985,6,snowfort,avalanche,turret
+1986,7,fallout,rainstorm,nuclear winter
+2214,3,fountain,watering can,watering can
+2215,2,geyser,watertower,fountainhead
+2218,9,watering,sprinkler,irrigation
+2219,3,fountain,watering,ziggurat
+2220,3,fountain,watering,sprinkler
+2221,3,fountain,watering,waterspout
+2222,10,waterwheel,watering,watermill
+2223,11,mill,tower,waterwheel
+2224,6,skyscraper,mill,skyscraper
+2226,4,turbine,mill,windmill
+2227,2,tornado,turbine,waterspout
+2228,6,hydroelectric,geyser,watermill
+2229,9,hydroelectric dam,tower,hydroelectric
+2230,4,turbine,hydroelectric dam,windmill
+2231,5,powerplant,hydroelectric dam,mill
+2234,5,powerplant,hydroelectric dam,tower
+2235,10,waterwheel,mill,irrigation
+2236,3,fountain,sprinkler,watertower
+2237,3,fountain,geyser,castle
+2238,3,terracotta,mudbrick,fire
+2239,2,clay,water,mudbrick
+2242,11,mill,windmill,millstone
+1982,13,sadness,depression,mushroom tree
+591,2,fog,hill,mist
+595,4,avalanche,dust,landslide
+600,2,volcano,continent,inferno
+601,1,lava,obsidian,ash
+605,2,hurricane,ocean,tornado
+606,3,tsunami,hurricane,ocean
+607,3,tsunami,tsunami,ocean
+608,3,tsunami,tsunami,tsunami
+609,5,asteroid,comet,planet
+610,6,meteor,world,comet
+611,4,world,island,planet
+612,5,asteroid,atoll,planet
+613,5,universe,sea,galaxy
+614,5,solar system,universe,sun
+615,1,lava,tsunami,fire
+616,5,asteroid,rock,planet
+617,5,asteroid,rock,solar system
+618,6,meteorite,rock,asteroid
+619,5,asteroid,rock,meteorite
+620,5,asteroid,rock,comet
+621,2,mountain,rock,world
+622,6,meteorite,rock,meteor
+623,2,mountain,rock,hill
+624,4,reef,rock,island
+625,4,terrarium,reef,planet
+626,6,greenhouse,terrarium,sun
+627,4,terrarium,greenhouse,planet
+628,2,hurricane,air,ocean
+629,2,hurricane,air,tsunami
+630,2,storm,air,sea
+631,4,atmosphere,air,continent
+632,6,meteorite,air,asteroid
+633,6,meteor,air,comet
+634,4,atmosphere,air,world
+635,6,meteorite,air,meteor
+636,3,cloud,air,island
+637,3,cloud,air,atoll
+638,6,nebula,air,galaxy
+639,6,sky,air,universe
+640,6,galaxy,sky,planet
+641,4,boulder,air,rock
+642,5,coral,air,reef
+643,5,greenhouse,air,terrarium
+644,6,greenhouse gas,air,greenhouse
+645,5,venus,greenhouse gas,planet
+646,0,earth,solar system,venus
+647,4,reef,atmosphere,coral
+648,2,volcano,meteor,mountain
+649,6,galaxy,sky,nebula
+650,2,storm,sky,cloud
+651,7,rainbow,sunlight,sky
+652,8,prism,rainbow,sunlight
+653,7,rainbow,prism,cloud
+654,7,rainbow,prism,atmosphere
+655,8,aurora,rainbow,venus
+1450,18,nothing,nothing,oblivion
+658,9,couple,man,man
+659,7,campfire,fire,father
+660,10,dad,father,father
+670,2,smokescreen,wildfire,lake
+671,3,windmill,breeze,mountain
+672,2,volcano,mountain,inferno
+673,3,firestorm,inferno,smokescreen
+674,4,turbine,tornado,windmill
+675,3,eruption,volcano,firestorm
+676,3,windmill,sea,turbine
+677,4,turbine,eruption,windmill
+678,3,slate,obsidian,mud
+679,2,ash,smoke,fire
+681,5,peninsular breeze,peninsular breeze,water
+682,1,mud,mud,fire
+683,3,ceramics,ceramics,ceramics
+1455,19,ghost,spirit,soul
+688,5,sun,sun,fire
+689,7,daytime,sunlight,sun
+690,6,solar eclipse,solar eclipse,galaxy
+691,6,galaxy,galaxy,water
+692,5,universe,galaxy,galaxy
+693,5,universe,universe,earth
+694,3,cloud,mountain,atmosphere
+695,6,galaxy,galaxy,sun
+696,6,nebula,nebula,sunlight
+697,6,multiverse,universe,universe
+698,2,smokescreen,wildfire,atmosphere
+699,1,wind,atmosphere,air
+700,3,continent,continent,wildfire
+701,7,rainbow,cloud,sunlight
+702,6,nebula,nebula,earth
+703,3,lava lake,magma,lake
+704,3,tsunami,tsunami,earth
+705,3,cloud,cloud,steam
+706,4,atmosphere,atmosphere,atmosphere
+707,1,mud,mud,galaxy
+708,2,volcano,continent,fire
+709,2,volcano,volcano,steam
+710,7,horizon,sky,mountain
+17,2,island,ocean,mountain
+20,3,continent,island,island
+31,6,family,human,human
+47,5,venus,smoke,planet
+48,6,woman,human,venus
+711,4,coal,land,charcoal
+712,5,powerplant,coal,turbine
+713,8,aurora,northern lights,claymore
+714,2,volcano,growth,magma
+715,7,blade,sword,gold
+716,8,fossil,algae,ore
+717,6,forest fire,ecosystem,fire
+718,8,aurora,northern lights,inferno
+719,2,tornado,soil,storm
+720,5,mirrorland,mirrorball,continent
+721,7,tidepool,ocean,sunspot
+722,4,hellscape,hellmouth,growth
+723,9,stargazer,metalhead,galaxy
+724,8,flamethrower,fireball,peninsular breeze
+725,11,daddy issues,avalanche,fatherhood
+726,6,mirrorverse,solar system,mirrorland
+727,6,galaxy,family,solar system
+728,2,inferno,jungle,hellscape
+729,6,geothermal,volcano,powerplant
+661,6,cubic zirconia,diamond,diamond
+730,5,planter,vase,terrarium
+731,2,island,world,continent
+732,3,swamp,island,mud
+733,4,archipelago,continent,lake
+734,5,universe,sky,galaxy
+735,7,rainbow,sky,sun
+736,6,nebula,rainbow,planet
+737,5,solar system,planet,sunlight
+738,5,nebula,planet,cloud
+739,2,volcano,planet,lava
+740,2,tornado,planet,wind
+741,8,daystar,planet,daytime
+742,5,nebula,galaxy,atmosphere
+743,3,firestorm,galaxy,wildfire
+744,5,universe,galaxy,solar system
+745,5,universe,galaxy,world
+746,5,nebula,sunlight,galaxy
+747,5,nebula,mountain,galaxy
+748,5,nebula,cloud,galaxy
+749,6,aurora,solar system,wildfire
+656,7,northern lights,aurora,sky
+750,5,nebula,solar system,sunlight
+751,5,nebula,solar system,cloud
+752,6,galaxy,solar system,lake
+753,6,galaxy,solar system,continent
+754,6,cosmos,solar system,universe
+755,2,hurricane,solar system,wind
+756,6,galaxy,solar system,mountain
+757,2,mountain,solar system,hill
+758,5,nebula,solar system,dust
+759,6,galaxy,solar system,soil
+760,6,galaxy,solar system,archipelago
+761,5,nebula,solar system,hurricane
+762,5,nebula,solar system,aurora
+763,6,supernova,solar system,firestorm
+764,6,galaxy,solar system,tornado
+765,2,storm,solar system,weather
+766,5,nebula,solar system,smokescreen
+767,5,nebula,breeze,solar system
+768,2,clay,soil,mud
+769,4,terrarium,terracotta,solar system
+770,6,solarium,terrarium,solar system
+771,5,universe,solarium,solar system
+772,4,planet,clay,solar system
+773,6,galaxy,storm,solar system
+774,2,smokescreen,ocean,wildfire
+775,2,mountain,world,hill
+776,6,aurora,steam,rainbow
+777,2,fog,breeze,smokescreen
+778,6,aurora,smokescreen,nebula
+779,5,greenhouse,solarium,terrarium
+780,2,hurricane,greenhouse,storm
+781,4,terrarium,clay,greenhouse
+782,5,greenhouse,bay,greenhouse
+783,4,beach,bay,earth
+784,2,island,beach,earth
+785,5,wave,beach,water
+786,2,breeze,beach,air
+787,4,bayou,bay,bay
+788,3,lagoon,bayou,bay
+789,3,swamp,lagoon,bayou
+790,5,coast,lagoon,beach
+791,2,volcano,mountain,hill
+792,7,glacier,sunlight,mountain
+793,5,black hole,universe,solar eclipse
+794,6,cosmos,galaxy,universe
+795,4,world,universe,island
+796,5,nebula,universe,dust
+797,6,tidalwave,universe,tsunami
+798,5,nebula,universe,rainbow
+799,5,nebula,cloud,universe
+800,2,fog,atmosphere,lake
+801,2,volcano,atmosphere,fire
+802,4,mirrorball,mirror,obsidian
+803,3,mirror,reflection,reflection
+804,5,illusion,reflection,mirror
+805,6,kaleidoscope,illusion,mirrorball
+806,8,mirage,illusion,glacier
+807,5,illusion,obsidian,mirage
+808,5,illusion,mirror,mirage
+809,5,black hole,mirrorball,obsidian
+810,5,nebula,obsidian,galaxy
+811,5,black hole,obsidian,universe
+812,5,black hole,obsidian,sun
+813,2,fog,smoke,smoke
+814,1,lava,volcano,soil
+815,2,volcano,magma,cloud
+816,2,volcano,lava,cloud
+817,6,mirage,illusion,reflection
+818,5,algae,lagoon,moss
+819,6,lens,algae,mirror
+820,7,seaglass,lens,lagoon
+821,4,beach,glacier,coast
+822,2,volcano,geyser,terrarium
+823,2,storm,hurricane,cosmos
+824,2,island,archipelago,volcano
+825,3,tsunami,ocean,water
+826,2,mountain,hill,universe
+827,9,sunstorm,tornado,daystar
+828,2,hurricane,tornado,eruption
+829,6,aurora,sky,fire
+830,10,solar flare,sunstorm,fire
+831,2,volcano,sunstorm,earth
+832,6,aurora,solar flare,smoke
+833,7,chloroplast,lens,algae
+834,5,illusion,chloroplast,mirage
+835,4,mirage,smoke,mirror
+836,4,mirrorball,moss,mirrorball
+837,5,kaleidoscope,reflection,mirrorball
+838,4,mirage,illusion,coast
+839,2,breeze,beach,wind
+840,2,hurricane,mountain,tornado
+841,2,tornado,hurricane,mountain
+842,1,mist,nebula,breeze
+843,2,volcano,lava,wildfire
+844,2,obsidian,lava,sunlight
+845,6,comet,meteorite,galaxy
+846,5,asteroid,meteor,comet
+847,6,meteor,asteroid,fire
+848,5,black hole,asteroid,universe
+849,6,comet,asteroid,nebula
+850,6,meteor,asteroid,cloud
+852,6,comet,asteroid,smoke
+853,6,meteor,asteroid,mist
+854,7,telescope,asteroid,lens
+856,6,meteor,asteroid,sunstorm
+858,5,solar system,asteroid,chloroplast
+859,6,meteor,asteroid,solar eclipse
+861,5,asteroid,meteorite,solar system
+862,5,asteroid,asteroid belt,meteor
+1456,1,wind,spirit,air
+1457,18,spirit,ghost,air
+1458,20,poltergeist,ghost,fire
+1459,21,ghostfire,poltergeist,fire
+1576,4,canyon,smoke,valley
+1173,5,cave,canyon,rock
+1577,5,gorge,canyon,valley
+1578,4,canyon,gorge,valley
+1747,4,blackout,black hole,solar eclipse
+1748,5,black hole,darkness,solar system
+1749,5,black hole,darkness,galaxy
+1750,6,night,darkness,atmosphere
+1751,7,twilight,night,atmosphere
+1752,6,night,twilight,twilight
+1753,2,breeze,twilight,wind
+1754,8,dusk,lake,twilight
+1755,7,twilight,dusk,dusk
+1756,1,mist,night,air
+1757,6,bonfire,night,fire
+1758,4,firework,bonfire,bonfire
+1759,5,sparkler,firework,water
+1760,6,nightlight,sparkler,darkness
+1761,5,darkness,nightlight,night
+1762,2,hurricane,nightlight,tornado
+1763,7,daydream,nightlight,sun
+1764,8,dreamcatcher,solar eclipse,daydream
+1765,5,nebula,dreamcatcher,solar system
+1766,9,hallucination,atmosphere,dreamcatcher
+1876,2,tornado,wind,earth
+1877,3,avalanche,storm,mountain
+1767,9,imagination,hallucination,universe
+2059,5,black hole,time machine,darkness
+1768,9,creativity,imagination,imagination
+1987,8,aurora borealis,aurora,northern lights
+1988,6,aurora,aurora borealis,aurora borealis
+1989,6,aurora,northern lights,northern lights
+1990,6,aurora,northern lights,aurora borealis
+1991,7,northern lights,skylight,aurora borealis
+1993,6,aurora,northern lights,dome
+1994,9,astronomer,aurora borealis,stargazer
+1995,9,night vision,aurora borealis,telescope
+1996,6,telescope,night vision,skylight
+1997,6,aurora,night vision,aurora borealis
+1999,10,tent,night vision,canopy
+2000,6,aurora,tent,northern lights
+2001,11,igloo,tent,aurora borealis
+2002,6,dome,igloo,skylight
+2003,12,igloodome,dome,igloo
+2005,7,polar bear,iceberg,night vision
+2006,8,stargazer,night vision,astronomer
+2007,5,satellite,night vision,spaceship
+2008,6,spaceship,night vision,shuttle
+2009,10,skydome,night vision,planetarium
+2010,8,planetarium,night vision,skydome
+2011,7,heaven,skydome,skydome
+2012,10,starry,night vision,heaven
+2013,8,stargazer,starry,night vision
+2014,6,aurora,starry,northern lights
+2015,10,owl,stargazer,night vision
+2016,10,spy satellite,satellite,night vision
+2017,6,telescope,spy satellite,stargazer
+2019,7,northern lights,heaven,aurora
+2020,7,northern lights,heaven,aurora borealis
+2021,11,tabernacle,heaven,tent
+2022,5,universe,heaven,skydome
+2024,5,universe,heaven,starry
+2025,5,universe,heaven,cosmos
+2026,7,ufo,heaven,spaceship
+2027,6,cosmos,heaven,planetarium
+2030,4,window,heaven,skylight
+2031,8,portal,heaven,window
+2032,4,chimney,heaven,fireplace
+2033,3,cloud,chimney,heaven
+2034,7,rainbow,heaven,cloud
+2036,7,paradise,sky,heaven
+2037,8,stargazer,sky,night vision
+2039,6,chimneystack,skylight,chimney
+2040,5,skylight,chimneystack,window
+2041,6,aurora,northern lights,air
+2042,6,aurora,northern lights,window
+2043,7,rainbow,northern lights,mirror
+2046,5,sparkle,skylight,glimmer
+2047,7,rainbow,prism,northern lights
+2049,12,camouflage,stealth,night vision
+2050,13,ghillie,camouflage,night vision
+2051,5,darkness,night vision,night vision
+2052,8,spacetime,wormhole,black hole
+2053,5,black hole,spacetime,spacetime
+2054,5,black hole,spacetime,singularity
+2055,5,black hole,spacetime,darkness
+2056,12,cloaking,spacetime,stealth
+2058,8,time machine,ufo,wormhole
+2060,7,wormhole,time machine,singularity
+2061,9,teleporter,time machine,wormhole
+2062,8,portal,teleporter,wormhole
+2063,7,wormhole,teleporter,spacetime
+2065,8,portal,teleporter,tabernacle
+2066,14,invisibility cloak,teleporter,ghillie
+2067,11,stealth,invisibility cloak,cloaking
+2068,5,cave,darkness,tent
+2069,7,campfire,tent,fire
+2070,6,aurora,darkness,northern lights
+2071,6,night,darkness,sky
+2072,6,aurora,night,northern lights
+2073,7,twilight,aurora,night
+851,5,life,asteroid,algae
+855,8,gemstone,asteroid,seaglass
+857,5,illusion,asteroid,mirage
+1460,3,firestorm,ghostfire,windurn
+1461,11,jellyfish,jellyfish,death
+1462,18,nothing,death,oblivion
+1579,5,universe,nebula,cosmos
+1769,1,wind,breeze,breeze
+1770,5,weather,world,atmosphere
+1771,2,storm,weather,weather
+1772,2,storm,weather,cloud
+1773,2,storm,breeze,weather
+1774,2,storm,weather,lake
+1775,2,hurricane,weather,ocean
+1776,2,storm,earth,weather
+1777,2,storm,air,weather
+1778,2,volcano,lava,atmosphere
+1779,5,universe,volcano,solar system
+1780,5,black hole,volcano,universe
+1782,11,dream,nightmare,imagination
+1784,1,mist,nightmare,atmosphere
+1785,5,nebula,galaxy,fire
+1786,4,atmosphere,multiverse,air
+1787,2,tornado,multiverse,wind
+1788,5,nebula,lake,galaxy
+1789,7,heaven,sky,sky
+1790,5,universe,sky,solar system
+1792,10,imagination,sky,creativity
+1793,2,storm,sky,weather
+1794,7,stars,sky,night
+1795,6,galaxy,stars,sky
+1796,8,galaxies,stars,stars
+1797,1,lava,stars,magma
+1798,5,prison,alcatraz,alcatraz
+1800,5,prison,jail,alcatraz
+1801,7,paradise,heaven,alcatraz
+1803,2,island,alcatraz,lake
+1805,6,meteor,asteroid,atmosphere
+1806,6,meteorite,meteor,atmosphere
+1810,10,nightmare,dream,horror
+1813,6,comet,asteroid belt,meteorite
+1816,7,meteor shower,asteroid field,meteor
+1817,3,firestorm,meteor shower,fireball
+1819,6,meteor,crater,asteroid
+1821,7,impact,meteorite,crater
+1822,5,asteroid,comet,crater
+1878,2,hurricane,breeze,tornado
+1879,2,hurricane,tornado,storm
+1880,2,tornado,hurricane,earth
+1881,2,magma,lava,breeze
+1882,2,volcano,earth,eruption
+2389,2,hurricane,ash,typhoon
+1781,9,nightmare,volcano,hallucination
+1783,10,dreamscape,nightmare,universe
+1791,9,dream,sky,imagination
+1992,6,aurora,northern lights,fireplace
+2004,8,iceberg,igloo,igloo
+2018,6,aurora,heaven,northern lights
+2029,8,hubble,heaven,telescope
+2038,4,window,skylight,glass
+2045,6,prism,skylight,diamond
+2057,7,wormhole,ufo,spacetime
+2081,5,moon,earth,night
+2093,8,gloom,moonlight,shadow
+2098,2,ash,lava,night
+2216,7,irrigation,watering can,watertower
+2232,5,powerplant,hydroelectric dam,turbine
+2247,4,castle,hill,brick
+2240,5,vaselet,castle,vase
+2252,3,windmill,twister,turbine
+2311,3,firestorm,meteor,wildfire
+2312,2,volcano,firestorm,planet
+2344,3,tsunami,eruption,tsunami
+2345,2,hurricane,typhoon,tornado
+2346,2,volcano,eruption,hell
+2347,2,volcano,mountain,eruption
+2348,3,firestorm,typhoon,inferno
+2349,2,hurricane,firestorm,typhoon
+2351,3,avalanche,mountain,tsunami
+2352,2,volcano,mountain,typhoon
+2353,3,rock,mountain,boulder
+2354,4,blizzard,avalanche,typhoon
+2356,2,volcano,storm,fire
+2357,2,hurricane,typhoon,storm
+2359,2,hurricane,hell,storm
+2360,2,hurricane,inferno,storm
+2361,3,hell,purgatory,earth
+2362,3,desert,hellscape,earth
+2364,5,cataclysm,armageddon,eruption
+2365,5,apocalypse,cataclysm,cataclysm
+2366,2,tornado,cataclysm,storm
+2367,2,volcano,cataclysm,eruption
+2368,5,apocalypse,cataclysm,armageddon
+2369,2,tornado,cataclysm,air
+2370,2,hurricane,cataclysm,typhoon
+2372,7,deluge,armageddon,tsunami
+2373,4,blizzard,armageddon,avalanche
+2374,2,hurricane,armageddon,typhoon
+2376,2,hurricane,cataclysm,tornado
+2377,3,tsunami,deluge,deluge
+2378,3,tsunami,cataclysm,deluge
+2379,6,ice age,cataclysm,blizzard
+2380,2,volcano,cataclysm,fire
+2382,2,volcano,eruption,lava
+2386,2,ash,dust,eruption
+2387,2,volcano,ash,eruption
+2390,2,volcano,storm,lava
+2392,4,ember,cinder,wind
+2393,2,volcano,magma,storm
+2394,2,volcano,magma,typhoon
+2395,2,volcano,magma,eruption
+2396,2,ash,air,cinder
+2397,2,sandstorm,air,duststorm
+2399,3,ceramics,clay,lava
+2400,3,cinder,dirt,ash
+2401,2,tornado,dirt,typhoon
+2403,3,avalanche,landslide,eruption
+2404,3,tsunami,landslide,typhoon
+2405,2,volcano,lava lake,tsunami
+2406,2,volcano,lava lake,earth
+2407,5,terraform,apocalypse,earth
+860,5,asteroid,meteor,solar system
+864,2,mudslide,steam,earth
+559,4,lavaflow,magma,landslide
+865,2,mudslide,sludge,sludge
+866,2,mudslide,clay,sludge
+867,3,brick,clay,mud
+868,4,wall,brick,brick
+869,5,prison,wall,wall
+870,6,alcatraz,prison,wall
+871,6,castle,prison,brick
+872,7,fortress,alcatraz,castle
+873,7,fortress,fortress,castle
+874,6,castle,fortress,fortress
+876,7,fortress,castle,wall
+877,7,fortress,castle,brick
+880,2,mudslide,maze,mudslide
+881,8,labyrinth,castle,maze
+882,4,moss,plant,mud
+883,4,forest,mossy,moss
+884,8,labyrinth,forest,maze
+885,7,fortress,forest,castle
+886,6,castle,forest,fortress
+887,9,maze,forest,labyrinth
+888,6,alcatraz,forest,alcatraz
+889,5,bog,forest,sludge
+890,2,mudslide,bog,clay
+1463,18,spirit,oblivion,poltergeist
+892,2,mudslide,swampslide,water
+893,2,mudslide,swampslide,earth
+894,2,sludge,swampslide,mud
+895,2,mudslide,swampslide,clay
+896,7,mire,swampslide,bog
+897,5,jungle,mire,forest
+898,6,rainforest,jungle,jungle
+899,5,jungle,rainforest,rainforest
+900,7,tropics,rainforest,jungle
+901,5,jungle,tropics,tropics
+902,2,fog,mist,water
+903,1,smoke,fog,fire
+904,1,mist,fog,water
+905,2,sludge,smoke,mud
+906,2,fog,sludge,smoke
+907,3,terracotta,clay,smoke
+908,2,clay,terracotta,mudslide
+909,5,debris,forest,mudslide
+910,2,ash,fire,debris
+911,5,jungle,ash,rainforest
+912,6,cinderblock,ash,prison
+913,7,concrete,steam,cinderblock
+914,4,wall,concrete,concrete
+915,8,jail,concrete,prison
+916,5,prison,jail,wall
+918,5,prison,dungeon,penitentiary
+919,2,fog,geyser,steam
+920,3,mudpot,geyser,mud
+921,2,mudslide,sludge,mudpot
+922,3,pottery,clay,clay
+923,2,sandstorm,wind,mud
+924,3,dustdevil,sandstorm,fire
+925,3,rainstorm,sandstorm,water
+926,2,fog,sandstorm,steam
+927,4,thunderstorm,rainstorm,fire
+928,4,flood,rainstorm,water
+929,2,hurricane,rainstorm,thunderstorm
+930,2,hurricane,thunderstorm,flood
+931,2,volcano,desert,lava
+932,2,volcano,desert,magma
+935,5,universe,solar system,solar system
+936,5,universe,cosmos,galaxy
+937,6,sunspot,sun,solar eclipse
+938,7,blackout,air,solar eclipse
+1464,22,nightmare,oblivion,ghostfire
+941,7,darkness,night,eclipse
+945,1,mist,steam,fire
+946,2,fog,mist,mist
+947,2,fog,air,steam
+948,2,fog,smoke,steam
+949,5,lavalamp,mirrorball,lava
+952,6,alcatraz,prison,prison
+954,3,lagoon,bay,lake
+955,4,harbor,bay,ocean
+960,4,atmosphere,sky,air
+961,4,world,sky,earth
+962,3,cloud,sky,water
+963,4,thunderstorm,cloud,fire
+964,7,tidepool,aurora,ocean
+965,3,cloud,dust,sky
+966,2,magma,lava lake,lava
+967,2,geyser,lava lake,water
+968,2,magma,lava lake,lava lake
+969,2,volcano,mud,mountain
+970,2,puddle,mud,lake
+971,2,sludge,ocean,mud
+972,2,magma,mudslide,lava
+973,3,lahar,magma,mudslide
+974,3,avalanche,mudslide,mountain
+975,3,landslide,mudslide,hill
+982,2,storm,cloud,earth
+983,4,smog,cloud,ash
+984,2,fog,cloud,dust
+985,2,tornado,storm,earth
+986,1,mist,air,cloud
+987,2,tornado,thunderstorm,cloud
+988,2,mountain,cloud,hill
+989,2,hurricane,cloud,storm
+990,2,tornado,hurricane,cloud
+991,2,tornado,smog,storm
+993,4,smog,pollution,cloud
+994,2,volcano,pollution,lava
+998,1,lava,volcanic rock,volcano
+999,2,volcano,volcanic rock,hill
+1000,6,acid rain,acidic soil,mist
+1001,3,dustdevil,acidic soil,tornado
+1002,2,magma,acidic soil,lava
+1003,6,acid rain,acidic soil,storm
+939,6,eclipse,blackout,sun
+917,8,penitentiary,jail,prison
+875,6,dungeon,castle,prison
+878,7,labyrinth,dungeon,dungeon
+879,8,maze,labyrinth,clay
+1004,2,volcano,acidic soil,mountain
+1005,2,volcano,acidic soil,air
+1006,2,clay,acidic soil,earth
+1007,2,mudslide,clay,pollution
+1009,1,lava,acidic mudslide,volcanic rock
+1013,5,pollution,acid,smog
+1014,6,acid rain,acid,hurricane
+1015,2,duststorm,acid,dustdevil
+1016,2,sandstorm,acid,duststorm
+1017,1,lava,acid,mudslide
+1018,2,hurricane,acid,tornado
+1019,1,lava,acid,obsidian
+1020,1,lava,acid,fire
+1021,2,clay,acid,earth
+1023,6,acid rain,acid,acid
+1024,1,mist,acid,air
+1025,3,desert,mudstone,sandstorm
+1026,1,lava,desert,acidic mudslide
+1027,1,lava,desert,volcano
+1029,3,desert,salt flats,earth
+1030,2,magma,soil,lava
+1031,4,world,continent,earth
+1032,7,omniverse,multiverse,multiverse
+1033,6,multiverse,omniverse,omniverse
+1034,2,tornado,universe,storm
+1035,2,magma,universe,lava
+1036,6,galaxy,universe,nebula
+1037,7,terragalaxy,galaxy,terracotta
+1038,4,terrarium,universe,terracotta
+1039,4,forest,universe,plant
+1040,2,volcano,world,fire
+1041,2,ocean,world,water
+1042,2,island,continent,water
+1043,3,continent,island,world
+1044,5,universe,cosmos,omniverse
+1045,6,comet,cosmos,fire
+1047,3,desert,omniverse,salt flats
+1049,6,galaxy,continent,universe
+1050,6,mountain range,universe,mountain
+1051,4,terrarium,mountain range,terrarium
+1052,8,salt flats,mountain range,salty
+1053,8,mountaingalaxy,mountain range,terragalaxy
+1054,3,desert,salton sea,mountain range
+1055,5,universe,mountaingalaxy,omniverse
+1056,4,world,mountaingalaxy,island
+1057,7,flower,comet,plant
+1058,8,mountainous,omniverse,mountain range
+1059,6,meteor,mountainous,comet
+1060,3,desert,asteroid,salt flats
+1061,9,salton sea,asteroid,salty
+1062,6,meteorite,asteroid,earth
+1063,5,moon,asteroid,world
+1064,5,asteroid,moon,meteorite
+1065,6,meteor,moon,asteroid
+1070,5,globe,world,earth
+1071,4,mountain range,mountain,continent
+1072,4,world,planet,globe
+1073,5,universe,planet,world
+1074,5,mountainous planet,planet,mountain range
+1075,6,mars,planet,mountainous planet
+1076,7,olympus,mars,mountainous planet
+1077,7,olympus,olympus,olympus
+1078,7,olympus,olympus,mountain range
+1079,5,mountainous,mountain range,continent
+1080,5,nebula,cosmos,universe
+1081,6,galaxy,cosmos,mountainous planet
+1082,6,galaxy,nebula,mountainous planet
+1083,6,cosmos,galaxy,nebula
+1084,5,nebula,galaxy,volcano
+1085,6,mount atlantis,atlantis,mountainous
+1086,7,olympus,atlantis,olympus
+1087,7,andes,mount atlantis,mountain range
+1088,7,swampland,mount atlantis,swamp
+1089,3,flood,mudslide,water
+1090,2,mudslide,flood,earth
+1091,2,tornado,flood,air
+1092,5,bog,swampland,swampland
+1093,8,swampfire,swampland,sun
+1094,8,alligator,swampland,life
+1095,6,exoplanet,universe,terraform
+1096,2,volcano,swamp,mountainous
+1097,2,volcano,island,mountain
+1098,5,universe,cosmos,cosmos
+1099,1,lava,mud,volcano
+1100,2,hurricane,tornado,water
+1101,2,storm,water,hurricane
+1102,5,universe,solar system,mount atlantis
+1104,5,bog,mire,swampland
+1105,3,swamp,aquarium,mud
+1106,5,universe,swampland,cosmos
+1107,6,galaxy,mountainous planet,universe
+1108,5,jungle,terraform,swamp
+1109,6,mountainous range,mountain range,mountainous
+1110,4,bog,swamp,earth
+891,5,swampslide,bog,mudslide
+1103,5,mire,swamp,bog
+1111,6,solarium,mount atlantis,sun
+1112,4,mirage,mire,sun
+1113,2,volcano,mountainous range,swampfire
+1114,7,mountain planet,mountainous range,exoplanet
+1115,5,terraform,mount atlantis,mountain planet
+1116,8,planetarium,solar system,mountain planet
+1117,7,spaceship,planetarium,mountain planet
+1118,8,mountaintop,spaceship,mountainous range
+1120,10,observatory,ufo,mountaintop
+1121,7,spaceship,observatory,mountain planet
+1122,7,spaceship,observatory,planetarium
+1465,10,horror,nightmare,nightmare
+1129,7,spaceship,shuttlecraft,jungleship
+1131,5,waterfall,boulder,water
+1466,22,nightmare,horror,horror
+1139,2,tornado,rock,storm
+1143,8,antenna,mountainous range,satellite dish
+1144,7,spaceship,jungleship,satellite dish
+1145,6,limestone,waterfall,rock
+1150,7,spaceship,satellite,spacecraft
+1155,4,aquarium,waterfall,glass
+1156,7,mountaintop,mountainous range,solarium
+1119,8,ufo,mountaintop,spaceship
+1123,9,space station,observatory,spaceship
+2044,6,prism,skylight,crystal
+1163,8,ufo,hallucination,alienship
+1165,7,spaceship,shuttlecraft,shuttle
+1167,8,ufo,mirage,alienship
+1168,8,ufo,mothership,spacecraft
+1172,2,island,jungleship,mountaintop
+1174,8,ufo,dreamcatcher,alienship
+1176,7,telescope,satellite dish,starcatcher
+1180,7,telescope,vision,satellite
+1181,7,spaceship,satellite,shuttle
+1182,7,spaceship,space station,planetarium
+1183,7,spaceship,mountain planet,shuttle
+1189,8,lemonade,lime,water
+1191,8,limeade,lime,air
+1192,9,fizz,lemonade,air
+1193,10,soda,fizz,water
+1196,1,lava,bog,fire
+1468,6,thunder,terror,lightning
+1469,22,nightmare,terror,soul
+1470,22,nightmare,terror,ghost
+1471,23,horror,terror,mist
+1187,6,grotto,cave,water
+1580,1,mud,clay,dirt
+1581,5,universe,cosmos,earth
+1582,5,black hole,magma,universe
+1583,6,black earth,black hole,earth
+1584,2,obsidian,black earth,black earth
+1585,5,black hole,black earth,black hole
+1586,6,supernova,black hole,fire
+1587,2,ocean,black hole,water
+1588,4,canyon,mountain,valley
+1589,2,volcano,mountain,dust
+1590,6,black mountain,mountain,black hole
+1591,6,meteorite,supernova,mountain
+1592,6,singularity,asteroid,black hole
+1593,2,geyser,lake,volcano
+1594,5,pacific,archipelago,archipelago
+1595,2,island,archipelago,continent
+1596,6,pacifist,pacific,pacific
+1597,7,peacemaker,pacific,pacifist
+1598,7,utopia,pacifist,continent
+1599,8,harmony,utopia,peacemaker
+1600,9,peace,harmony,harmony
+1601,10,tranquility,harmony,peace
+1603,2,volcano,archipelago,lava
+1604,4,archipelago,atoll,island
+1605,5,coral,atoll,archipelago
+1606,4,reef,coral,coral
+1607,3,peninsula,hill,island
+340,4,peninsular breeze,breeze,peninsula
+684,5,windchime,terracotta,peninsular breeze
+1608,4,chimney,brick,fire
+1610,9,peace,chimney,tranquility
+1612,8,smokestack,utopia,chimney
+1613,3,smog,smokestack,utopia
+1614,8,pipe,chimney,peacemaker
+1615,3,desert,island,dust
+1617,4,archipelago,atoll,atoll
+1618,6,hawaii,archipelago,pacific
+1619,5,terracotta pot,moss,terracotta
+1620,4,coal,moss,fire
+1623,5,jungle,rainforest,moss
+1626,4,forest,fern,fern
+1627,7,hawaiian fern,fern,hawaii
+1630,5,jungle,forest,continent
+1631,2,volcano,hawaiian fern,hawaii
+1632,7,paradise,hawaii,oasis
+1633,6,eden,paradise,earth
+1635,5,jungle,eden,forest
+1636,5,jungle,eden,plant
+2048,11,stealth,night vision,tent
+2064,7,wormhole,teleporter,universe
+1799,7,jail,alcatraz,prison
+1804,5,asteroid,mountain,planet
+1808,6,galaxy,island,solar system
+1809,6,galaxy,universe,atmosphere
+1811,6,comet,fireball,atmosphere
+1812,5,asteroid,solar system,comet
+1814,7,asteroid belt,asteroid field,asteroid field
+1818,2,volcano,crater,earth
+1823,6,eclipse,moon,moon
+1175,9,starcatcher,space station,dreamcatcher
+1825,7,space station,spaceship,satellite
+1136,10,spacecraft,mothership,space station
+1883,5,earthquake,disaster,earth
+1467,11,terror,horror,nightmare
+1998,7,observatory,night vision,dome
+2023,6,cosmos,universe,heaven
+2028,6,telescope,heaven,observatory
+2035,6,sky,heaven,air
+2076,5,explosion,skyrocket,detonation
+2086,8,moonbeam,moonlight,window
+2091,7,twilight,dusk,sunset
+2096,5,darkness,gloom,gloom
+2217,8,sprinkler,waterspout,irrigation
+2225,3,windmill,mill,fortress
+2233,4,turbine,hydroelectric dam,waterwheel
+2241,12,millstone,vaselet,mill
+2248,5,fortress,hill,castle
+2253,2,tornado,twister,windmill
+2313,2,sludge,puddle,mud
+2314,2,sludge,bay,mud
+2350,2,hurricane,wildfire,typhoon
+2355,2,storm,blizzard,blizzard
+2358,2,hurricane,typhoon,blizzard
+1125,4,boulder,rock,water
+1472,6,cloudy,vase of clouds,vase
+1602,3,continent,archipelago,earth
+1134,7,spaceship,mothership,observatory
+1135,7,spaceship,mothership,shuttle
+1138,11,shuttle,spacecraft,shuttlecraft
+1141,7,spaceship,jungle,satellite
+1142,7,satellite dish,mountainous range,satellite
+1146,6,satellite,antenna,satellite dish
+1148,7,spaceship,mountaintop,shuttlecraft
+1151,7,spaceship,shuttle,space station
+1153,7,swampland,mountain planet,mire
+1154,8,mountaintop,planetarium,mountainous range
+1132,8,observatory,mountaintop,solarium
+2391,2,volcano,storm,ash
+2398,2,volcano,air,eruption
+1158,7,spaceship,spaceship,planetarium
+1161,2,mountain,hill,terraform
+1162,6,canyon,waterfall,earth
+1164,6,rapids,waterfall,water
+1170,5,waterfall,rock,rapids
+1171,10,dreamcatcher,space station,hallucination
+1179,6,satellite,vision,satellite dish
+1185,7,spaceship,space station,observatory
+1186,4,boulder,hurricane,rock
+1188,7,lime,fire,limestone
+1190,8,limelight,lime,fire
+1195,5,mudflat,bog,earth
+1609,3,terracotta,clay,wildfire
+1611,9,peace,chimney,harmony
+1624,1,mist,rainforest,dust
+1629,5,fern,hawaiian fern,hawaiian fern
+1634,5,jungle,eden,rainforest
+1637,6,bamboo,plant,fern
+1178,9,vision,dreamcatcher,telescope
+1802,5,prison,geyser,alcatraz
+1807,5,solar system,galaxy,asteroid belt
+1815,7,asteroid belt,asteroid field,asteroid
+1820,7,impact,meteor,crater
+1824,3,cloud,moon,sky
+2402,2,mudslide,dirt,tsunami
+1124,8,shuttle,space station,spaceship
+2414,3,desert,extinction,earth
+1128,7,jungleship,spaceship,jungle
+1884,3,tsunami,earthquake,earthquake
+1885,3,flood,tsunami,water
+1886,6,tsunamiquake,tsunami,earthquake
+1887,5,cataclysm,tsunami,disaster
+1888,2,volcano,cataclysm,earth
+1889,3,eruption,tsunamiquake,earth
+1890,2,mudslide,disaster,avalanche
+1891,2,volcano,disaster,mountain
+1892,2,tornado,disaster,air
+1159,8,hallucination,mirage,observatory
+1127,8,shuttlecraft,shuttle,spaceship
+2074,7,skyrocket,night,firework
+2075,5,explosion,detonation,detonation
+2077,5,explosion,firework,bang
+2078,5,explosion,bonfire,bang
+2079,5,explosion,twilight,bang
+2080,6,thunder,night,bang
+2082,7,moonlight,moon,night
+2083,5,darkness,moonlight,night
+2084,7,shadow,night,darkness
+2085,5,darkness,shadow,night
+2087,8,dusk,night,twilight
+2088,8,sunset,dusk,twilight
+2089,7,twilight,sunset,night
+2090,7,twilight,sunset,sunset
+2092,8,constellation,night,stars
+2094,8,dusk,night,gloom
+2095,5,darkness,dusk,night
+2097,7,campfire,night,bonfire
+2099,6,nightlight,night,window
+2243,3,windmill,tornado,millstone
+2244,4,vase,millstone,vaselet
+2245,4,turbine,millstone,hydroelectric
+2246,5,powerplant,geyser,turbine
+2249,2,volcano,hill,geyser
+2250,3,twister,hill,tornado
+2251,3,windmill,twister,millstone
+2254,2,tornado,twister,air
+2255,2,tornado,twister,earth
+2256,2,tornado,twister,fire
+2257,2,hurricane,twister,water
+2258,2,tornado,twister,mud
+2259,5,urn,vase,chimney
+2260,5,sludgepipe,chimney,sludge
+2261,3,fountain,urn,water
+2262,4,castle,brick,wall
+2263,4,wall,cinderblock,brick
+2264,7,concrete,cinderblock,mud
+2315,3,landslide,mudslide,mud
+2316,5,catastrophe,disaster,disaster
+2317,6,apocalypse,disaster,catastrophe
+2318,5,cataclysm,apocalypse,disaster
+2363,5,apocalypse,hellscape,hellscape
+2371,2,volcano,cataclysm,mountain
+2375,5,cataclysm,armageddon,hurricane
+2384,2,tornado,tsunami,whirlwind
+2385,2,sandstorm,duststorm,duststorm
+2417,6,armageddon,extinction,hellscape
+2421,10,nothing,extinction,vacuum
+2423,2,ash,extinction,wildfire
+2426,3,eruption,cataclysm,volcano
+2432,6,armageddon,meteor,apocalypse
+2434,5,apocalypse,catastrophe,armageddon
+2444,7,extinction,meteor shower,armageddon
+2447,6,armageddon,hellscape,meteor shower
+2459,6,armageddon,hurricane,meteor storm
+2461,4,purgatory,hell,terraform
+2501,7,ore,gold,rock
+2574,8,imagination,faith,dreamland
+2575,9,hope,faith,imagination
+2577,9,hope,prayer,prayer
+1126,7,spaceship,shuttle,planetarium
+1137,7,spaceship,spacecraft,shuttle
+1140,6,satellite,spacecraft,spaceship
+1147,6,satellite,antenna,ufo
+1149,7,spaceship,planetarium,spacecraft
+1152,7,spaceship,shuttle,solar system
+1157,7,spaceship,solarium,ufo
+1160,2,volcano,mountainous,mount atlantis
+1166,7,spaceship,mountain planet,space station
+1169,7,spaceship,satellite,shuttlecraft
+1177,7,marble,limestone,rock
+1184,7,spaceship,spaceship,jungleship
+1194,11,pop,soda,fire
+1197,1,mist,bog,air
+1198,5,rockslide,boulder,sludge
+1199,3,avalanche,waterfall,rockslide
+1200,5,fishtank,aquarium,aquarium
+1201,4,aquarium,fishtank,fishtank
+1202,2,island,sea,rock
+1203,2,ocean,lake,sea
+1204,2,island,sea,boulder
+1205,4,archipelago,boulder,island
+1206,2,tornado,storm,hurricane
+1207,2,hurricane,storm,glass
+1208,3,lagoon,water,archipelago
+1209,3,atlantis,atlantis,earth
+1210,3,cloud,atlantis,air
+1211,3,atlantis,fire,atlantis
+1212,4,aquarium,fishtank,cave
+1213,4,aquarium,soda,fishtank
+1214,4,aquarium,fishtank,grotto
+1215,4,aquarium,fishtank,rapids
+1216,4,aquarium,fishtank,lime
+1217,6,limestone,lime,sea
+1218,3,tsunami,sea,eruption
+1219,2,tornado,boulder,hurricane
+1220,2,tornado,dustdevil,water
+1221,2,mountain,rock,rock
+1222,2,tornado,wind,mountain
+1223,4,sandstone,rock,wind
+1224,5,sandblast,dustdevil,sandstone
+1225,2,mountain,boulder,boulder
+1226,2,volcano,smoke,rock
+1228,2,hurricane,storm,water
+1229,3,cloud,geyser,air
+1231,2,tornado,dustdevil,mountain
+1232,5,sandcastle,sandstone,sandstone
+1233,6,mudpie,sandcastle,water
+1234,7,mudcastle,mudpie,sandcastle
+1235,4,sandstone,sandcastle,earth
+1237,2,mudslide,mudcastle,water
+1238,2,mudslide,rock,mudcastle
+1239,4,boulder,mudslide,rock
+1240,2,mountain,boulder,rock
+1241,2,duststorm,mudslide,air
+1242,3,landslide,mudslide,mudslide
+1243,4,boulder,landslide,rock
+1244,3,avalanche,landslide,landslide
+1245,4,boulder,avalanche,rock
+1246,3,landslide,avalanche,mudslide
+1247,4,disaster,landslide,avalanche
+1248,3,avalanche,mountain,landslide
+1249,3,avalanche,landslide,air
+1250,5,devastation,mudslide,disaster
+1251,4,boulder,disaster,rock
+1252,2,volcano,devastation,rock
+1253,2,obsidian,volcano,rock
+1254,4,boulder,mountain,rock
+1255,3,avalanche,volcano,landslide
+1256,3,avalanche,storm,landslide
+1257,3,flood,landslide,water
+1258,2,volcano,landslide,fire
+1259,3,avalanche,sandblast,landslide
+1260,6,armageddon,devastation,devastation
+1261,3,avalanche,avalanche,avalanche
+1262,3,tsunami,armageddon,landslide
+1263,2,island,tsunami,rock
+1264,7,cataclysm,armageddon,storm
+1265,3,tsunami,landslide,tsunami
+1266,2,sandstorm,landslide,duststorm
+1267,4,sandstone,sandstorm,rock
+1268,3,dune,sandstorm,mountain
+1269,2,volcano,cataclysm,rock
+1270,7,deluge,rainstorm,armageddon
+1271,2,mudslide,rainstorm,landslide
+1272,3,avalanche,rainstorm,mountain
+1273,2,mudslide,rock,rainstorm
+1274,3,avalanche,deluge,mountain
+1275,3,landslide,mountain,avalanche
+1276,3,landslide,boulder,avalanche
+1277,3,avalanche,boulder,landslide
+1278,2,duststorm,sandblast,avalanche
+1279,6,sandblaster,sandblast,sandblast
+1280,6,sandblaster,sandblaster,sandblaster
+1281,4,sandstone,sandblaster,rock
+1282,5,sandslide,sandstone,avalanche
+1283,3,avalanche,rock,sandslide
+1284,4,blackout,obsidian,avalanche
+940,7,night,eclipse,blackout
+1285,5,darkness,blackout,blackout
+1286,3,avalanche,sandslide,mountain
+1287,3,landslide,eruption,avalanche
+1288,2,volcano,eruption,rock
+1289,5,sandblast,metal,sandslide
+1290,2,mudslide,metal,landslide
+1291,3,lahar,mudslide,eruption
+1292,3,dustdevil,boulder,tornado
+1293,4,blizzard,dustdevil,avalanche
+1294,3,dune,sandcastle,sandslide
+1295,3,avalanche,sandstone,landslide
+1296,2,volcano,sandslide,fire
+1297,2,mudslide,water,sandslide
+1298,3,tsunami,island,avalanche
+1299,2,obsidian,darkness,rock
+1130,8,alienship,jungleship,ufo
+1300,4,boulder,rock,metal
+1304,3,tsunami,geyser,flood
+1305,3,avalanche,blizzard,lahar
+1307,4,crystal,glass,rock
+1309,7,apocalypse,diamond,armageddon
+1313,6,armageddon,doomsday,doomsday
+1316,6,sword,steel,steel
+1318,6,fortress,sandcastle,rock
+1321,8,fork,doubleedged sword,doubleedged sword
+1322,2,mudslide,sludge,avalanche
+1323,2,inferno,fire,wildfire
+1324,3,hell,inferno,purgatory
+1473,23,horror,vase,terror
+1474,7,decanter,cloudy,vase
+1476,25,dementor,dementor,dementor
+1616,2,volcano,fire,island
+1621,2,soil,moss,dirt
+1622,6,rainforest,jungle,forest
+1625,5,jungle,fern,rainforest
+1628,5,jungle,hawaii,rainforest
+2505,4,caldera,lake,crater
+1826,5,moon,satellite,earth
+1828,5,asteroid,satellite,comet
+1829,7,spaceship,satellite,atmosphere
+1830,7,satellite dish,world,satellite
+1832,6,satellite,antenna,spaceship
+1833,6,satellite,space station,antenna
+1834,5,nebula,spaceship,stars
+1835,7,asteroid belt,spaceship,asteroid field
+1836,5,asteroid,spaceship,meteorite
+1827,6,orbit,satellite,moon
+1831,7,antenna,satellite dish,satellite dish
+1893,3,tsunami,water,cataclysm
+1894,2,geyser,water,eruption
+1475,12,dementor,decanter,terror
+2102,4,porcelain,ceramics,pottery
+2104,3,ceramics,terracotta,tile
+2105,3,pottery,terracotta,ceramics
+2106,1,dust,wind,soil
+2107,3,dune,sandstorm,desert
+2108,2,sandstorm,dune,dust
+2111,2,hurricane,sandstorm,rainstorm
+2112,3,dustdevil,oasis,sandstorm
+2113,2,tornado,dustdevil,wind
+2115,2,tornado,fire,dustdevil
+2116,3,dustdevil,dirt,sandstorm
+2118,2,sandstorm,sandstone,dust
+2119,3,desert,sandstone,earth
+2120,5,mudstone,sandstone,water
+2121,6,castle,sandcastle,sandcastle
+2123,3,glass,sandcastle,fire
+2124,5,sandblast,sandstone,air
+2125,4,sandstone,sandblast,mudstone
+2126,7,ruins,castle,sandblast
+2127,5,debris,glass,ruins
+2129,4,boulder,rubble,mudstone
+2131,2,mountain,boulder,earth
+2132,3,terracotta,clay,desert
+2133,3,windmill,clay,wind
+2135,4,wall,brick,boulder
+2136,6,ruins,wall,debris
+2137,7,erosion,wall,sandblaster
+2138,6,erosion,wall,sandblast
+2139,5,rockslide,erosion,boulder
+2141,2,mudslide,clay,erosion
+2143,3,dune,sandstone,erosion
+2144,5,fortress,sandstone,castle
+2145,5,glassware,glass,sandstone
+2146,3,terracotta,clay,sandstorm
+2149,4,quicksand,quicksand,quicksand
+2150,2,magma,quicksand,fire
+2151,3,dustdevil,quicksand,air
+2152,2,mudslide,quicksand,water
+2153,3,dune,quicksand,desert
+2154,5,sandtrap,quicksand,dune
+2156,5,sandblast,sandtrap,dust
+2158,6,ruins,debris,prison
+2159,3,ceramics,dust,pottery
+2161,2,mudslide,steam,quicksand
+2162,4,mirage,steam,desert
+2164,3,glass,steam,sandstone
+2506,4,caldera,crater,volcano
+2166,5,steamship,castle,steam
+2267,2,volcano,dirt,mountain
+2319,6,apocalypse,cataclysm,disaster
+2320,3,avalanche,landslide,disaster
+2383,3,tsunami,eruption,ocean
+2388,3,cinder,ash,ash
+2412,6,armageddon,oblivion,apocalypse
+2418,3,flood,extinction,water
+2429,9,oblivion,catastrophe,extinction
+2420,8,vacuum,extinction,air
+2436,5,asteroid,cataclysm,meteor
+2437,6,armageddon,meteorite,apocalypse
+2441,6,meteorite,meteor shower,earth
+2445,6,armageddon,meteor shower,hell
+2452,6,armageddon,meteor storm,cataclysm
+2455,3,tsunami,meteor storm,deluge
+2458,6,deluge,tsunami,cataclysm
+2462,2,inferno,purgatory,hell
+2504,2,volcano,crater,hill
+2508,2,volcano,earth,geyser
+2509,2,volcano,geyser,fire
+2510,2,fog,hill,steam
+2579,1,wind,prayer,air
+2580,2,hurricane,wind,prayer
+2582,13,serenity,calm,miracle
+2583,10,tranquility,serenity,calm
+2584,11,serenity,tranquility,faith
+2585,9,peace,prayer,tranquility
+2627,6,jar,vase,urn
+2640,4,terrarium,flowerpot,vase
+2646,8,lavajar,terrajar,lavalamp
+2654,11,kettle,water,cauldron
+2669,12,tea,ocean,teacupful
+2680,14,teatime,teabag,tea party
+1301,3,landslide,deluge,mudslide
+1303,4,boulder,flood,rock
+1306,2,mudslide,lahar,lahar
+1308,5,diamond,air,crystal
+1310,6,armageddon,apocalypse,apocalypse
+1311,6,armageddon,devastation,apocalypse
+1314,7,apocalypse,doomsday,armageddon
+1315,5,steel,metal,metal
+1317,7,doubleedged sword,sword,sword
+1319,8,mudfort,mudcastle,mudcastle
+1477,1,wind,nothing,air
+1478,5,darkness,nothing,fire
+1479,5,black hole,darkness,darkness
+1480,5,black hole,wormhole,darkness
+1481,6,meteorite,black hole,rock
+1489,4,forest,growth,plant
+1493,7,herbivore,animal,plant
+1494,6,stone golem,rock,life
+1506,2,ocean,ecosphere,water
+1508,4,world,ecosphere,earth
+1510,2,sandstorm,water,duststorm
+1515,3,dustdevil,wildfire,duststorm
+1517,2,hurricane,steam,tornado
+1519,2,fog,mist,steam
+1521,2,mountain,fog,hill
+1524,2,volcano,obsidian,eruption
+1526,3,ceramics,clay,steam
+1529,5,tile,ceramics,porcelain
+1530,3,ceramics,tile,porcelain
+1532,3,brick,terracotta,magma
+1533,4,brickade,brick,obsidian
+1320,6,snowfort,avalanche,fortress
+1536,6,castle,fortress,brick
+1541,4,terrarium,bunker,terracotta
+1641,4,tide,ocean,sea
+1642,5,seascape,archipelago,ocean
+1837,5,prison,spaceship,jail
+1838,7,ufo,spaceship,cloud
+1895,4,glimmer,glass,fire
+1896,5,sparkle,glimmer,glimmer
+1897,6,glitter,glimmer,sparkle
+1898,5,sparkle,glitter,glitter
+1899,6,glitter,sparkle,sparkle
+2103,6,mosaic,tile,tile
+2109,2,sandstorm,dune,wind
+2122,6,fort,sandcastle,mud
+2134,3,brick,clay,rubble
+2128,7,rubble,debris,ruins
+2140,3,valley,mountain,erosion
+2148,4,quicksand,desert,sludge
+2155,6,dunebuggy,sandtrap,dune
+2163,3,mudstone,steam,soil
+2269,11,calmity,tranquility,apocalypse
+2270,2,volcano,nightfire,island
+2271,10,nightbuggy,dunebuggy,night vision
+2272,5,lavalamp,aurora borealis,mudpot
+2273,10,jelly,fern,jam
+2274,7,mountain crystal,cubic zirconia,mountainous
+2275,8,tatooine,dunebuggy,mountain planet
+2276,6,thunder,electric eel,volcano
+2277,2,volcano,dirt,mount atlantis
+2278,7,toadstool,electrocution,mushroom
+2279,8,darkroom,solar eclipse,jail
+2280,8,fossil,plant,death
+2281,12,hideout,stealth,bay
+2282,8,hellgate,hellmouth,legacy
+2283,8,vesuvius,aphrodite,volcano
+2284,6,aurora,meteor shower,dream
+2285,5,asteroid,asteroid belt,earth
+2286,6,spaceship,exoplanet,shuttle
+2287,3,cloud,sky,mountaintop
+2288,5,black hole,armageddon,galaxy
+1312,7,doomsday,apocalypse,armageddon
+2321,5,cataclysm,devastation,armageddon
+2408,7,desolation,armageddon,earth
+2411,9,oblivion,despair,apocalypse
+1448,10,nothing,oblivion,oblivion
+2413,10,extinction,oblivion,armageddon
+2416,9,oblivion,extinction,armageddon
+2419,7,deluge,extinction,flood
+2424,5,cataclysm,extinction,inferno
+2425,9,oblivion,cataclysm,extinction
+2427,6,meteor,eruption,extinction
+2428,5,catastrophe,meteor,extinction
+2430,7,extinction,catastrophe,meteor
+2422,9,nothing,vacuum,vacuum
+2415,8,oblivion,extinction,apocalypse
+2431,2,volcano,catastrophe,earth
+2433,5,cataclysm,meteor,armageddon
+2435,5,apocalypse,catastrophe,cataclysm
+2438,7,extinction,meteorite,armageddon
+2439,6,armageddon,meteorite,extinction
+2440,7,meteor shower,meteorite,eruption
+2442,5,asteroid,meteor shower,extinction
+2443,6,armageddon,meteor shower,apocalypse
+2446,6,armageddon,purgatory,meteor shower
+2448,8,meteor storm,meteor shower,meteor shower
+2449,7,meteor shower,meteor storm,meteor storm
+2450,6,armageddon,meteor storm,apocalypse
+2451,5,cataclysm,meteor storm,armageddon
+2453,6,meteorite,asteroid,meteor storm
+2454,6,armageddon,meteor storm,catastrophe
+2456,7,deluge,meteor storm,tsunami
+2457,5,cataclysm,tsunami,apocalypse
+2460,2,hurricane,tornado,meteor storm
+2507,2,geyser,steam,caldera
+2586,8,dreamcatcher,castle in the sky,nightmare
+2587,8,imagination,hallucination,castle in the sky
+2588,5,moat,castle,water
+2589,5,fortress,moat,sandcastle
+2590,4,castle,sandstone,moat
+2591,2,mudslide,mudstone,mud
+2592,2,clay,mudstone,water
+2593,4,shale,mudstone,clay
+2594,3,slate,shale,mudstone
+2689,13,teapot,teabag,terracotta
+1302,5,snowstorm,blizzard,avalanche
+1325,2,tornado,wildfire,wind
+1326,2,volcano,inferno,eruption
+1327,2,tornado,wildfire,storm
+1328,2,hurricane,hell,tornado
+1329,2,tornado,eruption,hurricane
+1330,2,volcano,hill,wildfire
+1331,2,hurricane,wind,island
+1482,2,sandstorm,duststorm,dust
+1483,2,volcano,vase,hill
+1485,3,smog,ash,dust
+992,4,pollution,smog,dust
+995,5,acid rain,pollution,water
+996,6,acidic soil,acid rain,earth
+997,7,volcanic rock,acidic soil,obsidian
+1028,7,salt flats,desert,acidic soil
+1046,8,salton sea,comet,salt flats
+1048,8,salty,multiverse,salt flats
+1008,6,acidic mudslide,mudslide,acid rain
+1010,7,acidic mud,acidic mudslide,acidic soil
+1011,8,acidic rain,acidic mud,acid rain
+1012,9,acid,acidic rain,acid rain
+1022,10,mudstone,acid,clay
+1486,1,mud,dirt,water
+1490,6,phoenix,fire,life
+1496,6,golem,clay,life
+1498,8,statue,gargoyle,gargoyle
+1500,5,greenhouse,greenhouse,greenhouse
+1504,4,atmosphere,air,biome
+1511,2,volcano,geyser,eruption
+1512,2,hurricane,geyser,duststorm
+1513,2,volcano,inferno,earth
+1514,3,dustdevil,wildfire,sandstorm
+1516,2,volcano,wildfire,mountain
+1523,2,volcano,lava,hurricane
+1527,4,porcelain,ceramics,steam
+1528,3,ceramics,porcelain,steam
+1531,3,terracotta,tile,ceramics
+1534,1,mist,brick,cloud
+1535,5,fortress,brickade,wall
+1537,6,castle,fortress,wall
+1540,5,fortress,bunker,wall
+1542,5,fortress,bunker,bunker
+24,5,diamond,carbon,carbon
+1643,13,depression,alienship,recession
+1644,6,rainforest,ecosphere,tropics
+1645,8,flowerpot,ore,planter
+1646,22,nightmare,seaglass,terror
+1647,2,hurricane,death,rainstorm
+1648,8,marsh,swampland,lagoon
+1649,6,castle,vision,fortress
+1650,3,avalanche,human,rockslide
+1651,5,generator,brick,powerplant
+1652,8,antenna,satellite dish,fork
+1653,8,mudmen,mudslide,tribe
+1654,8,coke,concrete,coal
+1655,13,depression,patriarch,recession
+1656,9,crocodile,prison,alligator
+1657,5,stainedglass,window,charcoal
+1659,7,fallout,grotto,nuclear winter
+1660,4,thunderstorm,daytime,rainstorm
+1661,8,iceberg,black hole,glacier
+1662,4,mirrorball,mirror,dustbowl
+1840,8,ufo,alien,spaceship
+1841,8,ufo,space station,alien
+1842,8,ufo,antenna,alien
+1843,8,ufo,satellite dish,alien
+1844,6,satellite,orbit,alien
+1845,7,spaceship,ufo,ufo
+2290,2,obsidian,magma,clay
+1839,8,alien,ufo,spaceship
+1900,5,sparkle,glimmer,glitter
+1901,7,foam,glitter,water
+1902,5,sparkle,sparkle,water
+1903,1,lava,foam,fire
+1904,8,soap,foam,water
+1905,7,foam,soap,water
+1908,1,mist,glimmer,air
+1909,4,crystal,glass,glimmer
+1912,4,window,mirror,earth
+1913,5,fireplace,window,fire
+1918,5,smokestack,chimney,air
+1919,5,skylight,chimney,window
+1921,6,skyscraper,skylight,window
+1923,6,dome,skylight,skylight
+1926,6,skyscraper,skylight,skyscraper
+1931,4,chimney,telescope,fireplace
+1934,8,planetarium,observatory,skylight
+1939,4,crystal,planetarium,diamond
+1941,7,observatory,planetarium,skylight
+1942,8,stargazer,observatory,glimmer
+1944,9,astronomer,astronomer,telescope
+1947,3,cloud,mountain range,air
+1949,5,mountaintis,mountain range,atlantis
+1953,9,astronomer,stargazer,spaceship
+1955,5,nebula,atlantis,sea of stars
+1958,7,observatory,stargazer,dome
+1959,7,observatory,stargazer,canopy
+2110,3,dune,sandstorm,soil
+2114,2,tornado,dustdevil,air
+2117,4,sandstone,desert,dirt
+2130,4,sandstone,boulder,sandstorm
+2142,4,sandstone,brick,erosion
+2147,3,pottery,sandstorm,ceramics
+2157,5,sandblast,quicksand,dust
+2160,4,oasis,terracotta,desert
+2165,2,clay,steam,mudstone
+1658,6,swampboat,steamship,bayou
+2291,3,terracotta,obsidian,clay
+2292,4,vase,wind,pottery
+2293,5,fortress,castle,castle
+2294,4,castle,bunker,fortress
+2295,5,fortress,bunker,castle
+2330,2,magma,volcano,lava
+2332,3,cinder,volcano,ash
+2463,7,meteor shower,storm,meteorite
+2464,7,meteor shower,storm,meteor
+2465,3,tsunami,storm,flood
+2512,1,lava,steam,mudslide
+2596,9,tomb,vault,soil
+2702,7,venusian,dungeon,venus
+2703,4,world,purgatory,globe
+2704,8,stargazer,terrapical,constellation
+2705,2,volcano,lavacloud,goldmine
+2706,13,lotus,wisdom,flower
+2707,9,scuba,mount atlantis,pipe
+2708,6,melody,air,windchime
+2709,8,goblet,marble,glassware
+2710,8,alligator,crocodile,land
+2711,4,firework,nightfire,sparkler
+2712,10,goggles,vase,night vision
+2713,2,ash,wildfire,dust
+2714,2,volcano,tsunami,mountaintop
+2715,8,snowglobe,snowstorm,terrajar
+2718,6,galaxy,solar system,atmosphere
+2719,5,universe,solar system,world
+2720,4,mountain range,mountain,world
+2721,2,dirt,galaxy,soil
+2722,4,terracotta army,terracotta,mountain
+2723,2,volcano,clay,mountain
+2724,4,terrarium,clay,universe
+2725,4,vase,pottery,clay
+2726,3,cloud,archipelago,air
+2727,1,lava,magma,soil
+2728,5,universe,window,solar system
+2729,6,spaceship,galaxy,window
+2730,7,space station,spaceship,spaceship
+2736,4,glimmer,jelly,sparkle
+2737,8,trebuchet,catapult,coral
+2738,5,sandcastle,moonbeam,beach
+2739,2,sludge,jail,muck
+2740,2,volcano,waterspout,volcanic rock
+2741,12,icehouse,breeze,igloo
+2742,5,catastrophe,solarium,disaster
+2743,7,planetarium,sandstone castle,solar system
+2744,6,cinderblock,ash,penitentiary
+2745,8,civilization,earth,culture
+2746,4,oasis,nirvana,wasteland
+2747,9,waterjet,flamethrower,hydroelectric
+2748,5,sandblast,detonation,sandblaster
+2749,3,tsunami,black earth,wave
+2750,7,extinction,carbon credit,doomsday
+2751,7,canopy,dunebuggy,tabernacle
+2752,2,volcano,lava lake,mother
+2753,7,paradise,bamboo,eden
+2754,11,eternity,marriage,spacetime
+2755,14,bushman,patriarch,ghillie
+2760,8,salton sea,salty,desert
+2761,9,meadow,daytime,marsh
+2762,2,volcano,lava,skylight
+2763,6,comet,planet,nightbuggy
+2764,6,bunker,solarium,safehouse
+2765,7,twilight,dusk,teatime
+2766,4,chimney,bonfire,windurn
+2767,4,aquarium,fish,lagoon
+2768,4,blizzard,acidic mudslide,snowstorm
+2769,15,carbonite,carbon,invisibility cloak
+2770,1,mist,labyrinth,smog
+2771,10,tranquility,meteor storm,peace
+2772,10,tranquility,peace,waterfall
+2773,5,black hole,solar eclipse,quicksand
+2774,3,tsunami,landslide,night
+2775,3,mirror,sandtrap,smoked glass
+2776,10,tranquility,venus,calmity
+2777,8,shades,doubleedged sword,sunglass
+2778,6,mudpie,prayer,mudpie
+2779,8,airship,blade,skycastle
+2788,11,jellyfish,windcatcher,jelly
+2789,18,cloche,terrarium,steamer
+2790,5,venus,vase,aphrodite
+2791,4,chimney,starry,fireplace
+2792,7,swag,satellite,swag
+2793,5,cave,safehouse,gorge
+2794,5,lightning,breeze,electric eel
+2795,7,marina,mosaic,harbor
+2796,6,deluge,armageddon,mudslide
+2797,6,mirrorstone,mudstone,mirrorland
+2798,10,cauldron,decanter,horror
+2799,9,anarchy,wildfire,society
+2800,8,binoculars,desert,periscope
+2801,9,lighthouse,tower,aurora
+2802,6,telescope,salt flats,binoculars
+2803,8,marsh,fort,swampland
+2804,2,duststorm,earthquake,sandblaster
+2805,3,smokebomb,smokebomb,hawaiian fern
+2806,4,beach,coast,purgatory
+2807,5,watermill,turret,hydroelectric
+2808,10,lavalight,power,lavalamp
+2809,7,rainbow,prism,horizon
+2810,8,seamonster,gargoyle,seascape
+2811,10,tranquility,daytime,peace
+2812,9,ashen dawn,aurora borealis,volcanic ash
+2813,11,moonshine,moonstone,bankrupt
+2814,5,kaleidoscope,dreamland,mosaic
+2816,6,mesa,ecosystem,sandstone
+2817,5,darkness,horror,blackout
+2818,7,necklace,dome,cubic zirconia
+2819,9,hope,fountainhead,faith
+2820,5,greenhouse,igloodome,sunlight
+2821,12,cloak,alienship,stealth
+2822,1,mist,foam,cloud
+2823,9,peace,devastation,nothing
+2824,4,terrarium,sun,flowerpot
+2825,5,darkness,sparkle,nothing
+2826,10,horror,tomb,terror
+2827,5,urn,porcelain,obsidian
+2836,3,fountain,creativity,sprinkler
+2837,3,avalanche,legacy,avalanche
+2838,5,universe,nothing,galaxies
+2839,7,superearth,exoplanet,venus
+2840,2,ocean,hellgate,seaglass
+2841,2,tornado,wind,geyser
+2843,3,avalanche,lightning,landslide
+2844,6,desolation,flowerpot,cataclysm
+2815,10,shoreline,faith,coast
+2977,9,iron man,alien,rust
+2409,7,despair,desolation,desolation
+2410,8,hope,despair,despair
+2576,10,prayer,faith,hope
+2578,11,miracle,prayer,faith
+2581,11,calm,hurricane,prayer
+2845,5,cape,harbor,peninsula
+2846,2,island,lava,peninsula
+2847,8,cannonball,balloon,concrete
+2848,3,terracotta,ceramics,planet
+2849,4,terrarium,pottery,hawaiian fern
+2850,9,creativity,imagination,soul
+2851,10,revolution,anarchy,peacemaker
+2852,11,space soda,exoplanet,soda
+2853,7,foam,waterfall,soap
+2854,10,gyroscope,kaleidoscope,windcatcher
+2855,2,obsidian,mudstone,lavastone
+2856,2,geyser,geothermal,foam
+2857,10,bioluminescent,chloroplast,lighthouse
+2858,5,cave,bamboo,erosion
+2859,5,waterfall,diamond,rapids
+2860,9,windway,breeze,portal
+2861,10,acidic mudbank,bank,acidic mudslide
+2862,7,mudcastle,mudfort,mudfort
+2863,2,duststorm,traffic,moondust
+2864,9,nightmare,mudmen,dreamscape
+2865,2,volcano,hawaii,cannonball
+2866,4,coal,legacy,carbon
+2867,3,avalanche,vaselet,avalanche
+2868,17,bushtea,teabag,bushman
+2869,9,spacegator,space station,alligator
+2870,10,flamediver,phoenix,scuba
+2871,8,lavaboat,jungleship,lahar
+2872,7,city,continent,skyscraper
+2873,3,terracotta,mudbrick,teapot
+2874,3,cloud,mountaintis,skydome
+2875,3,dustbowl,duststorm,marsh
+2880,19,garden,cloche,eden
+2881,5,explosion,bailout,detonation
+2882,9,spork,tropics,fork
+2883,3,tsunami,flood,nirvana
+2884,4,terrarium,flower,terrajar
+2885,2,volcano,snowglobe,lavacloud
+2886,22,sea of flames,tidepool,ghostfire
+2887,7,wasteland,desert,desolation
+2888,3,crater,fallout,moon
+2889,5,apocalypse,revelation,forest fire
+2890,3,tsunami,cataclysm,tide
+2891,6,telescope,extinction,observatory
+2892,5,darkness,night,abyss
+2893,6,rainbow,mudslide,kaleidoscope
+2894,9,cloud vault,vault,vase of clouds
+2895,11,sundrop,soda,eclipse
+2896,5,greenhouse,atmosphere,dome
+2897,18,port,shock,harbor
+2898,4,oasis,wasteland,watering
+2899,11,daddy,daddy,bliss
+2904,13,lumber,tree,millstone
+2905,6,telescope,sword,stargazer
+2906,11,fortuneteller,mirrorball,astrologer
+2907,8,moonglow,fern,moonlight
+2908,8,dreamcatcher,imagination,lighthouse
+2909,2,tornado,twister,concrete
+2910,8,traffic,pacific,gridlock
+2911,4,terrarium,pottery,fishtank
+2912,8,civilization,continent,culture
+2913,9,swamp thing,black mountain,alligator
+2914,9,kraken,mountaintis,seamonster
+2915,5,prison,slate,alcatraz
+2916,10,traffic jam,nightmare,gridlock
+2917,7,limbo,sandtrap,dreamland
+2918,9,saltstorm,salty,hurricane
+2919,5,satellite,patriarch,antenna
+2920,9,chalice,hell,goblet
+2921,9,forkatapult,fork,trebuchet
+2922,5,balloon,home,air
+2923,8,netherworld,mushroom tree,hellmouth
+2929,8,hubble,revolution,telescope
+2930,8,equator,orbit,tropics
+2931,10,nuclear power plant,hydroelectric dam,fallout
+2932,5,snowstorm,sadness,blizzard
+2933,5,snowstorm,beach,blizzard
+2934,4,reef,crocodile,atoll
+2935,3,tsunami,starcatcher,flood
+2936,9,joybox,vault,happiness
+2937,7,heaven,sludgeslide,paradise
+2938,9,terracraft,terracotta army,shuttlecraft
+2939,4,harbor,water,port
+2940,4,terrarium,teapot,ecosphere
+2941,8,mother of pearl,mother,vase of clouds
+2942,8,fossil,ecosystem,carbonite
+2943,13,insight,wisdom,sandblaster
+2944,4,chimney,wall,pipe
+2945,16,astrologite,astrologer,carbonite
+2946,9,alien jar,alien,jar
+2947,5,jungle,mossy,garden
+2948,7,mirror mountains,mirrorverse,mountain range
+2951,8,slingshot,catapult,sludgeslide
+2952,5,diamond,mountaintis,cubic zirconia
+2953,9,jailbreak,dunebuggy,penitentiary
+2954,7,onyx,obsidian,phoenix
+2955,9,lunar colony,society,moondust
+2956,12,popweed,pop,diamondweed
+2957,2,mudslide,nothing,acidic mudbank
+2958,8,terrazzo,mosaic,floor
+2959,11,cloudfork,fork,cloudcastle
+2960,10,paleontologist,fossil,astronomer
+2961,9,starfish,stargazer,tide
+2962,7,stars,energy,exoplanet
+2963,6,glitter,hill,sparkle
+2964,4,window,stainedglass,claymore
+2965,6,phoenix,animal,lavalight
+2966,2,storm,cloud,life
+2967,8,polargalaxy,polar bear,terragalaxy
+2968,13,teapot,sandcastle,teakettle
+2969,5,cataclysm,deluge,terror
+2976,5,lightning,chimney,electricity
+2978,11,chaos,cloudcastle,anarchy
+2979,3,swamp,daddy issues,mud
+2980,8,sunburn,vaselet,solar storm
+2981,10,tranquility,peace,millstone
+2982,2,tornado,hurricane,kettle
+2983,10,forklift,forkatapult,dirigible
+2984,21,haunted,sandstone castle,poltergeist
+2985,2,volcano,cloud,black earth
+2986,8,halo,mirror,ring of fire
+2987,5,greenhouse,terrarium,sunburn
+2988,5,nebula,purgatory,planetarium
+2989,12,bomb,chaos,cannonball
+2990,7,cathedral,stainedglass,rainforest
+2991,12,depression,dustbowl,daddy issues
+2842,14,tear,sparkle,sadness
+1968,13,melancholy,mudball,depression
+2970,14,zeppelin,melancholy,dirigible
+2992,11,biobay,bioluminescent,baywindow
+2993,5,algae,chloroplast,mount atlantis
+2994,11,omnipotence,multiverse,fatherhood
+2995,2,volcano,lava,omnipotence
