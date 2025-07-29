@@ -9,6 +9,7 @@ type Storage interface {
 	CreateAccount(acc *Account) error
 	CreatePlayer(player *Player) error
 	CreateLobby(lobby *Lobby) error
+	DeleteAccount(username string) error
 	GetPlayerByLobbyCodeAndName(name, lobbyCode string) (*Player, error)
 	DeletePlayer(name, lobbyCode string) error
 	GetPlayersByLobbyCode(lobbyCode string) ([]*Player, error)

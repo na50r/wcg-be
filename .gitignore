@@ -1,4 +1,5 @@
 .env
-store.db
-store.db*
+*.db
+*.db*
+api_test.go
 bin/

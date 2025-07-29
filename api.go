@@ -25,6 +25,7 @@ func makeHTTPHandleFunc(f APIFunc) http.HandlerFunc {
 }
 
 type APIServer struct {
+	router       *mux.Router
 	listenAddr   string
 	store        Storage
 	broker       *Broker
@@ -35,6 +36,7 @@ type APIServer struct {
 
 func NewAPIServer(listenAddr string, store Storage) *APIServer {
 	return &APIServer{
+		router:       mux.NewRouter(),
 		listenAddr:   listenAddr,
 		store:        store,
 		broker:       NewBroker(),
@@ -57,8 +59,8 @@ func corsMiddleware(h http.Handler) http.Handler {
 	})
 }
 
-func (s *APIServer) Run() {
-	router := mux.NewRouter()
+func (s *APIServer) RegisterRoutes() error {
+	router := s.router
 	router.Use(corsMiddleware)
 	//Endpoints
 	router.HandleFunc("/login", makeHTTPHandleFunc(s.handleLogin))
@@ -86,6 +88,12 @@ func (s *APIServer) Run() {
 
 	// Swagger
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
+	return nil
+}
+
+func (s *APIServer) Run() {
+	s.RegisterRoutes()
+	router := s.router
 	log.Fatal(http.ListenAndServe(s.listenAddr, router))
 
 }

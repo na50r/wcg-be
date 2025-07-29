@@ -13,8 +13,8 @@ type SQLiteStore struct {
 	db *sql.DB
 }
 
-func NewSQLiteStore() (*SQLiteStore, error) {
-	db, err := sql.Open("sqlite3", "./store.db")
+func NewSQLiteStore(name string) (*SQLiteStore, error) {
+	db, err := sql.Open("sqlite3", fmt.Sprintf("./%s.db", name))
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
@@ -734,4 +734,9 @@ func (s *SQLiteStore) SelectWinnerByPoints(lobbyCode string) (string, error) {
 		return winner, nil
 	}
 	return "", nil
+}
+
+func (s *SQLiteStore) DeleteAccount(username string) error {
+	_, err := s.db.Exec("delete from account where username = ?", username)
+	return err
 }

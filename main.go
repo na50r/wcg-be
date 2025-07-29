@@ -182,11 +182,23 @@ func setWords(store Storage) error {
 	return nil
 }
 
+func seedDatabase(store Storage) {
+	if err := setImages(store); err != nil {
+		log.Fatal(err)
+	}
+	if err := setCombinations(store); err != nil {
+		log.Fatal(err)
+	}
+	if err := setWords(store); err != nil {
+		log.Fatal(err)
+	} 
+}
+
 func main() {
 	seed := flag.Bool("seed", false, "seed images & elements")
 	flag.Parse()
 
-	store, err := NewSQLiteStore()
+	store, err := NewSQLiteStore("store")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -197,15 +209,7 @@ func main() {
 
 	//./bin --seed
 	if *seed {
-		if err := setImages(store); err != nil {
-			log.Fatal(err)
-		}
-		if err := setCombinations(store); err != nil {
-			log.Fatal(err)
-		}
-		if err := setWords(store); err != nil {
-			log.Fatal(err)
-		}
+		seedDatabase(store)
 	}
 
 	//Accounts for ports provided by hosting services
