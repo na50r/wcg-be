@@ -865,7 +865,7 @@
                     "type": "integer"
                 },
                 "gameMode": {
-                    "type": "string"
+                    "$ref": "#/definitions/main.GameMode"
                 }
             }
         },
@@ -873,7 +873,7 @@
             "type": "object",
             "properties": {
                 "gameMode": {
-                    "type": "string"
+                    "$ref": "#/definitions/main.GameMode"
                 },
                 "playerResults": {
                     "type": "array",
@@ -1063,7 +1063,7 @@
                     "type": "integer"
                 },
                 "gameMode": {
-                    "type": "string"
+                    "$ref": "#/definitions/main.GameMode"
                 },
                 "withTimer": {
                     "type": "boolean"

@@ -62,12 +62,12 @@ definitions:
       duration:
         type: integer
       gameMode:
-        type: string
+        $ref: '#/definitions/main.GameMode'
     type: object
   main.GameEndResponse:
     properties:
       gameMode:
-        type: string
+        $ref: '#/definitions/main.GameMode'
       playerResults:
         items:
           $ref: '#/definitions/main.PlayerResultDTO'
@@ -191,7 +191,7 @@ definitions:
       duration:
         type: integer
       gameMode:
-        type: string
+        $ref: '#/definitions/main.GameMode'
       withTimer:
         type: boolean
     type: object

@@ -143,6 +143,9 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 		log.Printf("Error deleting player words before game start: %v", err)
 		return err
 	}
+	if err := s.store.ResetPlayerPoints(lobbyCode); err != nil {
+		return err
+	}
 	if err := s.store.SeedPlayerWords(lobbyCode, game); err != nil {
 		return err
 	}

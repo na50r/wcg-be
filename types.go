@@ -139,17 +139,17 @@ type JoinLobbyRequest struct {
 }
 
 type EditGameRequest struct {
-	GameMode string `json:"gameMode"`
+	GameMode GameMode `json:"gameMode"`
 	Duration int    `json:"duration"`
 }
 
 type GameEditEvent struct {
-	GameMode string `json:"gameMode"`
+	GameMode GameMode `json:"gameMode"`
 	Duration int    `json:"duration"`
 }
 
 type Game struct {
-	GameMode    string   `json:"gameMode"`
+	GameMode    GameMode   `json:"gameMode"`
 	LobbyCode   string   `json:"lobbyCode"`
 	TargetWord  string   `json:"targetWord"`
 	TargetWords []string `json:"targetWords"`
@@ -186,7 +186,7 @@ type Words struct {
 }
 
 type StartGameRequest struct {
-	GameMode  string `json:"gameMode"`
+	GameMode  GameMode `json:"gameMode"`
 	WithTimer bool   `json:"withTimer"`
 	Duration  int    `json:"duration"`
 }
@@ -211,7 +211,7 @@ type PlayerResultDTO struct {
 }
 
 type GameEndResponse struct {
-	GameMode    string             `json:"gameMode"`
+	GameMode    GameMode             `json:"gameMode"`
 	Winner      string             `json:"winner"`
 	PlayerWords []*PlayerResultDTO `json:"playerResults"`
 }
@@ -223,6 +223,7 @@ type Timer struct {
 type TimeEvent struct {
 	SecondsLeft int `json:"secondsLeft"`
 }
+
 
 func NewAccount(username, password string) (*Account, error) {
 	encpw, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)

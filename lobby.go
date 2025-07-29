@@ -97,6 +97,9 @@ func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) err
 	if err := s.store.DeletePlayerWordsByPlayerAndLobbyCode(playerName, lobbyCode); err != nil {
 		return err
 	}
+	if err := s.store.IncrementPlayerCount(lobbyCode, -1); err != nil {
+		return err
+	}
 	delete(s.lobbyClients[lobbyCode], s.playerClient[playerName])
 	s.Publish(Message{Data: PLAYER_LEFT})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Left Lobby"})

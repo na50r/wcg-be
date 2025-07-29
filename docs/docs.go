@@ -871,7 +871,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "gameMode": {
-                    "type": "string"
+                    "$ref": "#/definitions/main.GameMode"
                 }
             }
         },
@@ -879,7 +879,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "gameMode": {
-                    "type": "string"
+                    "$ref": "#/definitions/main.GameMode"
                 },
                 "playerResults": {
                     "type": "array",
@@ -1069,7 +1069,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "gameMode": {
-                    "type": "string"
+                    "$ref": "#/definitions/main.GameMode"
                 },
                 "withTimer": {
                     "type": "boolean"

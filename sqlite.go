@@ -435,7 +435,7 @@ func (s *SQLiteStore) GetLobbyByCode(lobbyCode string) (*Lobby, error) {
 	return nil, fmt.Errorf("lobby %s not found", lobbyCode)
 }
 
-func (s *SQLiteStore) EditGameMode(lobbyCode, gameMode string) error {
+func (s *SQLiteStore) EditGameMode(lobbyCode string, gameMode GameMode) error {
 	_, err := s.db.Exec("update lobby set game_mode = ? where lobby_code = ?", gameMode, lobbyCode)
 	return err
 }
@@ -512,7 +512,7 @@ func (s *SQLiteStore) GetTargetWord(minReachability, maxReachability float64, ma
 	return targetWords[rand.Intn(len(targetWords))], nil
 }
 
-func (s *SQLiteStore) NewGame(lobbyCode string, gameMode string, withTimer bool, duration int) (*Game, error) {
+func (s *SQLiteStore) NewGame(lobbyCode string, gameMode GameMode, withTimer bool, duration int) (*Game, error) {
 	game := new(Game)
 	game.LobbyCode = lobbyCode
 	game.GameMode = gameMode
@@ -520,10 +520,10 @@ func (s *SQLiteStore) NewGame(lobbyCode string, gameMode string, withTimer bool,
 	if withTimer {
 		game.Timer = NewTimer(duration)
 	}
-	if gameMode == "Vanilla" {
+	if gameMode == VANILLA {
 		return game, nil
 	}
-	if gameMode == "Fusion Frenzy" {
+	if gameMode == FUSION_FRENZY {
 		var err error
 		game.TargetWord, err = s.GetTargetWord(0.4, 10, 10)
 		if err != nil {
@@ -531,7 +531,7 @@ func (s *SQLiteStore) NewGame(lobbyCode string, gameMode string, withTimer bool,
 		}
 		return game, nil
 	}
-	if gameMode == "Wombo Combo" {
+	if gameMode == WOMBO_COMBO {
 		var err error
 		game.TargetWords, err = s.GetTargetWords(0.4, 10, 10)
 		if err != nil {
@@ -693,6 +693,11 @@ func (s *SQLiteStore) UpdateAccountWinsAndLosses(lobbyCode, winner string) error
 
 func (s *SQLiteStore) IncrementPlayerPoints(playerName, lobbyCode string, points int) error {
 	_, err := s.db.Exec("update player set points = points + ? where name = ? and lobby_code = ?", points, playerName, lobbyCode)
+	return err
+}
+
+func (s * SQLiteStore) ResetPlayerPoints(lobbyCode string) error { 
+	_, err := s.db.Exec("update player set points = 0 where lobby_code = ?", lobbyCode)
 	return err
 }
 

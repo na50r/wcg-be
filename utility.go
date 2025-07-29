@@ -110,22 +110,22 @@ func RadixHash(s string, size int) int {
 }
 
 func (g *Game) SetTarget() (string, error) {
-	if g.GameMode == "Vanilla" {
+	if g.GameMode == VANILLA {
 		return "", nil
 	}
-	if g.GameMode == "Wombo Combo" {
+	if g.GameMode == WOMBO_COMBO {
 		log.Println("Number of target words ", len(g.TargetWords))
 		targetWord := g.TargetWords[rand.Intn(len(g.TargetWords))]
 		return targetWord, nil
 	}
-	if g.GameMode == "Fusion Frenzy" {
+	if g.GameMode == FUSION_FRENZY {
 		return g.TargetWord, nil
 	}
 	return "", fmt.Errorf("game mode %s not found", g.GameMode)
 }
 
 func ProcessMove(server *APIServer, game *Game, player *Player, result string) error {
-	if game.GameMode == "Fusion Frenzy" && player.TargetWord == result {
+	if game.GameMode == FUSION_FRENZY && player.TargetWord == result {
 		game.StopTimer()
 		game.Winner = player.Name
 		if err := server.store.UpdateAccountWinsAndLosses(game.LobbyCode, player.Name); err != nil {
@@ -135,7 +135,7 @@ func ProcessMove(server *APIServer, game *Game, player *Player, result string) e
 		server.PublishToLobby(game.LobbyCode, Message{Data: ACCOUNT_UPDATE})
 		return nil
 	}
-	if game.GameMode == "Wombo Combo" && player.TargetWord == result {
+	if game.GameMode == WOMBO_COMBO && player.TargetWord == result {
 		var newTargetWord string
 		var err error
 		for {
@@ -184,8 +184,8 @@ func (g *Game) StopTimer() {
 }
 
 func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
-	if mt.durationMinutes == 0 {
-		return nil
+	if mt.durationMinutes < 1 {
+		return fmt.Errorf("duration must be at least 1 minute")
 	}
 	if mt.durationMinutes >= 5 {
 		return fmt.Errorf("duration must be less than or equal to 5 minutes")
@@ -193,16 +193,15 @@ func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	mt.cancelFunc = cancel
 	ticker := time.NewTicker(time.Second)
-	total_duration := time.Duration(mt.durationMinutes) * 60 * time.Second
-	half_duration := total_duration / 2
-	quarter_duration := half_duration / 2
-	three_quarter_duration := half_duration + quarter_duration
+	total := mt.durationMinutes * 60
+	half := total / 2
+	quarter := half / 2
+	three_quarter := half + quarter
 	now := time.Now()
-
-	publishTimeEvent := func (secondsLeft int) {
+	triggers := map[int]bool{three_quarter: false, half: false, quarter: false}
+	publishTimeEvent := func(secondsLeft int) {
 		s.PublishToLobby(lobbyCode, Message{Data: TimeEvent{SecondsLeft: secondsLeft}})
 	}
-
 	go func() {
 		defer ticker.Stop()
 		for {
@@ -212,29 +211,29 @@ func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
 				log.Printf("Timer %s stopped\n", lobbyCode)
 				return
 			case t := <-ticker.C:
-				elapsed := t.Sub(now)
-				secondsLeft := int((total_duration - elapsed).Seconds())
+				elapsed := int(t.Sub(now).Seconds())
+				secondsLeft := total - elapsed
 				log.Printf("Timer %s: %ds left\n", lobbyCode, secondsLeft)
-				switch elapsed {
-				case quarter_duration:
+				switch {
+				case secondsLeft <= three_quarter && triggers[three_quarter] == false:
+					triggers[three_quarter] = true
 					publishTimeEvent(secondsLeft)
-				case half_duration:
+				case secondsLeft <= half && triggers[half] == false:
+					triggers[half] = true
 					publishTimeEvent(secondsLeft)
-				case three_quarter_duration:
+				case secondsLeft <= quarter && triggers[quarter] == false:
+					triggers[quarter] = true
 					publishTimeEvent(secondsLeft)
-				default:
-					if secondsLeft <= 10 && secondsLeft > 0{
+				case secondsLeft <= 10 && secondsLeft > 0:
 					publishTimeEvent(secondsLeft)
+				case secondsLeft <= 0:
+					var err error
+					game.Winner, err = s.store.SelectWinnerByPoints(lobbyCode)
+					if err != nil {
+						log.Printf("Error selecting winner: %v", err)
 					}
-					if secondsLeft < 0 {
-						var err error
-						game.Winner, err = s.store.SelectWinnerByPoints(lobbyCode)
-						if err != nil {
-							log.Printf("Error selecting winner: %v", err)
-						}
-						s.PublishToLobby(lobbyCode, Message{Data: GAME_OVER})
-						return
-					}
+					s.PublishToLobby(lobbyCode, Message{Data: GAME_OVER})
+					return
 				}
 			}
 		}
