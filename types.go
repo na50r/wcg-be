@@ -9,6 +9,18 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type CohereResponse struct {
+	ID      string `json:"id"`
+	Message struct {
+		Role    string `json:"role"`
+		Content []struct {
+			Type string `json:"type"`
+			Text string `json:"text"`
+		} `json:"content"`
+	} `json:"message"`
+}
+
+
 type APIFunc func(http.ResponseWriter, *http.Request) error
 
 type APIError struct {
@@ -178,6 +190,7 @@ type WordRequest struct {
 
 type WordResponse struct {
 	Result string `json:"result"`
+	IsNew  bool   `json:"isNew"`
 }
 
 type Words struct {

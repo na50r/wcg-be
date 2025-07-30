@@ -28,7 +28,7 @@ type Storage interface {
 	GetLobbyByCode(lobbyCode string) (*Lobby, error)
 	EditGameMode(lobbyCode string, gameMode GameMode) error
 	AddCombination(element *Combination) error
-	GetCombination(a, b string) (*string, error)
+	GetCombination(a, b string) (*string, bool, error)
 	NewGame(lobbyCode string, gameMode GameMode, withTimer bool, duration int) (*Game, error)
 	AddWord(word *Word) error
 	AddPlayerWord(playerName, word, lobbyCode string) error
@@ -46,6 +46,7 @@ type Storage interface {
 	SelectWinnerByPoints(lobbyCode string) (string, error)
 	ResetPlayerPoints(lobbyCode string) error
 	IncrementPlayerCount(lobbyCode string, increment int) error
+	AddNewCombination(a, b, result string) error
 }
 
 // Convert SQL rows into an defined Go types

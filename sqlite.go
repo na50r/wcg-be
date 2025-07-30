@@ -440,32 +440,20 @@ func (s *SQLiteStore) EditGameMode(lobbyCode string, gameMode GameMode) error {
 	return err
 }
 
-func (s *SQLiteStore) GetCombination(a, b string) (*string, error) {
-	a = strings.ToLower(a)
-	b = strings.ToLower(b)
-	sorted := a < b
-	if !sorted {
-		a, b = b, a
-	}
+func (s *SQLiteStore) GetCombination(a, b string) (*string, bool, error) {
+	a, b = sortAB(a, b)
 	var result string
 	err := s.db.QueryRow("SELECT result FROM combination WHERE a = ? AND b = ?", a, b).Scan(&result)
 	if err == sql.ErrNoRows {
-		log.Printf("word for %s and %s not found", a, b)
-		placeholder := "star"
-		return &placeholder, nil
+		return nil, false, nil
 	} else if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	return &result, nil
+	return &result, true, nil
 }
 
 func (s *SQLiteStore) AddCombination(combi *Combination) error {
-	a := strings.ToLower(combi.A)
-	b := strings.ToLower(combi.B)
-	sorted := a < b
-	if !sorted {
-		a, b = b, a
-	}
+	a, b := sortAB(combi.A, combi.B)
 	_, err := s.db.Exec(
 		"insert or ignore into combination (a, b, result, depth) values (?, ?, ?, ?)",
 		a,
@@ -475,6 +463,37 @@ func (s *SQLiteStore) AddCombination(combi *Combination) error {
 	)
 	return err
 }
+
+func (s *SQLiteStore) AddNewCombination(a, b, result string) error {
+	a, b = sortAB(a, b)
+	aDepth := 0
+	bDepth := 0
+	err := s.db.QueryRow("select depth from word where word = ?", a).Scan(&aDepth)
+	if err != nil {
+		return err
+	}
+	err = s.db.QueryRow("select depth from word where word = ?", b).Scan(&bDepth)
+	if err != nil {
+		return err
+	}
+	depth := max(aDepth, bDepth) + 1
+	_, err = s.db.Exec(
+		"insert or ignore into combination (a, b, result, depth) values (?, ?, ?, ?)",
+		a,
+		b,
+		result,
+		depth,
+	)
+	reachability := 1.0 / float64(int(1) << uint(depth))
+	_, err = s.db.Exec(
+		"insert or ignore into word (word, depth, reachability) values (?, ?, ?)",
+		result,
+		depth,
+		reachability,
+	)
+	return err
+}
+
 
 func (s *SQLiteStore) AddWord(word *Word) error {
 	w := strings.ToLower(word.Word)

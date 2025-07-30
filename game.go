@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	jwt "github.com/golang-jwt/jwt"
+	"sort"
 )
 
 func (s *APIServer) handleGame(w http.ResponseWriter, r *http.Request) error {
@@ -186,7 +187,7 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
-	result, err := s.store.GetCombination(req.A, req.B)
+	result, isNew, err := GetCombination(s.store, req.A, req.B)
 	if err != nil {
 		return err
 	}
@@ -198,12 +199,12 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 	if err != nil {
 		return err
 	}
-	log.Printf("Player %s played %s + %s = %s", playerName, req.A, req.B, *result)
-	err = ProcessMove(s, game, player, *result)
+	log.Printf("Player %s played %s + %s = %s", playerName, req.A, req.B, result)
+	err = ProcessMove(s, game, player, result)
 	if err != nil {
 		return err
 	}
-	return WriteJSON(w, http.StatusOK, WordResponse{Result: *result})
+	return WriteJSON(w, http.StatusOK, WordResponse{Result: result, IsNew: isNew})
 }
 
 // handleGetGameStats godoc
@@ -238,6 +239,15 @@ func (s *APIServer) handleGetGameStats(w http.ResponseWriter, r *http.Request) e
 		}
 		playerWordsDTO = append(playerWordsDTO, &PlayerResultDTO{PlayerName: player.Name, Image: img, WordCount: playerWordCount.WordCount, Points: player.Points})
 	}
+	sort.Slice(playerWordsDTO, func(i, j int) bool {
+		if playerWordsDTO[i].PlayerName == winner {
+			return true
+		}
+		if playerWordsDTO[j].PlayerName == winner {
+			return false
+		}
+		return playerWordsDTO[i].Points > playerWordsDTO[j].Points
+	})
 	return WriteJSON(w, http.StatusOK, GameEndResponse{Winner: winner, PlayerWords: playerWordsDTO, GameMode: s.games[lobbyCode].GameMode})
 }
 
