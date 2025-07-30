@@ -832,3 +832,30 @@ func (s *SQLiteStore) DeleteAccount(username string) error {
 	_, err := s.db.Exec("delete from account where username = ?", username)
 	return err
 }
+
+func (s *SQLiteStore) GetChallengeEntries() ([]*ChallengeEntry, error) {
+	today := time.Now().Format("2006-01-02")
+	rows, err := s.db.Query("select * from daily_challenge where timestamp = ?", today)
+	if err != nil {
+		return nil, err
+	}
+	entries := []*ChallengeEntry{}
+	defer rows.Close()
+	for rows.Next() {
+		entry, err := scanIntoChallengeEntry(rows)
+		if err != nil {
+			return nil, err
+		}
+		entries = append(entries, entry)
+	}
+	return entries, nil
+}
+
+func (s *SQLiteStore) GetImageByUsername(username string) ([]byte, error) {
+	var imageName string
+	err := s.db.QueryRow("select image_name from account where username = ?", username).Scan(&imageName)
+	if err != nil {
+		return nil, err
+	}
+	return s.GetImage(imageName)
+}

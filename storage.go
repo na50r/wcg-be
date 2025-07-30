@@ -49,6 +49,8 @@ type Storage interface {
 	AddNewCombination(a, b, result string) error
 	CreateOrGetDailyWord(minReachability, maxReachability float64, maxDepth int) (string, error)
 	AddDailyChallengeEntry(wordCount int, username string) error
+	GetChallengeEntries() ([]*ChallengeEntry, error)
+	GetImageByUsername(username string) ([]byte, error)
 }
 
 // Convert SQL rows into an defined Go types
@@ -131,4 +133,14 @@ func scanIntoPlayerWordCount(rows *sql.Rows) (*PlayerWordCount, error) {
 		&wordCount.WordCount,
 	)
 	return wordCount, err
+}
+
+func scanIntoChallengeEntry(rows *sql.Rows) (*ChallengeEntry, error) {
+	entry := new(ChallengeEntry)
+	err := rows.Scan(
+		&entry.Timestamp,
+		&entry.WordCount,
+		&entry.Username,
+	)
+	return entry, err
 }

@@ -143,6 +143,44 @@ const docTemplate = `{
                 }
             }
         },
+        "/account/{username}/leaderboard": {
+            "get": {
+                "description": "Get the leaderboard",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    ""
+                ],
+                "summary": "Get the leaderboard",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.ChallengeEntryDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/main.APIError"
+                        }
+                    },
+                    "405": {
+                        "description": "Method Not Allowed",
+                        "schema": {
+                            "$ref": "#/definitions/main.APIError"
+                        }
+                    }
+                }
+            }
+        },
         "/accounts": {
             "post": {
                 "description": "Register an account",
@@ -825,6 +863,23 @@ const docTemplate = `{
                 }
             }
         },
+        "main.ChallengeEntryDTO": {
+            "type": "object",
+            "properties": {
+                "image": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "username": {
+                    "type": "string"
+                },
+                "wordCount": {
+                    "type": "integer"
+                }
+            }
+        },
         "main.CreateLobbyRequest": {
             "type": "object",
             "properties": {
@@ -897,12 +952,14 @@ const docTemplate = `{
             "enum": [
                 "Vanilla",
                 "Wombo Combo",
-                "Fusion Frenzy"
+                "Fusion Frenzy",
+                "Daily Challenge"
             ],
             "x-enum-varnames": [
                 "VANILLA",
                 "WOMBO_COMBO",
-                "FUSION_FRENZY"
+                "FUSION_FRENZY",
+                "DAILY_CHALLENGE"
             ]
         },
         "main.GenericResponse": {
@@ -967,7 +1024,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "gameMode": {
-                    "type": "string"
+                    "$ref": "#/definitions/main.GameMode"
                 },
                 "gameModes": {
                     "type": "array",
@@ -1101,6 +1158,9 @@ const docTemplate = `{
         "main.WordResponse": {
             "type": "object",
             "properties": {
+                "isNew": {
+                    "type": "boolean"
+                },
                 "result": {
                     "type": "string"
                 }

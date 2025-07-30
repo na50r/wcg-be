@@ -34,22 +34,6 @@ func (b *Broker) CreateChannel() int {
 	return b.cnt
 }
 
-func handleToken(token jwt.Token) (string, string, bool) {
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
-		return "", "", false
-	}
-	if claims["type"] == "account" {
-		accountName := claims["username"].(string)
-		return accountName, "", true
-	}
-	if claims["type"] == "player" {
-		return claims["lobbyCode"].(string), claims["playerName"].(string), true
-	}
-	return "", "", false
-
-}
-
 // SSEHandler godoc
 // @Summary Server-Sent Events
 // @Description Server-Sent Events
@@ -74,7 +58,6 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	var lobbyCode string
 	var playerName string
-	var accountName string
 	channelID := b.CreateChannel()
 	channel := b.ClientChannels[channelID]
 	log.Printf("Channel address: %p (id: %d)", channel, channelID)
@@ -82,11 +65,6 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
 			return
-		}
-		if claims["type"] == "account" {
-			accountName := claims["username"].(string)
-			log.Printf("Account %s connected (channel: %d)", accountName, channelID)
-			s.accountClient[accountName] = channelID
 		}
 		if claims["type"] == "player" {
 			lobbyCode = claims["lobbyCode"].(string)
@@ -113,7 +91,6 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 			log.Printf("client has disconnected (id=%d), total clients: %d\n", channelID, len(b.ClientChannels))
 			close(channel)
 			if tokenExists {
-				delete(s.accountClient, accountName)
 				delete(s.lobbyClients[lobbyCode], channelID)
 			}
 			return

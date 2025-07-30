@@ -287,3 +287,33 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 	}
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Logout successful"})
 }
+
+// handleLeaderboard godoc
+// @Summary Get the leaderboard
+// @Description Get the leaderboard
+// @Tags 
+// @Accept json
+// @Produce json
+// @Success 200 {array} ChallengeEntryDTO
+// @Failure 400 {object} APIError
+// @Failure 405 {object} APIError
+// @Router /account/{username}/leaderboard [get]
+func (s *APIServer) handleLeaderboard(w http.ResponseWriter, r *http.Request) error {
+	if r.Method != http.MethodGet {
+		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		return err
+	}
+	entries, err := s.store.GetChallengeEntries()
+	if err != nil {
+		return err
+	}
+	entriesDTO := []*ChallengeEntryDTO{}
+	for _, entry := range entries {
+		image, err := s.store.GetImageByUsername(entry.Username)
+		if err != nil {
+			return err
+		}
+		entriesDTO = append(entriesDTO, &ChallengeEntryDTO{WordCount: entry.WordCount, Username: entry.Username, Image: image})
+	}
+	return WriteJSON(w, http.StatusOK, entriesDTO)
+}

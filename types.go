@@ -243,6 +243,12 @@ type ChallengeEntry struct {
 	Username string `json:"username"`
 }
 
+type ChallengeEntryDTO struct {
+	WordCount int `json:"wordCount"`
+	Username string `json:"username"`
+	Image []byte `json:"image"`
+}
+
 func NewAccount(username, password string) (*Account, error) {
 	encpw, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {

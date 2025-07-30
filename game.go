@@ -313,6 +313,3 @@ func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) 
 }
 
 
-func (s *APIServer) handleChallenge(w http.ResponseWriter, r *http.Request) error {
-	return nil
-}

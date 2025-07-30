@@ -32,6 +32,17 @@ definitions:
         description: Number of wins
         type: integer
     type: object
+  main.ChallengeEntryDTO:
+    properties:
+      image:
+        items:
+          type: integer
+        type: array
+      username:
+        type: string
+      wordCount:
+        type: integer
+    type: object
   main.CreateLobbyRequest:
     properties:
       name:
@@ -80,11 +91,13 @@ definitions:
     - Vanilla
     - Wombo Combo
     - Fusion Frenzy
+    - Daily Challenge
     type: string
     x-enum-varnames:
     - VANILLA
     - WOMBO_COMBO
     - FUSION_FRENZY
+    - DAILY_CHALLENGE
   main.GenericResponse:
     properties:
       message:
@@ -125,7 +138,7 @@ definitions:
   main.LobbyDTO:
     properties:
       gameMode:
-        type: string
+        $ref: '#/definitions/main.GameMode'
       gameModes:
         items:
           $ref: '#/definitions/main.GameMode'
@@ -212,6 +225,8 @@ definitions:
     type: object
   main.WordResponse:
     properties:
+      isNew:
+        type: boolean
       result:
         type: string
     type: object
@@ -314,6 +329,31 @@ paths:
       summary: Get all potential profile pictures
       tags:
       - account
+  /account/{username}/leaderboard:
+    get:
+      consumes:
+      - application/json
+      description: Get the leaderboard
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.ChallengeEntryDTO'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/main.APIError'
+      summary: Get the leaderboard
+      tags:
+      - ""
   /accounts:
     post:
       consumes:

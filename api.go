@@ -71,6 +71,7 @@ func (s *APIServer) RegisterRoutes() error {
 	router.HandleFunc("/accounts", makeHTTPHandleFunc(s.handleRegister))
 	router.HandleFunc("/account/{username}", withJWTAuth(makeHTTPHandleFunc(s.handleAccount)))
 	router.HandleFunc("/account/{username}/images", withJWTAuth(makeHTTPHandleFunc(s.handleGetImages)))
+	router.HandleFunc("/account/{username}/leaderboard", withJWTAuth(makeHTTPHandleFunc(s.handleLeaderboard)))
 
 	// Lobby Endpoints
 	router.HandleFunc("/lobbies", makeHTTPHandleFunc(s.handleLobbies))
@@ -83,9 +84,6 @@ func (s *APIServer) RegisterRoutes() error {
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/combinations", withLobbyAuth(makeHTTPHandleFunc(s.handleCombination)))
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/words", withLobbyAuth(makeHTTPHandleFunc(s.handleGetWords)))
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/end", withLobbyAuth(makeHTTPHandleFunc(s.handleManualGameEnd)))
-
-	// Challenge endpoint
-	router.HandleFunc("/challenge/{username}", withJWTAuth(makeHTTPHandleFunc(s.handleChallenge)))
 
 	// Events
 	router.HandleFunc("/events", s.SSEHandler)
