@@ -12,5 +12,11 @@ make run #Builds and runs the server
 make seed #Seeds the database with images, words and combinations
 ```
 
+## Docker
+```
+make docker-build
+API_KEY=<COHERE_API_KEY> make docker-seed
+```
+
 ## API
 The API is documented using Swagger. It can be accessed at `http://localhost:<port>/swagger/index.html` after running the server.

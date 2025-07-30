@@ -71,6 +71,7 @@ func main() {
 	}
 
 	if err := store.Init(); err != nil {
+		log.Println("Error initializing database")
 		log.Fatal(err)
 	}
 

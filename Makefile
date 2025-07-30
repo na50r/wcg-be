@@ -18,4 +18,4 @@ docker-run:
 	@docker run --rm -p 3030:3030 -e CLIENT="http://localhost:5173" wc-be
 
 docker-seed:
-	@docker run --rm -p 3030:3030 -e CLIENT="http://localhost:5173" -e JWT_SECRET="secret" wc-be ./wombo-combo-go-be --seed=true 
+	@docker run --rm -p 3030:3030 -e CLIENT="http://localhost:5173" -e JWT_SECRET="secret" -e COHERE_API_KEY="$(API_KEY)"  wc-be ./wombo-combo-go-be --seed=true 
