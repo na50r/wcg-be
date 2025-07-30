@@ -31,6 +31,7 @@ type APIServer struct {
 	broker       *Broker
 	lobbyClients map[string]map[int]bool // Maps a lobby code to a SET of clients
 	playerClient map[string]int          // Maps each player to a client
+	accountClient map[string]int
 	games        map[string]*Game
 }
 
@@ -42,6 +43,7 @@ func NewAPIServer(listenAddr string, store Storage) *APIServer {
 		broker:       NewBroker(),
 		lobbyClients: make(map[string]map[int]bool),
 		playerClient: make(map[string]int),
+		accountClient: make(map[string]int),
 		games:        make(map[string]*Game),
 	}
 }
@@ -82,9 +84,15 @@ func (s *APIServer) RegisterRoutes() error {
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/words", withLobbyAuth(makeHTTPHandleFunc(s.handleGetWords)))
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/end", withLobbyAuth(makeHTTPHandleFunc(s.handleManualGameEnd)))
 
+	// Challenge endpoint
+	router.HandleFunc("/challenge/{username}", withJWTAuth(makeHTTPHandleFunc(s.handleChallenge)))
+
 	// Events
 	router.HandleFunc("/events", s.SSEHandler)
 	router.HandleFunc("/broadcast", s.Broadcast)
+
+	// Test
+	router.HandleFunc("/test-ch/{channelID}", s.PublishToChannel)
 
 	// Swagger
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)

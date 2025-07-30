@@ -47,6 +47,8 @@ type Storage interface {
 	ResetPlayerPoints(lobbyCode string) error
 	IncrementPlayerCount(lobbyCode string, increment int) error
 	AddNewCombination(a, b, result string) error
+	CreateOrGetDailyWord(minReachability, maxReachability float64, maxDepth int) (string, error)
+	AddDailyChallengeEntry(wordCount int, username string) error
 }
 
 // Convert SQL rows into an defined Go types

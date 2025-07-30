@@ -34,6 +34,22 @@ func (b *Broker) CreateChannel() int {
 	return b.cnt
 }
 
+func handleToken(token jwt.Token) (string, string, bool) {
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return "", "", false
+	}
+	if claims["type"] == "account" {
+		accountName := claims["username"].(string)
+		return accountName, "", true
+	}
+	if claims["type"] == "player" {
+		return claims["lobbyCode"].(string), claims["playerName"].(string), true
+	}
+	return "", "", false
+
+}
+
 // SSEHandler godoc
 // @Summary Server-Sent Events
 // @Description Server-Sent Events
@@ -52,11 +68,13 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	token, tokenExists, err := getToken(r)
+	log.Printf("Token exists: %v", tokenExists)
 	if err != nil {
 		return
 	}
 	var lobbyCode string
 	var playerName string
+	var accountName string
 	channelID := b.CreateChannel()
 	channel := b.ClientChannels[channelID]
 	log.Printf("Channel address: %p (id: %d)", channel, channelID)
@@ -65,14 +83,21 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 		if !ok {
 			return
 		}
-		lobbyCode = claims["lobbyCode"].(string)
-		playerName = claims["playerName"].(string)
-		log.Printf("Player %s connected to lobby %s (channel: %d)", playerName, lobbyCode, channelID)
-		s.playerClient[playerName] = channelID
-		if s.lobbyClients[lobbyCode] == nil {
-			s.lobbyClients[lobbyCode] = make(map[int]bool)
+		if claims["type"] == "account" {
+			accountName := claims["username"].(string)
+			log.Printf("Account %s connected (channel: %d)", accountName, channelID)
+			s.accountClient[accountName] = channelID
 		}
-		s.lobbyClients[lobbyCode][channelID] = true
+		if claims["type"] == "player" {
+			lobbyCode = claims["lobbyCode"].(string)
+			playerName = claims["playerName"].(string)
+			log.Printf("Player %s connected to lobby %s (channel: %d)", playerName, lobbyCode, channelID)
+			s.playerClient[playerName] = channelID
+			if s.lobbyClients[lobbyCode] == nil {
+				s.lobbyClients[lobbyCode] = make(map[int]bool)
+			}
+			s.lobbyClients[lobbyCode][channelID] = true
+		}
 	}
 
 	log.Printf("client connected (id=%d), total clients: %d\n", channelID, len(b.ClientChannels))
@@ -88,11 +113,12 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 			log.Printf("client has disconnected (id=%d), total clients: %d\n", channelID, len(b.ClientChannels))
 			close(channel)
 			if tokenExists {
+				delete(s.accountClient, accountName)
 				delete(s.lobbyClients[lobbyCode], channelID)
 			}
 			return
 		case data := <-channel:
-			written, err := fmt.Fprintf(w, "event:msg\ndata:%s\n\n", data) 
+			written, err := fmt.Fprintf(w, "event:msg\ndata:%s\n\n", data)
 			log.Printf("written %d bytes", written)
 			if err != nil {
 				log.Printf("unable to write: %s", err.Error())
@@ -117,7 +143,7 @@ func (s *APIServer) Publish(msg Message) {
 	// Publish to all channels
 	// NOTE: Not concurrent
 	for key, channel := range b.ClientChannels {
-		log.Printf("Channel value: %p (key: %d)", channel, key)
+		log.Printf("Channel value: %p (id: %d)", channel, key)
 		channel <- data
 	}
 }
@@ -145,6 +171,42 @@ func (s *APIServer) PublishToPlayer(playerName string, msg Message) {
 	}
 	b.ClientChannels[channelID] <- data
 }
+
+func (s *APIServer) PublishToAccount(accountName string, msg Message) {
+	b := s.broker
+	channelID := s.accountClient[accountName]
+	data, err := json.Marshal(msg.Data)
+	if err != nil {
+		log.Printf("unable to marshal: %s", err.Error())
+		return
+	}
+	log.Printf("Publishing to account %s (channel: %d)", accountName, channelID)
+	b.ClientChannels[channelID] <- data
+}
+
+
+func (s *APIServer) PublishToChannel(w http.ResponseWriter, r *http.Request) {
+	b := s.broker
+	channelID, err := getChannelID(r)
+	log.Printf("Channel ID: %d", channelID)
+	if err != nil {
+		http.Error(w, "bad request", http.StatusBadRequest)
+		return
+	}
+	var m Message
+	err = json.NewDecoder(r.Body).Decode(&m)
+	if err != nil {
+		http.Error(w, "bad request", http.StatusBadRequest)
+		return
+	}
+	data, err := json.Marshal(m.Data)
+	if err != nil {
+		http.Error(w, "bad request", http.StatusBadRequest)
+		return
+	}
+	b.ClientChannels[channelID] <- data
+}
+
 
 func (s *APIServer) Broadcast(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {

@@ -135,6 +135,15 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 	if err := s.store.EditGameMode(lobbyCode, req.GameMode); err != nil {
 		return err
 	}
+	lobby, err := s.store.GetLobbyByCode(lobbyCode)
+	if err != nil {
+		return err
+	}
+	if req.GameMode == DAILY_CHALLENGE {
+		if lobby.PlayerCount > 1 || req.WithTimer {
+			return fmt.Errorf("daily challenge must be played solo and without a timer!")
+		}
+	}
 	game, err := s.store.NewGame(lobbyCode, req.GameMode, req.WithTimer, req.Duration)
 	if err != nil {
 		return err
@@ -237,7 +246,7 @@ func (s *APIServer) handleGetGameStats(w http.ResponseWriter, r *http.Request) e
 		if err != nil {
 			return err
 		}
-		playerWordsDTO = append(playerWordsDTO, &PlayerResultDTO{PlayerName: player.Name, Image: img, WordCount: playerWordCount.WordCount, Points: player.Points})
+		playerWordsDTO = append(playerWordsDTO, &PlayerResultDTO{PlayerName: player.Name, Image: img, WordCount: playerWordCount.WordCount, Points: player.Points+playerWordCount.WordCount})
 	}
 	sort.Slice(playerWordsDTO, func(i, j int) bool {
 		if playerWordsDTO[i].PlayerName == winner {
@@ -301,4 +310,9 @@ func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) 
 	game.Winner = winner
 	s.PublishToLobby(lobbyCode, Message{Data: GAME_OVER})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game ended"})
+}
+
+
+func (s *APIServer) handleChallenge(w http.ResponseWriter, r *http.Request) error {
+	return nil
 }

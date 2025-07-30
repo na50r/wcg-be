@@ -14,13 +14,13 @@ import (
 
 	"bytes"
 	"context"
+	"encoding/csv"
 	"encoding/json"
 	jwt "github.com/golang-jwt/jwt"
+	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
-	"path/filepath"
-	"encoding/csv"
-	"os"
 )
 
 func getImageFromFilePath(filePath string) (*Image, error) {
@@ -156,7 +156,12 @@ func seedDatabase(store Storage) {
 	}
 	if err := setWords(store); err != nil {
 		log.Fatal(err)
-	} 
+	}
+}
+
+func getChannelID(r *http.Request) (int, error) {
+	channelID := mux.Vars(r)["channelID"]
+	return strconv.Atoi(channelID)
 }
 
 func getUsername(r *http.Request) (string, error) {
@@ -178,6 +183,7 @@ func createJWT(account *Account) (string, error) {
 	claims := &jwt.MapClaims{
 		"exp":      time.Now().Add(time.Hour * 12).Unix(),
 		"username": account.Username,
+		"type":     "account",
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
@@ -191,6 +197,7 @@ func createLobbyToken(player *Player) (string, error) {
 		"lobbyCode":  player.LobbyCode,
 		"hasAccount": player.HasAccount,
 		"isOwner":    player.IsOwner,
+		"type":       "player",
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(JWT_SECRET))
@@ -263,6 +270,9 @@ func (g *Game) SetTarget() (string, error) {
 	if g.GameMode == FUSION_FRENZY {
 		return g.TargetWord, nil
 	}
+	if g.GameMode == DAILY_CHALLENGE {
+		return g.TargetWord, nil
+	}
 	return "", fmt.Errorf("game mode %s not found", g.GameMode)
 }
 
@@ -298,14 +308,18 @@ func ProcessMove(server *APIServer, game *Game, player *Player, result string) e
 		}
 		server.PublishToLobby(game.LobbyCode, Message{Data: WOMBO_COMBO_EVENT})
 	}
-	isPlayerWord, err := server.store.IsPlayerWord(player.Name, result, game.LobbyCode)
-	if err != nil {
-		return err
-	}
-	if isPlayerWord {
-		if err := server.store.IncrementPlayerPoints(player.Name, game.LobbyCode, 1); err != nil {
+	if game.GameMode == DAILY_CHALLENGE && player.TargetWord == result {
+		wordCounts, err := server.store.GetWordCountByLobbyCode(game.LobbyCode)
+		if err != nil {
 			return err
 		}
+		wordCount := wordCounts[0].WordCount
+		log.Printf("Player %s completed daily challenge with word count %d", player.Name, wordCount)
+		if err := server.store.AddDailyChallengeEntry(wordCount, player.Name); err != nil {
+			return err
+		}
+		server.PublishToLobby(game.LobbyCode, Message{Data: GAME_OVER})
+		return nil
 	}
 	if err := server.store.AddPlayerWord(player.Name, result, game.LobbyCode); err != nil {
 		return err
@@ -473,7 +487,6 @@ func formatWord(word string) string {
 	word = re.ReplaceAllString(word, "")
 	return word
 }
-
 
 func sortAB(a, b string) (string, string) {
 	a = strings.ToLower(a)

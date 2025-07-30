@@ -21,6 +21,7 @@ const (
 	VANILLA GameMode = "Vanilla"
 	WOMBO_COMBO GameMode = "Wombo Combo"
 	FUSION_FRENZY GameMode = "Fusion Frenzy"
+	DAILY_CHALLENGE GameMode = "Daily Challenge"
 )
 
 const (

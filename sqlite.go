@@ -7,6 +7,7 @@ import (
 	"log"
 	"math/rand"
 	"strings"
+	"time"
 )
 
 type SQLiteStore struct {
@@ -120,6 +121,25 @@ func (s *SQLiteStore) createPlayerWordTable() error {
 	return err
 }
 
+func (s *SQLiteStore) createDailyWordTable() error {
+	query := `create table if not exists daily_word (
+		timestamp datetime default current_timestamp,
+		word text
+		)`
+	_, err := s.db.Exec(query)
+	return err
+}
+
+func (s *SQLiteStore) createDailyChallengeTable() error {
+	query := `create table if not exists daily_challenge (
+		timestamp datetime default current_timestamp,
+		word_count integer,
+		username text
+		)`
+	_, err := s.db.Exec(query)
+	return err
+}
+
 func (s *SQLiteStore) Init() error {
 	if err := s.createAccountTable(); err != nil {
 		return err
@@ -143,7 +163,50 @@ func (s *SQLiteStore) Init() error {
 	if err := s.createPlayerWordTable(); err != nil {
 		return err
 	}
+	if err := s.createDailyWordTable(); err != nil {
+		return err
+	}
+	if err := s.createDailyChallengeTable(); err != nil {
+		return err
+	}
 	return nil
+}
+
+func (s *SQLiteStore) AddDailyChallengeEntry(wordCount int, username string) error {
+	today := time.Now().Format("2006-01-02")
+	var oldCount int 
+	err := s.db.QueryRow("select word_count from daily_challenge where username = ? and timestamp = ?", username, today).Scan(&oldCount)
+	if err != nil && err != sql.ErrNoRows {
+		return err
+	}
+	if err == sql.ErrNoRows {
+		_, err = s.db.Exec("insert into daily_challenge (word_count, username, timestamp) values (?, ?, ?)", wordCount, username, today)
+		return err
+	}
+	if oldCount > wordCount {
+		_, err = s.db.Exec("update daily_challenge set word_count = ? where username = ? and timestamp = ?", wordCount, username, today)
+		return err
+	}
+	return nil
+}
+
+func (s *SQLiteStore) CreateOrGetDailyWord(minReachability, maxReachability float64, maxDepth int) (string, error) {
+	log.Println("Creating or getting daily word")
+	today := time.Now().Format("2006-01-02")
+	var word string
+	err := s.db.QueryRow("select word from daily_word where timestamp = ?", today).Scan(&word)
+	if err == sql.ErrNoRows {
+		word, err := s.GetTargetWord(minReachability, maxReachability, maxDepth)
+		if err != nil {
+			return "", err
+		}
+		_, err = s.db.Exec("insert into daily_word (timestamp, word) values (?, ?)", today, word)
+		if err != nil {
+			return "", err
+		}
+		return word, nil
+	}
+	return word, nil
 }
 
 func (s *SQLiteStore) CreateAccount(acc *Account) error {
@@ -536,14 +599,16 @@ func (s *SQLiteStore) NewGame(lobbyCode string, gameMode GameMode, withTimer boo
 	game.LobbyCode = lobbyCode
 	game.GameMode = gameMode
 	game.WithTimer = withTimer
+
 	if withTimer {
 		game.Timer = NewTimer(duration)
 	}
+
+	err := fmt.Errorf("game mode %s not found", gameMode)
 	if gameMode == VANILLA {
 		return game, nil
 	}
 	if gameMode == FUSION_FRENZY {
-		var err error
 		game.TargetWord, err = s.GetTargetWord(0.4, 10, 10)
 		if err != nil {
 			return nil, err
@@ -551,14 +616,21 @@ func (s *SQLiteStore) NewGame(lobbyCode string, gameMode GameMode, withTimer boo
 		return game, nil
 	}
 	if gameMode == WOMBO_COMBO {
-		var err error
 		game.TargetWords, err = s.GetTargetWords(0.4, 10, 10)
 		if err != nil {
 			return nil, err
 		}
 		return game, nil
 	}
-	return nil, fmt.Errorf("game mode %s not found", gameMode)
+	if gameMode == DAILY_CHALLENGE {
+		game.TargetWord, err = s.CreateOrGetDailyWord(0.4, 8, 8)
+		if err != nil {
+			log.Printf("Error creating or getting daily word: %v", err)
+			return nil, err
+		}
+		return game, nil
+	}
+	return nil, err
 }
 
 func (s *SQLiteStore) AddPlayerWord(playerName, word, lobbyCode string) error {
@@ -666,6 +738,7 @@ func (s *SQLiteStore) GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCo
 		if err != nil {
 			return nil, err
 		}
+		wordCount.WordCount -= 4 // Exclude starting words
 		wordCounts = append(wordCounts, wordCount)
 	}
 	return wordCounts, nil

@@ -94,7 +94,7 @@ type Lobby struct {
 	Name        string `json:"name"`
 	ImageName   string `json:"imageName"`
 	LobbyCode   string `json:"lobbyCode"`
-	GameMode    string `json:"gameMode"`
+	GameMode    GameMode `json:"gameMode"`
 	PlayerCount int    `json:"playerCount"`
 }
 
@@ -106,7 +106,7 @@ type PlayerDTO struct {
 type LobbyDTO struct {
 	LobbyCode string       `json:"lobbyCode"`
 	Name      string       `json:"name"`
-	GameMode  string       `json:"gameMode"`
+	GameMode  GameMode       `json:"gameMode"`
 	Owner     string       `json:"owner"`
 	Players   []*PlayerDTO `json:"players"`
 	GameModes []GameMode   `json:"gameModes"`
@@ -237,6 +237,11 @@ type TimeEvent struct {
 	SecondsLeft int `json:"secondsLeft"`
 }
 
+type ChallengeEntry struct {
+	Timestamp time.Time `json:"timestamp"`
+	WordCount int `json:"wordCount"`
+	Username string `json:"username"`
+}
 
 func NewAccount(username, password string) (*Account, error) {
 	encpw, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -269,7 +274,7 @@ func NewPlayer(name, lobbyCode, imageName string, isOwner, hasAccount bool) *Pla
 }
 
 func NewGameModes() []GameMode {
-	return []GameMode{VANILLA, WOMBO_COMBO, FUSION_FRENZY}
+	return []GameMode{VANILLA, WOMBO_COMBO, FUSION_FRENZY, DAILY_CHALLENGE}
 }
 
 func NewLobby(name, lobbyCode, imageName string) *Lobby {
@@ -277,7 +282,7 @@ func NewLobby(name, lobbyCode, imageName string) *Lobby {
 		Name:        name,
 		ImageName:   imageName,
 		LobbyCode:   lobbyCode,
-		GameMode:    "Vanilla",
+		GameMode:    VANILLA,
 		PlayerCount: 1,
 	}
 }
