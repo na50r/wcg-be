@@ -21,7 +21,7 @@ func NewPostgresStore() (*PostgresStore, error) {
 	//docker run --name wc-postgres -e POSTGRES_PASSWORD=wc-local -p 5433:5432 -d postgres
 	//Map port 5432 of the container to 5433 of the host
 	//Adjust accordingly for deployment
-	db, err := sql.Open("postgresql", POSTGRES_CONNECTION)
+	db, err := sql.Open("postgres", POSTGRES_CONNECTION)
 	if err != nil {
 		return nil, err
 	}
