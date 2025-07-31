@@ -7,7 +7,7 @@ WORKDIR /build
 RUN go mod tidy
 
 # Required to get sqlite3 to work
-RUN CGO_ENABLED=1 go build -o bin/wombo-combo-go-be
+RUN go build -o bin/wombo-combo-go-be
 
 FROM alpine
 RUN adduser -S -D -H -h /app appuser
