@@ -151,12 +151,15 @@ func seedDatabase(store Storage) {
 	if err := setImages(store); err != nil {
 		log.Fatal(err)
 	}
+	log.Println("Images seeded")
 	if err := setCombinations(store); err != nil {
 		log.Fatal(err)
 	}
+	log.Println("Combinations seeded")
 	if err := setWords(store); err != nil {
 		log.Fatal(err)
 	}
+	log.Println("Words seeded")
 }
 
 func getChannelID(r *http.Request) (int, error) {

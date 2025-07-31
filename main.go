@@ -27,6 +27,7 @@ var ICONS string
 var COMBINATIONS string
 var WORDS string
 var COHERE_API_KEY string
+var POSTGRES_CONNECTION string
 
 func init() {
 	err := godotenv.Load()
@@ -39,6 +40,7 @@ func init() {
 	COMBINATIONS = os.Getenv("COMBINATIONS")
 	WORDS = os.Getenv("WORDS")
 	COHERE_API_KEY = os.Getenv("COHERE_API_KEY")
+	POSTGRES_CONNECTION = os.Getenv("POSTGRES_CONNECTION")
 
 	if JWT_SECRET == "" {
 		log.Fatal("JWT_SECRET not set")
@@ -58,6 +60,9 @@ func init() {
 	if COHERE_API_KEY == "" {
 		log.Fatal("COHERE_API_KEY not set")
 	}
+	if POSTGRES_CONNECTION == "" {
+		log.Fatal("POSTGRES_CONNECTION not set")
+	}
 }
 
 
@@ -65,7 +70,7 @@ func main() {
 	seed := flag.Bool("seed", false, "seed images & elements")
 	flag.Parse()
 
-	store, err := NewSQLiteStore("store")
+	store, err := NewPostgresStore()
 	if err != nil {
 		log.Fatal(err)
 	}
