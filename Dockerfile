@@ -1,7 +1,7 @@
 FROM golang:1.23.10-alpine AS builder
 RUN apk add --no-cache gcc g++ git openssh-client
 RUN mkdir /build
-COPY go.mod go.sum storage.go types.go api.go main.go sqlite.go account.go game.go lobby.go sse.go utility.go constants.go /build/
+COPY go.mod go.sum storage.go types.go api.go main.go sqlite.go postgres.go account.go game.go lobby.go sse.go utility.go constants.go /build/
 COPY docs /build/docs
 WORKDIR /build
 RUN go mod tidy
