@@ -7,6 +7,7 @@ import (
 
 	jwt "github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
+	"sort"
 )
 
 // handleGetAccount godoc
@@ -315,5 +316,8 @@ func (s *APIServer) handleLeaderboard(w http.ResponseWriter, r *http.Request) er
 		}
 		entriesDTO = append(entriesDTO, &ChallengeEntryDTO{WordCount: entry.WordCount, Username: entry.Username, Image: image})
 	}
+	sort.Slice(entriesDTO, func(i, j int) bool {
+		return entriesDTO[i].WordCount < entriesDTO[j].WordCount
+	})
 	return WriteJSON(w, http.StatusOK, entriesDTO)
 }

@@ -3,3 +3,4 @@
 *.db*
 api_test.go
 bin/
+*.sh
