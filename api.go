@@ -36,7 +36,7 @@ type APIServer struct {
 }
 
 func NewAPIServer(listenAddr string, store Storage) *APIServer {
-	return &APIServer{
+	s := APIServer{
 		router:       mux.NewRouter(),
 		listenAddr:   listenAddr,
 		store:        store,
@@ -46,6 +46,8 @@ func NewAPIServer(listenAddr string, store Storage) *APIServer {
 		accountClient: make(map[string]int),
 		games:        make(map[string]*Game),
 	}
+	go s.listen()
+	return &s
 }
 
 func corsMiddleware(h http.Handler) http.Handler {
