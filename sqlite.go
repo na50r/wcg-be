@@ -547,12 +547,17 @@ func (s *SQLiteStore) AddNewCombination(a, b, result string) error {
 		result,
 		depth,
 	)
+	oldReachability := 0.0
+	err = s.db.QueryRow("select reachability from word where word = ?", result).Scan(&oldReachability)
+	if err != nil && err != sql.ErrNoRows {
+		log.Printf("No reachability for word %s", result)
+	}
 	reachability := 1.0 / float64(int(1) << uint(depth))
 	_, err = s.db.Exec(
 		"insert or ignore into word (word, depth, reachability) values (?, ?, ?)",
 		result,
 		depth,
-		reachability,
+		reachability + oldReachability,
 	)
 	return err
 }
@@ -687,7 +692,7 @@ func (s *SQLiteStore) SeedPlayerWords(lobbyCode string, game *Game) error {
 		s.AddPlayerWord(player.Name, "fire", lobbyCode)
 		s.AddPlayerWord(player.Name, "water", lobbyCode)
 		s.AddPlayerWord(player.Name, "earth", lobbyCode)
-		s.AddPlayerWord(player.Name, "air", lobbyCode)
+		s.AddPlayerWord(player.Name, "wind", lobbyCode)
 	}
 	return nil
 }

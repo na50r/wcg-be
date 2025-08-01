@@ -113,15 +113,16 @@ func readCSV(filePath string) ([][]string, error) {
 
 func setCombinations(store Storage) error {
 	records, err := readCSV(COMBINATIONS)
+	log.Println("Number of combinations ", len(records))
 	if err != nil {
 		return err
 	}
 	for _, record := range records {
 		combi := new(Combination)
-		combi.A = strings.ToLower(record[3])
-		combi.B = strings.ToLower(record[4])
-		combi.Result = strings.ToLower(record[2])
-		combi.Depth, _ = strconv.Atoi(record[1])
+		combi.A = strings.ToLower(record[1])
+		combi.B = strings.ToLower(record[2])
+		combi.Result = strings.ToLower(record[3])
+		combi.Depth, _ = strconv.Atoi(record[0])
 		if err := store.AddCombination(combi); err != nil {
 			return err
 		}
@@ -134,6 +135,7 @@ func setWords(store Storage) error {
 	if err != nil {
 		return err
 	}
+	log.Println("Number of words ", len(records))
 	for _, record := range records {
 		word := new(Word)
 		word.Word = strings.ToLower(record[0])

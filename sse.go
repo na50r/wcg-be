@@ -18,20 +18,61 @@ type Message struct {
 
 type Broker struct {
 	cnt            int
+	newClients     chan Subscription
+	goneClients    chan Subscription
 	ClientChannels map[int]chan []byte
 }
 
-func NewBroker() *Broker {
-	return &Broker{
-		ClientChannels: make(map[int]chan []byte),
-		cnt:            0,
-	}
+type Subscription struct {
+	ChannelID int    `json:"channelId"`
+	Channel   chan []byte `json:"channel"`
+	LobbyCode string `json:"lobbyCode"`
+	PlayerName string `json:"playerName"`
+	IsPlayer bool   `json:"isPlayer"`
 }
 
-func (b *Broker) CreateChannel() int {
+func NewBroker() *Broker {
+	b := Broker{
+		ClientChannels: make(map[int]chan []byte),
+		newClients:     make(chan Subscription),
+		goneClients:    make(chan Subscription),
+		cnt:            0,
+	}
+	return &b
+}
+
+func (b* Broker) CreateChannel() (int, chan []byte) {
 	b.cnt++
 	b.ClientChannels[b.cnt] = make(chan []byte)
-	return b.cnt
+	return b.cnt, b.ClientChannels[b.cnt]
+}
+
+func (s *APIServer) listen() {
+	b := s.broker
+	for {
+		select {
+		case sub := <-b.newClients:
+			log.Printf("client connected (ch=%04b), total clients: %d\n", sub.ChannelID, len(b.ClientChannels))
+			if sub.IsPlayer {
+				if s.lobbyClients[sub.LobbyCode] == nil {
+					s.lobbyClients[sub.LobbyCode] = make(map[int]bool)
+				}
+				s.lobbyClients[sub.LobbyCode][sub.ChannelID] = true
+				s.playerClient[sub.PlayerName] = sub.ChannelID
+				log.Printf("player %s (ch=%04b) connected to lobby %s", sub.PlayerName, sub.ChannelID, sub.LobbyCode)
+			}
+		case unsub := <-b.goneClients:
+			channel := b.ClientChannels[unsub.ChannelID]
+			delete(b.ClientChannels, unsub.ChannelID)
+			close(channel)
+			if unsub.IsPlayer {
+				delete(s.lobbyClients[unsub.LobbyCode], unsub.ChannelID)
+				delete(s.playerClient, unsub.PlayerName)
+				log.Printf("player %s (ch=%04b) disconnected from lobby %s", unsub.PlayerName, unsub.ChannelID, unsub.LobbyCode)
+			}
+			log.Printf("client %04b disconnected, total clients: %d\n", unsub.ChannelID, len(b.ClientChannels))
+		}
+	}
 }
 
 // SSEHandler godoc
@@ -58,9 +99,11 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	var lobbyCode string
 	var playerName string
-	channelID := b.CreateChannel()
-	channel := b.ClientChannels[channelID]
-	log.Printf("Channel address: %p (id: %d)", channel, channelID)
+	channelID, channel := b.CreateChannel()
+	var sub Subscription
+	sub.ChannelID = channelID
+	sub.Channel = channel
+	sub.IsPlayer = false
 	if tokenExists {
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
@@ -69,30 +112,19 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 		if claims["type"] == "player" {
 			lobbyCode = claims["lobbyCode"].(string)
 			playerName = claims["playerName"].(string)
-			log.Printf("Player %s connected to lobby %s (channel: %d)", playerName, lobbyCode, channelID)
-			s.playerClient[playerName] = channelID
-			if s.lobbyClients[lobbyCode] == nil {
-				s.lobbyClients[lobbyCode] = make(map[int]bool)
-			}
-			s.lobbyClients[lobbyCode][channelID] = true
+			sub.LobbyCode = lobbyCode
+			sub.PlayerName = playerName
+			sub.IsPlayer = true
 		}
 	}
-
-	log.Printf("client connected (id=%d), total clients: %d\n", channelID, len(b.ClientChannels))
-
+	b.newClients <- sub
 	clientGone := r.Context().Done()
-
 	rc := http.NewResponseController(w)
 
 	for {
 		select {
 		case <-clientGone:
-			delete(b.ClientChannels, channelID)
-			log.Printf("client has disconnected (id=%d), total clients: %d\n", channelID, len(b.ClientChannels))
-			close(channel)
-			if tokenExists {
-				delete(s.lobbyClients[lobbyCode], channelID)
-			}
+			b.goneClients <- sub
 			return
 		case data := <-channel:
 			written, err := fmt.Fprintf(w, "event:msg\ndata:%s\n\n", data)
@@ -119,8 +151,7 @@ func (s *APIServer) Publish(msg Message) {
 	}
 	// Publish to all channels
 	// NOTE: Not concurrent
-	for key, channel := range b.ClientChannels {
-		log.Printf("Channel value: %p (id: %d)", channel, key)
+	for _, channel := range b.ClientChannels {
 		channel <- data
 	}
 }
@@ -149,23 +180,9 @@ func (s *APIServer) PublishToPlayer(playerName string, msg Message) {
 	b.ClientChannels[channelID] <- data
 }
 
-func (s *APIServer) PublishToAccount(accountName string, msg Message) {
-	b := s.broker
-	channelID := s.accountClient[accountName]
-	data, err := json.Marshal(msg.Data)
-	if err != nil {
-		log.Printf("unable to marshal: %s", err.Error())
-		return
-	}
-	log.Printf("Publishing to account %s (channel: %d)", accountName, channelID)
-	b.ClientChannels[channelID] <- data
-}
-
-
 func (s *APIServer) PublishToChannel(w http.ResponseWriter, r *http.Request) {
 	b := s.broker
 	channelID, err := getChannelID(r)
-	log.Printf("Channel ID: %d", channelID)
 	if err != nil {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return
