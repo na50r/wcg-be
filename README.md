@@ -20,3 +20,13 @@ API_KEY=<COHERE_API_KEY> make docker-seed
 
 ## API
 The API is documented using Swagger. It can be accessed at `http://localhost:<port>/swagger/index.html` after running the server.
+
+## Seeding Data
+The database is seeded with some initial data, namely:
+* Icons for profile pictures
+* Combinations based on on Infinite Craft
+
+The icons were taken from @wayou's [anonymous-animals](https://github.com/wayou/anonymous-animals)
+
+The combinations are from @napstaa967's [infinite-craft-database](https://github.com/napstaa967/infinite-craft-database/blob/main/items.json), JSON was converted and filtered to the appropriate CSV using a Python script. The CSV files can be found [here](https://drive.google.com/drive/folders/18pcu6pGdO9eN8S_FBiOg6PQXcBCe52YO?usp=drive_link)
+
