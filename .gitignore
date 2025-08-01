@@ -4,3 +4,4 @@
 api_test.go
 bin/
 *.sh
+*.csv

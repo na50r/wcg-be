@@ -685,7 +685,7 @@ func (s *PostgresStore) SeedPlayerWords(lobbyCode string, game *Game) error {
 		s.AddPlayerWord(player.Name, "fire", lobbyCode)
 		s.AddPlayerWord(player.Name, "water", lobbyCode)
 		s.AddPlayerWord(player.Name, "earth", lobbyCode)
-		s.AddPlayerWord(player.Name, "air", lobbyCode)
+		s.AddPlayerWord(player.Name, "wind", lobbyCode)
 	}
 	return nil
 }
