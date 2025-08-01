@@ -114,7 +114,6 @@ func readCSV(filePath string) ([][]string, error) {
 func setCombinations(store Storage) error {
 	records, err := readCSV(COMBINATIONS)
 	log.Println("Number of combinations ", len(records))
-	log.Println("First combination ", records[0])
 	if err != nil {
 		return err
 	}
@@ -136,6 +135,7 @@ func setWords(store Storage) error {
 	if err != nil {
 		return err
 	}
+	log.Println("Number of words ", len(records))
 	for _, record := range records {
 		word := new(Word)
 		word.Word = strings.ToLower(record[0])
