@@ -19,7 +19,7 @@ API_KEY=<COHERE_API_KEY> make docker-seed
 ```
 
 ## API
-The API is documented using Swagger. It can be accessed at `http://localhost:<port>/swagger/index.html` after running the server.
+The API is documented using Swagger. It can be accessed at `http://localhost:<port>/swagger/index.html` after executing `swag init` and then running the server.
 
 ## Seeding Data
 The database is seeded with some initial data, namely:

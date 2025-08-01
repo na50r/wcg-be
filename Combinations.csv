@@ -1,2 +1,3114 @@
 Depth,A,B,C
+1,Water,Water,Lake
+7,Water,Pond,Lake
+2,Water,Mountain,Lake
+8,Water,Cave,Lake
+4,Water,River,Lake
+18,Water,Tombstone,Lake
+15,Lake,Spain,Lake
+17,Water,Obsidian,Lake
 1,Water,Fire,Steam
+2,Fire,Wave,Steam
+3,Fire,Ocean,Steam
+3,Fire,Engine,Steam
+3,Water,Engine,Steam
+10,Water,Heat,Steam
+11,Water,Hot Air,Steam
+6,Water,Burn,Steam
+4,Fire,Puddle,Steam
+8,Water,Medicine,Steam
+6,Water,Fireplace,Steam
+8,Water,Flame,Steam
+8,Water,Grill,Steam
+4,Sea,Fire,Steam
+18,Ice-cold Croco-cola,Earth,Steam
+18,Rainfox,Rain,Steam
+12,Wind,Landslide,Steam
+10,Water,Jabba the Hutt,Steam
+5,Flying Spaghetti Monster,Cloud,Steam
+9,Water,Hot Springs,Steam
+15,Fire,Waterfall,Steam
+15,Water,Worker,Steam
+7,Water,Day,Steam
+1,Water,Wind,Wave
+5,Water,Energy,Wave
+8,Water,Breeze,Wave
+7,Water,Surf,Wave
+14,Parting,Tsunami,Wave
+15,Water,Love,Wave
+12,Lake,Google Wave,Wave
+12,Allergy,Garnet,Wave
+1,Water,Earth,Plant
+4,Water,Seed,Plant
+4,Fire,Seed,Plant
+4,Earth,Rain,Plant
+4,Earth,Sun,Plant
+7,Earth,Boiled Fish,Plant
+6,Earth,Airplane,Plant
+4,Earth,Flower,Plant
+10,Earth,Paramecium,Plant
+11,Earth,Lung,Plant
+8,Earth,Pot,Plant
+6,Earth,Soil,Plant
+11,Earth,Farmer,Plant
+21,Resurrection,Sandstorm,Plant
+25,Airship,Seed,Plant
+12,Earth,Coca Cola,Plant
+11,Earth,Algae,Plant
+14,Earth,Piranha,Plant
+21,Earth,Sealion,Plant
+17,Earth,Scarecrow,Plant
+14,Earth,Dance,Plant
+2,Water,Lake,Ocean
+3,Water,Tsunami,Ocean
+5,Water,Solar,Ocean
+4,Water,Beach,Ocean
+5,Water,Whale,Ocean
+3,Water,Planet,Ocean
+5,Water,Continent,Ocean
+8,Water,Tide,Ocean
+4,Sea,Lake,Ocean
+4,Sea,Water,Ocean
+9,Atlantis,Water,Ocean
+20,Water,Satellite,Ocean
+8,Lake,Tide,Ocean
+13,Water,BP,Ocean
+14,Water,Big Bang,Ocean
+15,Water,Universe,Ocean
+18,Water,Solar Wind,Ocean
+13,Water,Star,Ocean
+2,Water,Steam,Cloud
+2,Wind,Steam,Cloud
+2,Wind,Smoke,Cloud
+5,Wind,Electricity,Cloud
+4,Wind,Mist,Cloud
+11,Wind,Hot Spring,Cloud
+3,Wind,Fog,Cloud
+4,Sea,Steam,Cloud
+16,Hot Air Balloon,Fog,Cloud
+14,Lamb,Wind,Cloud
+13,Fire,Vapor,Cloud
+13,Lake,Vapor,Cloud
+10,Wind,Dream,Cloud
+12,Wind,Database,Cloud
+2,Water,Wave,Tsunami
+2,Water,Tornado,Tsunami
+4,Water,Mist,Tsunami
+7,Water,Crash,Tsunami
+6,Water,Cannon,Tsunami
+6,Water,Soda,Tsunami
+9,Water,Sneeze,Tsunami
+11,Water,Earthquake,Tsunami
+13,Narwhal,Tsunami,Tsunami
+8,Poseidon,Wave,Tsunami
+8,Poseidon,Water,Tsunami
+14,Dragon Sauce,Lake,Tsunami
+29,Sphinx,Wave,Tsunami
+11,Frankenstein,Tsunami,Tsunami
+15,Sunami,Ocean,Tsunami
+15,Sunami,Plant,Tsunami
+15,Sunami,Wave,Tsunami
+15,Sunami,Steam,Tsunami
+15,Sunami,Lake,Tsunami
+15,Sunami,Earth,Tsunami
+15,Sunami,Water,Tsunami
+14,Water,Katana,Tsunami
+19,Rainforest,Wave,Tsunami
+9,Tire,Tsunami,Tsunami
+12,Water,Landslide,Tsunami
+13,Pollution,Wave,Tsunami
+13,Vapor,Penguin,Tsunami
+12,Lake,Landslide,Tsunami
+11,Jabba,Wave,Tsunami
+27,Lake,Force,Tsunami
+18,Lake,Disaster,Tsunami
+19,Lake,Boom,Tsunami
+14,Water,Omelette,Tsunami
+2,Water,Plant,Swamp
+4,Water,Marsh,Swamp
+4,Fire,Marsh,Swamp
+3,Water,Mud,Swamp
+2,Earth,Lake,Swamp
+4,Earth,Marsh,Swamp
+7,Earth,Pond,Swamp
+4,Water,Forest,Swamp
+7,Water,Field,Swamp
+12,Swamp Thing,Fishbowl,Swamp
+12,Swamp Thing,Marsh,Swamp
+12,Swamp Thing,Rain,Swamp
+12,Swamp Thing,Water,Swamp
+12,Swamp Thing,Dandelion,Swamp
+12,Swamp Thing,Storm,Swamp
+12,Swamp Thing,Dust,Swamp
+12,Swamp Thing,Heat,Swamp
+12,Swamp Thing,Chili,Swamp
+12,Sea,Swamp Thing,Swamp
+16,Swamp Salad,Energy,Swamp
+14,Solar Flare,Swamp,Swamp
+15,Alligator,Plant,Swamp
+15,Alligator,Marsh,Swamp
+11,Water,Cemetery,Swamp
+17,Lake,Politician,Swamp
+14,Pink,Marsh,Swamp
+13,Moisture,Marsh,Swamp
+12,Wind,Google Wave,Swamp
+9,Noodles,Marsh,Swamp
+10,Wind,Ramen,Swamp
+18,BP,Flipper,Swamp
+14,Porkimus Prime,Emperor,Swamp
+11,Lake,Wet Sweater,Swamp
+13,Lake,Moisture,Swamp
+15,Lake,Poison,Swamp
+10,Lake,Sweat,Swamp
+8,Lake,Slim,Swamp
+17,Lake,Bribe,Swamp
+12,Lake,Swamp Lake,Swamp
+8,Lake,Methane,Swamp
+12,Water,Swamp Lake,Swamp
+17,Water,Scarecrow,Swamp
+17,Earth,Soggy,Swamp
+12,Water,Zombie,Swamp
+23,Water,Sinkhole,Swamp
+22,Water,Lawn,Swamp
+3,Water,Ocean,Fish
+5,Water,Fishbowl,Fish
+7,Fire,Boiled Fish,Fish
+5,Water,Sushi,Fish
+5,Water,Flying Fish,Fish
+4,Water,Balloon,Fish
+6,Water,Explosion,Fish
+6,Water,Bubble,Fish
+6,Water,Mermaid,Fish
+6,Water,Aquarium,Fish
+6,Fire,Aquarium,Fish
+11,Water,Lung,Fish
+6,Wind,Aquarium,Fish
+6,Earth,Aquarium,Fish
+9,Water,Life,Fish
+12,Water,Paratrooper,Fish
+10,Water,Human,Fish
+9,Water,Basket,Fish
+12,Water,Fisherman,Fish
+12,Fire,Fisherman,Fish
+7,Water,Bomb,Fish
+10,Water,Chip,Fish
+11,Volcanicus,Fishbowl,Fish
+17,Fish Balloon,Rainbow,Fish
+17,Fish Balloon,Marsh,Fish
+17,Fish Balloon,Fish,Fish
+12,Prayer,Fishbowl,Fish
+13,Coral Reef,Water,Fish
+12,Thunder,Fishbowl,Fish
+13,Shark,Fish,Fish
+12,Ninja,Water,Fish
+9,Water,Star Wars,Fish
+16,Fire,Fish Tank,Fish
+20,Water,God,Fish
+4,Lake,Lightning,Fish
+5,Lake,Flying Fish,Fish
+7,Lake,Crash,Fish
+13,Fishing,Ram,Fish
+12,Lake,Fisherman,Fish
+7,Lake,Bomb,Fish
+7,Lake,Barbecue,Fish
+7,Lake,Seaplane,Fish
+21,Lake,GPS,Fish
+7,Water,Fishing Rod,Fish
+13,Water,Cygnus,Fish
+12,Water,Oil Spill,Fish
+14,Water,Piranha,Fish
+14,Fire,Piranha,Fish
+21,Water,Baseball,Fish
+17,Water,Knight,Fish
+13,Water,Egg,Fish
+3,Water,Cloud,Rain
+5,Water,Rainbow,Rain
+5,Fire,Rainbow,Rain
+5,Wind,Rainbow,Rain
+3,Water,Storm,Rain
+6,Wind,Splash,Rain
+7,Water,Curtain,Rain
+3,Earth,Cloud,Rain
+5,Earth,Rainbow,Rain
+16,Rainbow Fish,Cloud,Rain
+12,Thunder,Rainbow,Rain
+15,Alligator,Cloud,Rain
+10,Grave,Rainbow,Rain
+20,Amazon,Fire,Rain
+14,Acid,Wind,Rain
+18,Wind,Google Ocean,Rain
+16,Fish Tank,Phoenix,Rain
+8,Sauna,Storm,Rain
+14,Wind,Oyster,Rain
+18,Wind,Wet,Rain
+13,Water,Grass,Rain
+3,Water,Swamp,Marsh
+10,Lake,Tar,Marsh
+4,Water,Fish,Fishbowl
+6,Water,Goldfish,Fishbowl
+24,Earth,Dracula,Fishbowl
+4,Water,Rain,Rainbow
+4,Fire,Rain,Rainbow
+4,Water,Sun,Rainbow
+15,Rainbow Train,Tsunami,Rainbow
+15,Rainbow Train,Cloud,Rainbow
+15,Rainbow Train,Ocean,Rainbow
+15,Rainbow Train,Plant,Rainbow
+15,Rainbow Train,Wave,Rainbow
+15,Rainbow Train,Steam,Rainbow
+15,Rainbow Train,Lake,Rainbow
+15,Rainbow Train,Earth,Rainbow
+15,Rainbow Train,Wind,Rainbow
+15,Rainbow Train,Fire,Rainbow
+15,Rainbow Train,Water,Rainbow
+15,Rainbow Train,Mud,Rainbow
+15,Rainbow Train,Dust Storm,Rainbow
+15,Rainbow Train,Flying,Rainbow
+15,Rainbow Train,Airplane,Rainbow
+15,Rainbow Train,Sandstorm,Rainbow
+15,Rainbow Train,Windmill,Rainbow
+15,Rainbow Train,Eruption,Rainbow
+16,Rainbow Fish,Volcano,Rainbow
+16,Rainbow Fish,Rainbow,Rainbow
+16,Rainbow Fish,Marsh,Rainbow
+16,Rainbow Fish,Rain,Rainbow
+16,Rainbow Fish,Swamp,Rainbow
+16,Rainbow Fish,Tsunami,Rainbow
+14,Parting,Rain,Rainbow
+15,Sunami,Cloud,Rainbow
+17,Prism,Cannon,Rainbow
+17,Prism,Vampire,Rainbow
+17,Prism,Explosion,Rainbow
+17,Prism,Brick,Rainbow
+17,Prism,Phoenix,Rainbow
+17,Prism,Crash,Rainbow
+17,Prism,Balloon,Rainbow
+17,Prism,Fireworks,Rainbow
+17,Prism,Ash,Rainbow
+17,Prism,Penguin,Rainbow
+17,Prism,Ship,Rainbow
+17,Prism,Mirage,Rainbow
+17,Prism,Holy Water,Rainbow
+17,Prism,Bird,Rainbow
+17,Prism,Boat,Rainbow
+17,Prism,Energy,Rainbow
+17,Prism,Wine,Rainbow
+18,Ice-cold Croco-cola,Swamp,Rainbow
+17,Wind,Prism,Rainbow
+17,Lake,Prism,Rainbow
+14,Dragonfly,Rain,Rainbow
+14,Jet,Rain,Rainbow
+16,Earth,Darth Rainbow,Rainbow
+13,Tan,Plant,Rainbow
+10,Eel,Cloud,Rainbow
+6,Sunset,Splash,Rainbow
+10,Water,Baptism,Rainbow
+11,Water,Light,Rainbow
+15,Wind,Waterfall,Rainbow
+6,Wind,Sunrise,Rainbow
+11,Wind,Light,Rainbow
+1,Fire,Fire,Volcano
+2,Fire,Lake,Volcano
+3,Fire,Tsunami,Volcano
+2,Fire,Smoke,Volcano
+2,Fire,Lava,Volcano
+4,Fire,Rock,Volcano
+2,Wind,Lava,Volcano
+3,Wind,Eruption,Volcano
+2,Fire,Tornado,Volcano
+3,Fire,Storm,Volcano
+4,Fire,Hurricane,Volcano
+3,Fire,Eruption,Volcano
+3,Fire,Sandstorm,Volcano
+7,Fire,Surf,Volcano
+2,Earth,Smoke,Volcano
+4,Earth,Lightning,Volcano
+4,Earth,Windmill,Volcano
+5,Earth,Energy,Volcano
+3,Earth,Sand,Volcano
+10,Earth,Hell,Volcano
+6,Earth,Bubble,Volcano
+6,Earth,Fireplace,Volcano
+8,Earth,Firework,Volcano
+8,Earth,Flame,Volcano
+2,Earth,Mountain,Volcano
+2,Fire,Mountain,Volcano
+4,Fire,Island,Volcano
+11,Fire,Earthquake,Volcano
+8,Fire,Spring,Volcano
+5,Fire,Continent,Volcano
+6,Fire,Soil,Volcano
+9,Fire,Mine,Volcano
+6,Fire,Land,Volcano
+4,Fire,River,Volcano
+8,Fire,Tide,Volcano
+9,Fire,Fountain,Volcano
+10,Fire,Well,Volcano
+9,Water,Sea Monster,Volcano
+11,Rocket,Lava,Volcano
+11,Volcanicus,Fish,Volcano
+16,Rainbow Fish,Lava,Volcano
+8,Poseidon,Fire,Volcano
+11,Fireball,Hot Spring,Volcano
+22,Don Quixote,Lava,Volcano
+14,Dragon Sauce,Fire,Volcano
+19,Sunflower,Eruption,Volcano
+26,Zeppelin,Eruption,Volcano
+17,Politician,Eruption,Volcano
+18,Disaster,Dust,Volcano
+15,Sunami,Fire,Volcano
+12,Thunder,Lava,Volcano
+12,Thunder,Smoke,Volcano
+20,Earth,Fire Breath,Volcano
+12,Lake,Ninja,Volcano
+9,Fire,Geode,Volcano
+30,Wind,Aphrodite,Volcano
+12,Fire,Ugly Duckling,Volcano
+12,Minotaur,Fishbowl,Volcano
+13,Labyrinth,Ocean,Volcano
+13,Fire,Pollution,Volcano
+19,Fire Ocean,Fire,Volcano
+16,Lake,Fish Tank,Volcano
+10,Ramen,Lava,Volcano
+5,Lake,Ship,Volcano
+19,Lake,Fire Ocean,Volcano
+9,Lake,Hot Springs,Volcano
+9,Fire,Hot Springs,Volcano
+16,Fire,French Onion Soup,Volcano
+21,Fire,Sealion,Volcano
+22,Fire,Drain,Volcano
+17,Wind,Obsidian,Volcano
+15,Fire,Fire Tornado,Volcano
+9,Earth,Napalm,Volcano
+6,Earth,Fire Ski,Volcano
+13,Earth,Chlorine,Volcano
+22,Earth,Bonfire,Volcano
+19,Earth,Power,Volcano
+17,Earth,Underworld,Volcano
+1,Fire,Wind,Smoke
+2,Fire,Plant,Smoke
+3,Fire,Fog,Smoke
+4,Fire,Mist,Smoke
+4,Fire,Flower,Smoke
+8,Wind,Firefighter,Smoke
+8,Fire,Breeze,Smoke
+10,Fire,Cough,Smoke
+11,Fire,Lung,Smoke
+6,Wind,Fireplace,Smoke
+8,Fire,Cave,Smoke
+4,Fire,Forest,Smoke
+11,Lake,Incense,Smoke
+9,Fire,Exhaust,Smoke
+19,Fire,Rainforest,Smoke
+11,Fire,Wet Sweater,Smoke
+14,Toxic,Earth,Smoke
+6,Fire,Toadstool,Smoke
+5,Lake,Dirt,Smoke
+16,Fire,Moonshine,Smoke
+12,Wind,Information,Smoke
+22,Wind,Bonfire,Smoke
+19,Fire,Metal,Smoke
+1,Fire,Earth,Lava
+2,Fire,Volcano,Lava
+2,Water,Volcano,Lava
+3,Fire,Stone,Lava
+3,Water,Eruption,Lava
+7,Fire,Vase,Lava
+2,Earth,Volcano,Lava
+10,Earth,Hot,Lava
+10,Earth,Heat,Lava
+10,Earth,Cough,Lava
+11,Rocket,Volcano,Lava
+12,Swamp Thing,Volcano,Lava
+22,Don Quixote,Volcano,Lava
+22,Golem,Fire,Lava
+16,Fire,Sonar,Lava
+16,Honeymoon,Volcano,Lava
+10,Crystal,Hot,Lava
+10,Fire,Crystal,Lava
+10,Dada,Volcano,Lava
+17,Fire,Obsidian,Lava
+14,Earth,Data Fire,Lava
+15,Fire,Hoth,Lava
+2,Fire,Steam,Engine
+7,Fire,Fuel,Engine
+3,Fire,Cloud,Lightning
+5,Water,Sea Serpent,Lightning
+5,Fire,Electricity,Lightning
+5,Earth,Electricity,Lightning
+21,Flying Sunfish,Stone,Lightning
+12,Thunder,Sushi,Lightning
+12,Thunder,Engine,Lightning
+12,Thunder,Volcano,Lightning
+12,Thunder,Marsh,Lightning
+17,Croco-cola,Tornado,Lightning
+12,Lake,Thunder,Lightning
+10,Coca-Cola,Electricity,Lightning
+10,Crystal,Storm,Lightning
+11,Fire,Electric Eel,Lightning
+11,Electric Eel,Rain,Lightning
+24,Fire,Home Run,Lightning
+14,Water,Firefly,Lightning
+3,Fire,Swamp,Dragon
+5,Fire,Sushi,Dragon
+5,Fire,Sea Serpent,Dragon
+4,Fire,Dragon,Dragon
+5,Wind,Sea Serpent,Dragon
+5,Fire,Flying Fish,Dragon
+5,Fire,Whale,Dragon
+6,Fire,Leviathan,Dragon
+7,Fire,Plesiosaur,Dragon
+12,Fire,Tattoo,Dragon
+14,Dragon Sauce,Plant,Dragon
+16,Swamp Salad,Oasis,Dragon
+21,Flying Sunfish,Rainbow,Dragon
+17,Fish Balloon,Dragon,Dragon
+15,Alligator,Lava,Dragon
+10,Grave,Dragon,Dragon
+20,Fire,Fire Breath,Dragon
+16,Darth Rainbow,Chili,Dragon
+12,Fire,Jaws,Dragon
+14,Fire,Tanning,Dragon
+21,Fire,Wizard,Dragon
+17,Fire,Knight,Dragon
+17,Wind,Plow,Dragon
+4,Fire,Fish,Sushi
+6,Water,Rice,Sushi
+6,Fire,Rice,Sushi
+13,Narwhal,Boiled Fish,Sushi
+13,Wasabi,Toast,Sushi
+13,Wasabi,Cheese,Sushi
+13,Wasabi,Chip,Sushi
+13,Wasabi,Barbecue,Sushi
+13,Wasabi,Crop,Sushi
+15,Fruit Salad,Fish,Sushi
+13,Twister,Boiled Fish,Sushi
+14,Miso,Goldfish,Sushi
+14,Miso,Sushi,Sushi
+13,Water,Samurai,Sushi
+13,Wind,Labyrinth,Sushi
+10,Ramen,Fishbowl,Sushi
+9,Noodles,Fish,Sushi
+8,Wind,Sauna,Sushi
+10,Flying Spaghetti Monster,Binks,Sushi
+6,Flying Spaghetti Monster,Steam Monster,Sushi
+16,Pasta,Gungan,Sushi
+5,Fire,Fishbowl,Goldfish
+15,Shrimp,Gold,Goldfish
+22,Don Quixote,Fishbowl,Goldfish
+12,Thunder,Goldfish,Goldfish
+4,Fire,Lightning,Sun
+5,Fire,Solar,Sun
+10,Fire,Heat,Sun
+7,Fire,Magnifying Glass,Sun
+4,Fire,Beach,Sun
+7,Fire,Telescope,Sun
+7,Fire,Warmth,Sun
+3,Fire,Planet,Sun
+7,Fire,Meteor,Sun
+8,Fire,Eclipse,Sun
+8,Fire,Meteorite,Sun
+11,Kettle,Solar,Sun
+8,Fireball,Window,Sun
+13,Duck Sauce,Sun,Sun
+19,Sunflower,Hot Air,Sun
+19,Sunflower,Kite,Sun
+21,Flying Sunfish,Iceberg,Sun
+24,Laser,Fire,Sun
+27,Alien,Hot,Sun
+16,Hot Air Balloon,Solar,Sun
+14,Solar Flare,Engine,Sun
+14,Solar Flare,Lava,Sun
+14,Solar Flare,Smoke,Sun
+14,Solar Flare,Rainbow,Sun
+14,Solar Flare,Fishbowl,Sun
+14,Solar Flare,Rain,Sun
+15,Burning Love,Solar,Sun
+12,Wind,Ugly Duckling,Sun
+13,Tan,Earth,Sun
+6,Lake,Lens,Sun
+14,Lake,Solar Flare,Sun
+19,Lake,Sunflower,Sun
+11,Lake,Monet,Sun
+10,Lake,Baptism,Sun
+5,Fire,Sunset,Sun
+15,Fire,Googol,Sun
+14,Fire,Baptist,Sun
+11,Fire,Light,Sun
+16,Fire,Galaxy,Sun
+17,Fire,Solar System,Sun
+7,Fire,Day,Sun
+13,Fire,Star,Sun
+6,Fire,Goldfish,Boiled Fish
+4,Fire,Sun,Solar
+8,Wind,Eclipse,Solar
+2,Water,Smoke,Fog
+11,Kettle,Mist,Fog
+26,Zeppelin,Hurricane,Fog
+18,Alka-Seltzer,Mist,Fog
+10,Coca-Cola,Fog,Fog
+20,Global Warming,Mist,Fog
+9,Art,Mist,Fog
+16,Pasta,Solar,Fog
+2,Water,Lava,Stone
+4,Water,Rock,Stone
+3,Earth,Engine,Stone
+11,Kettle,Rock,Stone
+21,Flying Sunfish,Soup,Stone
+11,Earth,Emerald,Stone
+4,Water,Lightning,Electricity
+4,Wind,Windmill,Electricity
+19,Sunflower,Windmill,Electricity
+13,Tan,Fire,Electricity
+11,Electric Eel,Water,Electricity
+10,Wind,Eel,Electricity
+13,Lightning,Tesla,Electricity
+4,Water,Dragon,Sea Serpent
+7,Water,Boiled Fish,Soup
+8,Water,Soup,Soup
+10,Water,Pepper,Soup
+8,Water,Pot,Soup
+9,Water,Cook,Soup
+10,Water,Popcorn,Soup
+7,Water,Barbecue,Soup
+10,Water,Chef,Soup
+12,Water,Hot Sauce,Soup
+14,Miso,Sun,Soup
+13,Earth,Shark,Soup
+15,Water,Mutton,Soup
+14,Water,Trash,Soup
+5,Water,Mushroom,Soup
+9,Noodles,Ocean,Soup
+14,Water,Noodle,Soup
+9,Noodles,Water,Soup
+8,Lake,Pot,Soup
+16,Lake,Vape,Soup
+14,Lake,Cappuccino,Soup
+14,Lake,Miso,Soup
+8,Water,Soggy Bread,Soup
+15,Water,Styx,Soup
+16,Water,Charon,Soup
+21,Water,Campfire,Soup
+18,Water,Knowledge,Soup
+17,Water,Tauntaun,Soup
+14,Water,Chicken,Soup
+3,Water,Fog,Ice
+7,Water,Penguin,Ice
+5,Earth,Iceberg,Ice
+5,Water,Snow,Ice
+24,Laser,Water,Ice
+10,Water,Diamond,Ice
+11,Water,Pressure,Ice
+17,Fire,Icefox,Ice
+12,Cold,Water,Ice
+12,Cold,Burn,Ice
+8,Lake,Tatooine,Ice
+10,Lake,Crystal,Ice
+5,Lake,Snow,Ice
+11,Lake,Earthquake,Ice
+17,Lake,Crack,Ice
+12,Lake,Cold,Ice
+11,Lake,SpongeBob,Ice
+6,Water,Winter,Ice
+20,Water,Pigimus Prime,Ice
+6,Water,Fire Ski,Ice
+14,Water,Hack,Ice
+10,Water,Zephyr,Ice
+21,Water,Wizard,Ice
+16,Water,Tartarus,Ice
+18,Water,Wampa,Ice
+3,Water,Stone,Rock
+3,Earth,Stone,Rock
+4,Water,Ice,Iceberg
+5,Water,Iceberg,Iceberg
+13,Ice Swamp Thing,Ocean,Iceberg
+13,Ice Swamp Thing,Wave,Iceberg
+10,Lake,Monster,Iceberg
+5,Lake,Iceberg,Iceberg
+6,Lake,Blizzard,Iceberg
+15,Lake,Titanic,Iceberg
+14,Lake,Piranha,Iceberg
+8,Fire,Soup,Chili
+11,Kettle,Chili,Chili
+9,Fire,Chili,Hot
+11,Fire,Spicy,Hot
+9,Water,Chili,Heat
+10,Fire,Hot,Heat
+10,Water,Hot,Tea
+9,Water,Tea,Tea
+10,Fire,Chai,Tea
+10,Water,Chai,Tea
+10,Wind,Chai,Tea
+10,Water,Fever,Tea
+8,Water,Hot Water,Tea
+8,Fire,Hot Water,Tea
+8,Wind,Hot Water,Tea
+10,Earth,Chai,Tea
+10,Earth,Teapot,Tea
+10,Water,Teapot,Tea
+10,Fire,Teapot,Tea
+11,Kettle,Hurricane,Tea
+11,Kettle,Dandelion,Tea
+11,Kettle,Storm,Tea
+11,Kettle,Dust,Tea
+11,Kettle,Chai,Tea
+11,Kettle,Heat,Tea
+11,Kettle,Hot,Tea
+11,Kettle,Iceberg,Tea
+11,Kettle,Soup,Tea
+11,Kettle,Electricity,Tea
+11,Kettle,Fog,Tea
+11,Kettle,Goldfish,Tea
+11,Kettle,Dragon,Tea
+11,Kettle,Lightning,Tea
+12,Swamp Thing,Tea,Tea
+6,Sea,Blizzard,Tea
+21,Flying Sunfish,Tea,Tea
+11,Fire,Sunburn,Tea
+14,Water,Tea Bag,Tea
+9,Tea,Tea,Tea
+9,Fire,Tea,Chai
+1,Wind,Wind,Tornado
+5,Wind,Fishbowl,Tornado
+5,Wind,Sushi,Tornado
+4,Wind,Ice,Tornado
+9,Wind,Chili,Tornado
+2,Wind,Tornado,Tornado
+4,Wind,Dust Storm,Tornado
+5,Wind,Energy,Tornado
+7,Wind,Crash,Tornado
+6,Wind,Explosion,Tornado
+6,Wind,Cannon,Tornado
+7,Wind,Cannonball,Tornado
+7,Wind,Magnifying Glass,Tornado
+8,Wind,Microscope,Tornado
+11,Wind,Devil,Tornado
+5,Wind,House,Tornado
+7,Wind,Fan,Tornado
+11,Wind,Parasail,Tornado
+4,Wind,Dragon,Tornado
+8,Wind,Soup,Tornado
+7,Wind,Curtain,Tornado
+3,Earth,Storm,Tornado
+4,Earth,Hurricane,Tornado
+4,Wind,Island,Tornado
+6,Wind,Leviathan,Tornado
+6,Wind,Bottle,Tornado
+11,Wind,Earthquake,Tornado
+8,Wind,Cave,Tornado
+5,Wind,Continent,Tornado
+11,Wind,Farmer,Tornado
+8,Poseidon,Wind,Tornado
+14,Psittacine,Chai,Tornado
+27,Crop Circle,Storm,Tornado
+27,Blimp,Chai,Tornado
+18,Disaster,Storm,Tornado
+13,Twister,Fog,Tornado
+13,Twister,Solar,Tornado
+15,Sunami,Wind,Tornado
+20,Radar,Wind,Tornado
+18,Wind,Clay,Tornado
+20,Wind,Satellite,Tornado
+11,Turtle,Wind,Tornado
+11,Wind,Cemetery,Tornado
+13,Lake,Twister,Tornado
+19,Rainforest,Wind,Tornado
+17,Wind,Crocodile Hunter,Tornado
+13,Wind,Fairy,Tornado
+12,Flying Pig,Storm,Tornado
+28,Wind,Steamroller,Tornado
+16,Heart,Sea Serpent,Tornado
+15,Poison,Stone,Tornado
+9,Wind,Star Wars,Tornado
+12,Gas,Lake,Tornado
+16,Fish Tank,Wind,Tornado
+9,Skeleton,Lightning,Tornado
+10,Wind,Snake,Tornado
+10,Binks,Wind,Tornado
+7,Wind,Fishing Rod,Tornado
+13,Wind,Data Lake,Tornado
+6,Wind,Death Star,Tornado
+14,Wind,Ice Golem,Tornado
+11,Wind,Emerald,Tornado
+11,Wind,Nightmare,Tornado
+16,Wind,Google Lake,Tornado
+21,Wind,Cottage,Tornado
+14,Wind,Pitch,Tornado
+21,Wind,Cruise,Tornado
+22,Wind,Drain,Tornado
+10,Wind,Zephyr,Tornado
+20,Wind,Gust,Tornado
+15,Wind,Fire Tornado,Tornado
+19,Wind,Dry,Tornado
+11,Earth,Jabba The Ramen,Tornado
+14,Earth,Sharknado,Tornado
+16,Wind,Tartarus,Tornado
+17,Wind,Underworld,Tornado
+14,Wind,Dance,Tornado
+23,Wind,Sinkhole,Tornado
+1,Wind,Earth,Dust
+5,Wind,Iceberg,Dust
+3,Wind,Mud,Dust
+3,Wind,Ash,Dust
+7,Wind,Pond,Dust
+4,Wind,Rock,Dust
+2,Earth,Tornado,Dust
+4,Earth,Mist,Dust
+6,Earth,Angel,Dust
+7,Earth,Fan,Dust
+9,Earth,Sneeze,Dust
+8,Earth,Breeze,Dust
+5,Wind,Dirt,Dust
+5,Wind,Fossil,Dust
+9,Wind,Bacteria,Dust
+6,Wind,Soil,Dust
+25,Airship,Sandstorm,Dust
+19,Dust Bunny,Windmill,Dust
+16,Heart,Stone,Dust
+9,Wind,Exhaust,Dust
+19,Water,Dust Bunny,Dust
+19,Fire,Dust Bunny,Dust
+12,Earth,Smog,Dust
+14,Wind,Trash,Dust
+13,Wind,Africa,Dust
+12,Wind,Hay,Dust
+11,Wind,Asphalt,Dust
+13,Wind,Haystack,Dust
+7,Wind,Death,Dust
+14,Wind,Bleach,Dust
+17,Wind,Rust,Dust
+8,Earth,Water Ski,Dust
+10,Earth,Zephyr,Dust
+15,Earth,Fire Tornado,Dust
+12,Wind,Road,Dust
+12,Wind,Zombie,Dust
+21,Wind,Baseball,Dust
+2,Wind,Lake,Storm
+2,Wind,Wave,Storm
+3,Wind,Ocean,Storm
+3,Wind,Cloud,Storm
+4,Wind,Rain,Storm
+4,Wind,Lightning,Storm
+7,Wind,Siren,Storm
+3,Wind,Planet,Storm
+12,Thunder,Lightning,Storm
+12,Thunder,Rain,Storm
+18,Wind,Knowledge,Storm
+19,Wind,Power,Storm
+17,Wind,Soggy,Storm
+17,Wind,Easter,Storm
+2,Wind,Plant,Dandelion
+4,Wind,Seed,Dandelion
+4,Wind,Flower,Dandelion
+21,Flying Sunfish,Tornado,Dandelion
+12,Buddha,Dandelion,Dandelion
+9,Skeleton,Lava,Dandelion
+3,Wind,Tsunami,Hurricane
+11,Wind,Hot Air,Hurricane
+10,Wind,Fever,Hurricane
+9,Wind,Sick,Hurricane
+9,Wind,Sneeze,Hurricane
+8,Wind,Breeze,Hurricane
+7,Wind,Warmth,Hurricane
+7,Wind,Ariel,Hurricane
+10,Wind,Cough,Hurricane
+15,Alligator,Wind,Hurricane
+17,Croco-cola,Dandelion,Hurricane
+19,Wind,Pina Colada,Hurricane
+13,Wind,Googolplex,Hurricane
+12,Wind,Jaws,Hurricane
+14,Wind,Baptist,Hurricane
+14,Wind,Hack,Hurricane
+15,Wind,Hacker,Hurricane
+3,Wind,Swamp,Mist
+4,Wind,Marsh,Mist
+3,Earth,Fog,Mist
+13,Fairy,Fog,Mist
+12,Wind,Swamp Lake,Mist
+4,Wind,Fish,Flying Fish
+21,Flying Sunfish,Hurricane,Flying Fish
+21,Flying Sunfish,Boiled Fish,Flying Fish
+21,Flying Sunfish,Sushi,Flying Fish
+21,Flying Sunfish,Rain,Flying Fish
+21,Flying Sunfish,Fish,Flying Fish
+17,Politician,Mist,Flying Fish
+18,Alka-Seltzer,Flying Fish,Flying Fish
+11,Flying Spaghetti Dragon,Naboo,Flying Fish
+6,Lake,Flying Mushroom,Flying Fish
+14,Wind,Piranha,Flying Fish
+2,Wind,Volcano,Eruption
+12,Prayer,Volcano,Eruption
+16,Genie,Volcano,Eruption
+3,Wind,Engine,Windmill
+6,Wind,Farm,Windmill
+10,Wind,Human,Windmill
+9,Wind,Mine,Windmill
+22,Don Quixote,Lightning,Windmill
+22,Don Quixote,Smoke,Windmill
+22,Don Quixote,Marsh,Windmill
+22,Don Quixote,Rain,Windmill
+15,Wind,Battery,Windmill
+16,Wind,Industrial Revolution,Windmill
+12,Wind,Wheel,Windmill
+4,Wind,Sun,Kite
+5,Wind,Solar,Kite
+9,Wind,Tea,Kite
+6,Wind,Airplane,Kite
+5,Wind,Flying,Kite
+6,Wind,Bird,Kite
+4,Wind,Balloon,Kite
+3,Wind,Sand,Kite
+7,Wind,Telescope,Kite
+7,Wind,Hanglider,Kite
+6,Wind,Surfer,Kite
+6,Wind,Goldfish,Kite
+7,Wind,Boiled Fish,Kite
+5,Wind,Kiln,Kite
+7,Wind,Surfing,Kite
+8,Wind,Pot,Kite
+11,Wind,Fluorite,Kite
+9,Wind,Basket,Kite
+23,Wind,Stingray,Kite
+16,Heart,Solar,Kite
+11,Wind,Jewel,Kite
+11,Wind,Culture,Kite
+14,Wind,Tea Bag,Kite
+8,Wind,Soggy Bread,Kite
+19,Wind,Optimus Pig,Kite
+18,Wind,Google Water,Kite
+10,Wind,Hot,Hot Air
+10,Wind,Heat,Hot Air
+3,Wind,Storm,Sandstorm
+4,Fire,Dust Storm,Sandstorm
+4,Wind,Oasis,Sandstorm
+5,Wind,Mirage,Sandstorm
+4,Wind,Desert,Sandstorm
+2,Wind,Dust,Sandstorm
+17,Swamp Wine,Flying,Sandstorm
+24,Steamship,Dust Storm,Sandstorm
+22,Golem,Wind,Sandstorm
+9,Drunk,Flying,Sandstorm
+7,Seaplane,Dust Storm,Sandstorm
+16,Wind,Sandwich,Sandstorm
+4,Wind,Hurricane,Seed
+3,Wind,Dandelion,Seed
+27,Crop Circle,Dandelion,Seed
+14,Earth,Bleach,Seed
+5,Wind,Flying Fish,Airplane
+7,Seaplane,Kite,Airplane
+18,Wind,Hollywood,Airplane
+4,Wind,Kite,Flying
+6,Wind,Angel,Flying
+10,Drunken,Kite,Flying
+3,Wind,Sandstorm,Dust Storm
+14,Wind,Google,Dust Storm
+19,Wind,Dust Bunny,Dust Storm
+2,Water,Dust,Mud
+4,Water,Dust Storm,Mud
+2,Earth,Steam,Mud
+3,Earth,Swamp,Mud
+6,Earth,Splash,Mud
+11,Earth,Hot Spring,Mud
+8,Earth,Hot Water,Mud
+8,Earth,Vodka,Mud
+5,Water,Dirt,Mud
+6,Water,Soil,Mud
+11,Toothpaste,Puddle,Mud
+24,Steamship,Mud,Mud
+18,Alka-Seltzer,Dust Storm,Mud
+9,Tire,Rainbow,Mud
+7,Fart,Earth,Mud
+28,Lake,Mudslide,Mud
+9,Earth,Hot Springs,Mud
+21,Earth,GPS,Mud
+12,Earth,Swamp Lake,Mud
+14,Earth,Baptist,Mud
+14,Earth,Wet Haystack,Mud
+18,Earth,Wet,Mud
+3,Water,Dandelion,Wine
+5,Water,Holy Water,Wine
+5,Water,Alcohol,Wine
+7,Water,Ceramic,Wine
+5,Earth,Vineyard,Wine
+6,Earth,Bottle,Wine
+5,Water,Vineyard,Wine
+6,Water,Bottle,Wine
+5,Fire,Vineyard,Wine
+7,Wind,Meteor,Wine
+12,Yeti,Vineyard,Wine
+10,Ramen,Volcano,Wine
+4,Water,Windmill,Energy
+4,Fire,Windmill,Energy
+17,Politician,Windmill,Energy
+19,Fire,Power,Energy
+17,Water,Google Wind,Energy
+3,Water,Sandstorm,Oasis
+5,Water,Mirage,Oasis
+4,Water,Desert,Oasis
+13,Reef,Desert,Oasis
+13,Coral Reef,Mirage,Oasis
+29,Lake,Sphinx,Oasis
+14,Gnome,Desert,Oasis
+6,Water,Airplane,Boat
+5,Water,Ship,Boat
+6,Water,Sail,Boat
+9,Lake,Exhaust,Boat
+10,Water,Shoe,Boat
+5,Water,Flying,Bird
+5,Earth,Flying Fish,Bird
+5,Earth,Flying,Bird
+18,Alka-Seltzer,Sandstorm,Bird
+13,Wind,Egg,Bird
+4,Water,Wine,Holy Water
+4,Water,Oasis,Mirage
+24,Laser,Energy,Mirage
+18,Mirror,Sand,Mirage
+17,Prism,Desert,Mirage
+17,Prism,Oasis,Mirage
+7,Water,Boat,Ship
+7,Water,Sailboat,Ship
+7,Water,Pirate,Ship
+6,Earth,Sail,Ship
+4,Water,Island,Ship
+12,Sea,Steam Engine,Ship
+21,Water,Cruise,Ship
+6,Water,Bird,Penguin
+7,Wind,Penguin,Penguin
+19,Skier,Ship,Penguin
+13,Coral Reef,Penguin,Penguin
+10,Cocaine,Penguin,Penguin
+2,Fire,Dust,Ash
+3,Fire,Dandelion,Ash
+7,Fire,Phoenix,Ash
+6,Fire,Vampire,Ash
+6,Fire,Burn,Ash
+7,Water,Phoenix,Ash
+3,Fire,Tree,Ash
+10,Fire,Burnt Toast,Ash
+12,Fire,Burnt Cookie,Ash
+12,Ninja,Burn,Ash
+14,Trash,Fire,Ash
+7,Fire,Death,Ash
+14,Fire,Bleach,Ash
+16,Fire,Clean,Ash
+4,Fire,Kite,Fireworks
+6,Fire,Explosion,Fireworks
+7,Fire,Blood,Fireworks
+12,Fire,Paratrooper,Fireworks
+9,Fire,Sleep,Fireworks
+18,Fire,Hollywood,Fireworks
+11,Fire,Hot Air,Balloon
+4,Wind,Wine,Balloon
+3,Earth,Sandstorm,Balloon
+25,Airship,Hot Air,Balloon
+25,Airship,Kite,Balloon
+11,Drunken,Hot Air,Balloon
+18,Alka-Seltzer,Eruption,Balloon
+6,Fire,Airplane,Crash
+8,Fire,Car,Crash
+29,Wall,Airplane,Crash
+5,Fire,Flying,Phoenix
+6,Fire,Bird,Phoenix
+9,Fire,Amoeba,Phoenix
+3,Fire,Lily,Phoenix
+6,Fire,Angel,Phoenix
+7,Fire,Surfing,Phoenix
+9,Fire,Life,Phoenix
+10,Fire,Human,Phoenix
+8,Fireball,Angel,Phoenix
+21,Resurrection,Airplane,Phoenix
+16,Vulture,Sandstorm,Phoenix
+17,Fire,Tomb,Phoenix
+10,Fire,Grave,Phoenix
+12,Tortoise,Fire,Phoenix
+13,Fire,Fairy,Phoenix
+11,Fire,Swan,Phoenix
+13,Fire,Flamingo,Phoenix
+18,Rainfox,Oasis,Phoenix
+16,Lake,FireFox,Phoenix
+16,Lake,Firefox,Phoenix
+13,Fire,Cygnus,Phoenix
+12,Fire,Swan Lake,Phoenix
+18,Fire,Mummy,Phoenix
+11,Fire,Holy Spirit,Phoenix
+3,Fire,Mud,Brick
+5,Fire,Dirt,Brick
+19,Skier,Phoenix,Brick
+29,Wall,Wine,Brick
+12,Hay,Gold,Brick
+4,Fire,Wine,Alcohol
+5,Fire,Energy,Explosion
+8,Fire,Firework,Explosion
+7,Fire,Emulsion,Explosion
+8,Fire,Gasoline,Explosion
+7,Fire,Bomb,Explosion
+19,Fire,Periscope,Explosion
+19,Fire,Alka-seltzer,Explosion
+16,Fire,Iphone 6s Plus,Explosion
+14,Acid,Fire,Explosion
+12,Gas,Fire,Explosion
+19,Fire,Boom,Explosion
+7,Fire,Fart,Explosion
+13,Fire,Pepsi,Explosion
+9,Fire,Napalm,Explosion
+7,Fire,Boat,Desert
+5,Fire,Mirage,Desert
+4,Earth,Oasis,Desert
+3,Earth,Ash,Desert
+17,Cactus,Oasis,Desert
+5,Seagull,Oasis,Desert
+13,Fire,Africa,Desert
+19,Earth,Dry,Desert
+5,Fire,Holy Water,Vampire
+7,Water,Blood,Vampire
+7,Wind,Blood,Vampire
+7,Wind,Bat,Vampire
+7,Water,Bat,Vampire
+7,Fire,Bat,Vampire
+7,Earth,Blood,Vampire
+15,Parasite,Lily,Vampire
+11,Toothpaste,Splash,Vampire
+24,Dracula,Amoeba,Vampire
+24,Dracula,Pond,Vampire
+24,Dracula,Vase,Vampire
+24,Dracula,Beach,Vampire
+24,Dracula,Blood,Vampire
+24,Dracula,Splash,Vampire
+24,Dracula,Puddle,Vampire
+24,Dracula,Magnifying Glass,Vampire
+24,Dracula,Lens,Vampire
+24,Dracula,Ceramic,Vampire
+24,Fire,Dracula,Vampire
+27,Stake,Penguin,Vampire
+18,?,Holy Water,Vampire
+27,Lake,Stake,Vampire
+7,Lake,Blood,Vampire
+5,Fire,Fireworks,Cannon
+7,Fire,Cannonball,Cannon
+7,Fire,Pirate,Cannon
+15,Fluids,Kiln,Cannon
+4,Fire,Balloon,Pop
+6,Fire,Bubble,Pop
+7,Fire,Crash,Burn
+5,Fire,Alcohol,Burn
+8,Fire,Vodka,Burn
+4,Fire,Brick,Kiln
+4,Fire,Desert,Sand
+4,Wind,Beach,Sand
+3,Wind,Stone,Sand
+2,Earth,Wave,Sand
+3,Earth,Mud,Sand
+4,Earth,Beach,Sand
+11,Toothpaste,Beach,Sand
+8,Wind,Tatooine,Sand
+16,Wind,Onyx,Sand
+6,Fire,Cannon,Cannonball
+5,Fire,Pop,Soda
+6,Fire,Soda,Soda
+5,Water,Pop,Soda
+18,Ice-cold Croco-cola,Volcano,Soda
+13,Fire,Coke,Soda
+13,Wind,Pepsi,Soda
+5,Fire,Kiln,Pottery
+7,Fire,Ceramic,Pottery
+7,Wind,Ceramic,Pottery
+18,Clay,Sun,Pottery
+18,Water,Clay,Pottery
+13,Tan,Ceramic,Pottery
+3,Fire,Sand,Glass
+4,Water,Brick,Glass
+5,Water,Kiln,Glass
+6,Fire,Pottery,Ceramic
+5,Fire,Glass,Lens
+6,Fire,Lens,Magnifying Glass
+3,Water,Ash,Puddle
+4,Wind,Puddle,Puddle
+11,Water,Snowman,Puddle
+28,Steamroller,Water,Puddle
+12,Gas,Pond,Puddle
+28,Lake,Steamroller,Puddle
+12,Water,Swan Lake,Puddle
+13,Water,Leak,Puddle
+18,Water,Wet,Puddle
+5,Water,Fireworks,Splash
+8,Water,Firework,Splash
+8,Water,Parachute,Splash
+6,Water,Death Star,Splash
+6,Water,Vampire,Blood
+16,Water,Heart,Blood
+3,Water,Sand,Beach
+6,Earth,Surfer,Beach
+7,Earth,Surf,Beach
+7,Earth,Surfing,Beach
+13,Reef,Sand,Beach
+20,Earth,Vacation,Beach
+6,Water,Pottery,Vase
+6,Wind,Pottery,Vase
+6,Earth,Pottery,Vase
+15,Fluids,Soda,Vase
+17,Aspirin,Pottery,Vase
+18,Clay,Boiled Fish,Vase
+18,Clay,Goldfish,Vase
+7,Water,Magnifying Glass,Microscope
+15,Fluids,Ceramic,Microscope
+6,Water,Splash,Pond
+9,Water,Amoeba,Pond
+3,Water,Lily,Pond
+6,Earth,Goldfish,Pond
+13,Water,Garden,Pond
+7,Water,Vase,Flower
+3,Wind,Lily,Flower
+3,Earth,Dandelion,Flower
+3,Earth,Lily,Flower
+8,Earth,Spring,Flower
+15,Rainbow Train,Seed,Flower
+8,Water,Microscope,Amoeba
+10,Water,Paramecium,Amoeba
+4,Water,Flower,Lily
+2,Lake,Plant,Lily
+7,Fire,Pond,Virus
+9,Fire,Bacteria,Virus
+15,Parasite,Flu,Virus
+8,Fire,Virus,Flu
+8,Wind,Virus,Flu
+9,Fire,Flu,Fever
+11,Fire,Hot Spring,Fever
+10,Fire,Fever,Hell
+11,Fire,Devil,Hell
+11,Water,Devil,Hell
+11,Earth,Devil,Hell
+14,Hades,Fever,Hell
+21,Fire,Religion,Hell
+22,Fire,Christianity,Hell
+16,Fire,Eurovision Song Contest,Hell
+9,Fire,Church,Hell
+12,Fire,Eden,Hell
+17,Fire,Underworld,Hell
+10,Fire,Hell,Devil
+10,Wind,Hell,Devil
+8,Water,Virus,Sick
+9,Water,Bacteria,Sick
+9,Water,Flu,Fluoride
+10,Wind,Fluoride,Fluoride
+14,Hades,Hell,Fluoride
+10,Water,Hell,Hot Spring
+10,Water,Fluoride,Medicine
+7,Water,Cure,Medicine
+7,Earth,Cure,Medicine
+8,Fire,Medicine,Cure
+6,Water,Hangover,Cure
+14,Hot Toddy,Cough,Cure
+8,Fireball,Medicine,Cure
+7,Fire,Cure,Firefighter
+11,Fire,Pump,Firefighter
+8,Fireball,Cure,Firefighter
+13,Fire,Leak,Firefighter
+7,Wind,Boat,Sail
+5,Wind,Ship,Sail
+7,Wind,Sailboat,Sail
+7,Wind,Pirate,Sail
+11,Wind,Lung,Sail
+5,Wind,Whale,Sail
+4,Sea,Wind,Sail
+13,Reef,Wind,Sail
+8,Wind,Car,Sail
+19,Water,Boot,Sail
+14,Wind,Slave,Sail
+13,Wind,BP,Sail
+17,Wind,Cleopatra,Sail
+17,Wind,Ferry,Sail
+14,Wind,Bp,Sail
+10,Wind,Shoe,Sail
+5,Wind,Holy Water,Angel
+23,Rose,Holy Water,Angel
+12,Prayer,Rainbow,Angel
+11,Wind,Holy Spirit,Angel
+11,Earth,Holy Spirit,Angel
+10,Flying,Human,Angel
+4,Wind,Brick,House
+6,Earth,Window,House
+23,Stingray,Brick,House
+21,Fire,Cottage,House
+17,Earth,Obsidian,House
+5,Wind,Alcohol,Hangover
+6,Earth,Hangover,Hangover
+20,Hot Toddies,Radar,Hangover
+6,Wind,Vampire,Bat
+5,Wind,Pop,Bubble
+6,Wind,Soda,Bubble
+6,Wind,Bubble,Bubble
+5,Wind,Glass,Window
+6,Wind,Lens,Telescope
+6,Earth,Lens,Telescope
+18,Mirror,Kiln,Telescope
+25,Lake,Beam,Telescope
+8,Lake,Water Ski,Telescope
+7,Wind,Vase,Fan
+6,Wind,Rice,Fan
+20,Wind,Seal,Fan
+16,Wind,Sword,Fan
+18,Wind,Iron,Fan
+9,Wind,Amoeba,Paramecium
+9,Wind,Flu,Sneeze
+8,Wind,Medicine,Sneeze
+10,Wind,Pepper,Sneeze
+13,Wasabi,Chef,Sneeze
+9,Fireball,Sneeze,Sneeze
+14,Crocodile,Sneeze,Sneeze
+10,Water,Allergy,Sneeze
+11,Water,Hay Fever,Sneeze
+10,Fire,Allergy,Sneeze
+11,Fire,Hay Fever,Sneeze
+8,Wind,Water Ski,Sneeze
+9,Wind,Hot Springs,Sneeze
+7,Wind,Cure,Breeze
+9,Wind,Life,Breeze
+20,Wind,Vacation,Breeze
+16,Wind,Clean,Breeze
+6,Wind,Sail,Sailboat
+6,Wind,Hangover,Hanglider
+6,Wind,Window,Curtain
+10,Wind,Paramecium,Parasail
+11,Water,Parasail,Parasail
+5,Water,House,Mermaid
+7,Water,Siren,Mermaid
+7,Water,Ariel,Mermaid
+7,Earth,Siren,Mermaid
+13,Narwhal,Goldfish,Mermaid
+16,Poseidon,Rainbow Fish,Mermaid
+13,Poseidon,Swamp Fish,Mermaid
+8,Sea,Werewolf,Mermaid
+9,Atlantis,Nessie,Mermaid
+28,Statue,Boiled Fish,Mermaid
+14,Crocodile,Mermaid,Mermaid
+18,Lake,Pilot,Mermaid
+12,Nymph,Boat,Mermaid
+5,Water Lily,Flying Fish,Mermaid
+13,Fairy,Goldfish,Mermaid
+12,Lake,Nymph,Mermaid
+15,Love,Lake,Mermaid
+19,Pina Colada,Sea Serpent,Mermaid
+10,Crystal,Flying Fish,Mermaid
+10,Crystal,Stone,Mermaid
+11,Lake,Jewel,Mermaid
+17,Wind,Scarecrow,Mermaid
+7,Water,Telescope,Aquarium
+5,Earth,Fishbowl,Aquarium
+13,Narwhal,Fishbowl,Aquarium
+16,Rainbow Fish,Fishbowl,Aquarium
+13,Reef,Glass,Aquarium
+15,Alligator,Fishbowl,Aquarium
+14,Dragonfly,Fishbowl,Aquarium
+18,Rainfox,Fishbowl,Aquarium
+13,Earth,Labyrinth,Aquarium
+16,Earth,Fish Tank,Aquarium
+16,Fish Tank,Cannon,Aquarium
+16,Fish Tank,Desert,Aquarium
+16,Fish Tank,Alcohol,Aquarium
+16,Fish Tank,Balloon,Aquarium
+14,Lake,Tea Bag,Aquarium
+7,Water,Hanglider,Surfer
+5,Water,Parachristianity,Surfer
+6,Water,Surfer,Surf
+13,Reef,Wave,Surf
+12,Water,Smog,Surf
+10,Binks,Wave,Surf
+6,Fire,Sail,Pirate
+7,Fire,Sailboat,Pirate
+8,Water,Treasure,Pirate
+8,Fireball,Firefighter,Pirate
+13,Coral Reef,Ship,Pirate
+14,Parrotfish,Boat,Pirate
+14,Crocodile,Sailboat,Pirate
+11,Lake,Sailor,Pirate
+9,Water,Skeleton,Pirate
+5,Flying Spaghetti Monster,Plant,Pirate
+17,Lake,iPhone,Pirate
+25,Lake,Airship,Pirate
+9,Lake,Skeleton,Pirate
+21,Fire,Cruise,Pirate
+5,Fire,House,Fireplace
+6,Fire,Window,Fireplace
+8,Fireball,House,Fireplace
+15,Fire,Sweater,Fireplace
+6,Fire,Hangover,Firewater
+9,Fire,Sneeze,Cough
+7,Fire,Hanglider,Firework
+11,Fire,Parasail,Firework
+11,Rocket,Smoke,Firework
+7,Fire,Curtain,Flame
+7,Fire,Ariel,Flame
+7,Fire,Fluorine,Flame
+13,Fire,Ballet,Flame
+16,Fire,Sword,Flame
+10,Fire,Zephyr,Flame
+20,Fire,Gust,Flame
+14,Fire,Dance,Flame
+6,Fire,Mermaid,Siren
+17,Bribe,Nymph,Siren
+6,Fire,Surfer,Surfing
+7,Water,Surfing,Surfing
+7,Wind,Surf,Surfing
+6,Fire,Fireplace,Warmth
+10,Water,Cough,Lung
+7,Water,Warmth,Hot Water
+14,Hot Toddy,Firewater,Hot Water
+6,Wind,Mermaid,Ariel
+14,Hot Toddy,Mermaid,Ariel
+1,Earth,Earth,Mountain
+4,Earth,Dragon,Mountain
+4,Earth,Rock,Mountain
+11,Earth,Earthquake,Mountain
+22,Golem,Earth,Mountain
+13,Earth,Pearl,Mountain
+2,Earth,Plant,Tree
+4,Earth,Forest,Tree
+29,Sphinx,Plant,Tree
+19,Rainforest,Seed,Tree
+16,Earth,Heart,Tree
+7,Zeus,Plant,Tree
+3,Earth,Ocean,Island
+3,Earth,Tsunami,Island
+6,Earth,Bird,Island
+7,Earth,Sailboat,Island
+6,Earth,Mermaid,Island
+5,Earth,Whale,Island
+6,Water,Land,Island
+4,Sea,Earth,Island
+4,Earth,Fish,Whale
+6,Water,Leviathan,Whale
+5,Earth,Sushi,Rice
+7,Earth,Paddy,Rice
+6,Water,Farm,Rice
+7,Water,Paddy,Rice
+7,Fire,Paddy,Rice
+8,Water,Crop,Rice
+7,Wind,Paddy,Rice
+5,Earth,Solar,Planet
+2,Earth,Dust,Planet
+6,Earth,Jabba The Hut,Planet
+14,Lake,Emperor,Planet
+15,Earth,Googol,Planet
+15,Earth,Universe,Planet
+16,Earth,Galaxy,Planet
+18,Earth,Solar Wind,Planet
+5,Earth,Sea Serpent,Leviathan
+13,Narwhal,Sea Serpent,Leviathan
+13,Narwhal,Dragon,Leviathan
+21,Flying Sunfish,Sea Serpent,Leviathan
+21,Flying Sunfish,Lava,Leviathan
+10,Naboo,Stone,Leviathan
+8,Earth,Soup,Dirt
+4,Earth,Kite,Dirt
+5,Earth,Holy Water,Dirt
+9,Earth,Flu,Dirt
+9,Earth,Sick,Dirt
+8,Earth,Medicine,Dirt
+7,Earth,Curtain,Dirt
+7,Earth,Ariel,Dirt
+9,Earth,Bacteria,Dirt
+16,Earth,French Onion Soup,Dirt
+14,Earth,Data,Dirt
+16,Earth,Sandwich,Dirt
+4,Earth,Ice,Snow
+11,Earth,Snowman,Snow
+11,Wind,Snowman,Snow
+19,Skier,Ash,Snow
+13,Enlightenment,Ice,Snow
+18,Earth,Alka-Seltzer,Snow
+19,Earth,Rainforest,Snow
+11,Fire,SpongeBob,Snow
+11,Wind,SpongeBob,Snow
+15,Wind,Hoth,Snow
+9,Earth,Chili,Pepper
+9,Earth,Tea,Teapot
+11,Kettle,Flying Fish,Teapot
+11,Kettle,Tornado,Teapot
+11,Kettle,Tea,Teapot
+27,Blimp,Tea,Teapot
+11,Flying Spaghetti Dragon,Tornado,Teapot
+4,Earth,Wine,Vineyard
+6,Earth,Soda,Meteor
+27,Alien,Rock,Meteor
+9,Tire,Fish,Meteor
+8,Lake,Meteorite,Meteor
+5,Earth,Glass,Bottle
+15,Fluids,Glass,Bottle
+16,Water,Genie,Bottle
+13,Wind,Coke,Bottle
+7,Earth,Ceramic,Pot
+7,Earth,Vase,Pot
+4,Earth,Puddle,Fossil
+14,Fruit,Stone,Fossil
+8,Earth,Microscope,Bacteria
+11,Toothpaste,Vase,Bacteria
+9,Earth,Amoeba,Life
+8,Earth,Virus,Life
+12,Gas,Earth,Life
+17,Earth,Fire Lake,Life
+10,Earth,Fever,Earthquake
+14,Earth,French Onion Soup Gun,Earthquake
+15,Earth,Hot Toddies,Earthquake
+10,Earth,Fluoride,Fluorite
+11,Earth,Fluorite,Fluorite
+11,Lake,Fluorite,Fluorite
+5,Earth,House,Farm
+7,Earth,Field,Farm
+12,Earth,Hay,Farm
+13,Earth,Haystack,Farm
+7,Earth,Bat,Cave
+17,Earth,Knight,Cave
+7,Earth,Telescope,Moon
+6,Earth,Leviathan,Moon
+7,Earth,Meteor,Moon
+8,Earth,Eclipse,Moon
+8,Water,Eclipse,Moon
+18,Earth,Mirror,Moon
+8,Earth,Galileo,Moon
+10,Earth,Dream,Moon
+8,Earth,Night,Moon
+8,Water,Night,Moon
+8,Fire,Night,Moon
+7,Earth,Hanglider,Parachute
+8,Wind,Spring,Parachute
+19,Skier,Fireworks,Parachute
+9,Wind,Sleep,Parachute
+11,Earth,Parasail,Paratrooper
+7,Earth,Pirate,Treasure
+7,Earth,Warmth,Spring
+3,Earth,Tree,Forest
+4,Earth,Island,Continent
+6,Earth,Land,Continent
+6,Earth,Rice,Paddy
+5,Earth,Dirt,Soil
+10,Earth,Shoe,Soil
+17,Earth,Rust,Soil
+10,Earth,Pepper,Snowman
+13,Snow Golem,Parachute,Snowman
+13,Snow Golem,Cave,Snowman
+13,Snow Golem,Farm,Snowman
+13,Snow Golem,Fossil,Snowman
+13,Snow Golem,Pot,Snowman
+13,Snow Golem,Bottle,Snowman
+16,Snowflake,Warmth,Snowman
+10,Snowball,Siren,Snowman
+10,Lake,Snowball,Snowman
+5,Earth,Fossil,Oil
+7,Earth,Fuel,Oil
+5,Water,Fossil,Oil
+8,Water,Meteorite,Oil
+8,Water,Gasoline,Oil
+11,Lake,Asphalt,Oil
+26,Lake,Piglet,Oil
+7,Water,Death,Oil
+13,Earth,BP,Oil
+14,Earth,Bp,Oil
+9,Earth,Life,Human
+6,Earth,Farm,Field
+17,Earth,Plow,Field
+8,Earth,Cave,Mine
+7,Earth,Moon,Eclipse
+7,Fire,Moon,Eclipse
+8,Earth,Parachute,Basket
+12,Earth,Paratrooper,Farmer
+10,Earth,Human,Farmer
+12,Earth,Ninja,Farmer
+14,Earth,Slave,Farmer
+14,Earth,Big Bang,Farmer
+8,Earth,Treasure,Gold
+9,Earth,Mine,Gold
+9,Earth,Money,Gold
+8,Fire,Treasure,Gold
+10,Fire,Midas,Gold
+10,Water,Midas,Gold
+13,Wasabi,Midas,Gold
+30,Fire,Aphrodite,Gold
+8,Fire,Rich,Gold
+5,Earth,Continent,Land
+17,Earth,Dolphin,Land
+20,Earth,Seal,Land
+17,Earth,Ferry,Land
+13,Earth,Leak,Land
+6,Earth,Oil,Fuel
+6,Fire,Oil,Fuel
+9,Earth,Basket,Potato
+19,French Fries,Soil,Potato
+19,French Fries,Paddy,Potato
+8,Earth,Rich,Potato
+9,Earth,Gold,Money
+9,Water,Gold,Money
+8,Wind,Methane,Money
+8,Earth,Methane,Money
+9,Earth,Potato,Vodka
+9,Water,Potato,Vodka
+9,Water,Money,Vodka
+7,Lake,Firewater,Vodka
+3,Water,Tree,River
+20,Water,Amazon,River
+20,Lake,Amazon,River
+15,Lake,Styx,River
+15,Water,Googol,River
+21,Water,GPS,River
+7,Water,Meteor,Meteorite
+11,Water,Fluorite,Fluorine
+8,Water,Hydrofluoric Acid,Fluorine
+6,Fire,Farm,Fluorine
+8,Fire,Hydrofluoric Acid,Fluorine
+7,Lake,Fluorine,Fluorine
+7,Water,Moon,Tide
+8,Water,Spring,Fountain
+9,Water,Fountain,Fountain
+11,Water,Pump,Fountain
+6,Water,Oil,Emulsion
+9,Water,Mine,Well
+11,Water,Farmer,Fisherman
+11,Kettle,Sun,Fisherman
+7,Water,Fuel,Gasoline
+7,Water,Fluorine,Hydrofluoric Acid
+7,Water,Emulsion,Milk
+8,Water,Milk,Milk
+9,Water,Cheese,Milk
+11,Water,Cookie,Milk
+10,Water,Well,Pump
+10,Fire,Pepper,Spicy
+12,Fire,Hot Sauce,Spicy
+6,Fire,Bottle,Bomb
+8,Fire,Pot,Cook
+10,Fire,Chef,Cook
+5,Fire,Fossil,Dinosaur
+15,Alligator,Volcano,Dinosaur
+17,Nap,Fossil,Dinosaur
+16,Google Dream,Dinosaur,Dinosaur
+13,Lake,T-Rex,Dinosaur
+7,Fire,Field,Crop
+7,Wind,Field,Crop
+9,Fire,Basket,Popcorn
+10,Fire,Popcorn,Popcorn
+18,Mirror,Pop,Popcorn
+12,Fire,Cinema,Popcorn
+11,Fire,Farmer,Barbecue
+6,Fire,Dinosaur,Barbecue
+8,Fire,Grill,Barbecue
+12,Wind,Smog,Barbecue
+22,Fire,Lawn,Barbecue
+13,Fire,Garden,Barbecue
+9,Fire,Gold,Midas
+9,Fire,Potato,Chip
+8,Fire,Milk,Cheese
+13,Lake,Googolplex,Cheese
+16,Water,Fondue,Cheese
+16,Fire,Fondue,Cheese
+16,Wind,Fondue,Cheese
+9,Fire,Cook,Chef
+8,Fire,Crop,Toast
+9,Fire,Cheese,Toast
+8,Fire,Soggy Bread,Toast
+15,Fire,Roast,Toast
+16,Fire,Sandwich,Toast
+17,Fire,Soggy,Toast
+18,Fire,Bunny,Toast
+7,Fire,Barbecue,Grill
+10,Fire,Chip,Cookie
+12,Water,Burnt Cookie,Cookie
+9,Fire,Toast,Burnt Toast
+7,Fire,Soggy Toast,Burnt Toast
+11,Fire,Cookie,Burnt Cookie
+11,Water,Spicy,Hot Sauce
+27,Alien,Chili,Hot Sauce
+6,Water,Dinosaur,Plesiosaur
+9,Water,Toast,Soggy Toast
+7,Water,Soggy Toast,Soggy Toast
+6,Lake,Death Star,Soggy Toast
+10,Water,Burnt Toast,Coffee
+11,Water,Coffee,Coffee
+11,Fire,Coffee,Coffee
+14,Cappuccino,Field,Coffee
+10,Death Star,Drunken,Coffee
+19,Lake,Periscope,Coffee
+15,Water,Roast,Coffee
+15,Earth,Blacksmith,Coffee
+7,Water,Plesiosaur,Loch Ness Monster
+5,Water,Nessie,Loch Ness Monster
+5,Fire,Nessie,Loch Ness Monster
+21,Flying Sunfish,Cloud,Loch Ness Monster
+23,Steam Ray,Wind,Loch Ness Monster
+27,Lake,Crop Circle,Loch Ness Monster
+22,Lake,Golem,Loch Ness Monster
+17,Jabba The Spaghetti,Flying Noodle,Loch Ness Monster
+9,Lake,Sea Monster,Loch Ness Monster
+10,Lake,Kraken,Loch Ness Monster
+9,Lake,Slim Serpent,Loch Ness Monster
+10,Lake,Flying Noodle,Loch Ness Monster
+20,Lake,God,Loch Ness Monster
+8,Water,Loch Ness Monster,Nessie
+9,Atlantis,Loch Ness Monster,Nessie
+13,Lake,Ghost,Nessie
+13,Fairy,Boiled Fish,Nessie
+16,Lake,Genie,Nessie
+7,Seaplane,Eruption,Nessie
+10,Binks,Lake,Nessie
+4,Lake,Leaf,Nessie
+14,Lake,Gnome,Nessie
+8,Fire,Loch Ness Monster,Sea Monster
+9,Fire,Sea Monster,Kraken
+13,Water,Octopus,Kraken
+13,Fire,Octopus,Kraken
+13,Atlantis,Octopus,Kraken
+11,Atlantis,Squid,Kraken
+12,Shipwreck,Sea Serpent,Kraken
+13,Lake,Octopus,Kraken
+10,Water,Kraken,Squid
+11,Water,Squid,Ink
+11,Fire,Squid,Tattoo
+12,Fire,Ink,Tattoo
+12,Water,Tattoo,Octopus
+12,Atlantis,Ink,Octopus
+2,Wind,Mountain,Avalanche
+19,Skier,Crash,Avalanche
+3,Wind,Tree,Leaf
+12,Wind,Green,Leaf
+5,Wind,Snow,Blizzard
+17,Wind,Icefox,Blizzard
+10,Wind,Teapot,Kettle
+7,Wind,Moon,Werewolf
+16,Lake,Sonar,Werewolf
+8,Wind,Parachute,Paraglider
+11,Kettle,Engine,Steam Engine
+16,Water,Industrial Revolution,Steam Engine
+13,Fire,Swine,Steam Engine
+8,Werewolf,Engine,Transformer
+10,Optimus Prime,Engine,Transformer
+9,Paraglider,Engine,Jetpack
+12,Steam Engine,Engine,Train
+15,Alligator,Engine,Train
+16,Pasta,Painting,Train
+25,Hot Toddies,Lightsaber,Train
+9,Transformer,Engine,Optimus Prime
+10,Sea,Optimus Prime,Optimus Prime
+16,Lake,French Onion Soup,Optimus Prime
+20,Fire,Pigimus Prime,Optimus Prime
+19,Earth,Optimus Pig,Optimus Prime
+10,Jetpack,Engine,Rocket
+12,Sapphire,Engine,Rocket
+14,Fire,Jet,Rocket
+13,Train,Engine,Locomotive
+10,Optimus Prime,Lava,Volcanicus
+11,Rocket,Rainbow,Unicorn
+13,Narwhal,Volcano,Unicorn
+13,Narwhal,Rainbow,Unicorn
+13,Narwhal,Marsh,Unicorn
+13,Narwhal,Rain,Unicorn
+13,Narwhal,Fish,Unicorn
+13,Narwhal,Swamp,Unicorn
+13,Narwhal,Cloud,Unicorn
+13,Narwhal,Ocean,Unicorn
+13,Narwhal,Plant,Unicorn
+13,Narwhal,Wave,Unicorn
+13,Narwhal,Steam,Unicorn
+13,Narwhal,Earth,Unicorn
+13,Narwhal,Wind,Unicorn
+13,Narwhal,Fire,Unicorn
+13,Narwhal,Water,Unicorn
+13,Narwhal,Lake,Unicorn
+15,Rainbow Train,Kite,Unicorn
+13,Narwhal,Iceberg,Unicorn
+13,Narwhal,Rock,Unicorn
+13,Narwhal,Ice,Unicorn
+13,Narwhal,Soup,Unicorn
+13,Narwhal,Electricity,Unicorn
+13,Narwhal,Stone,Unicorn
+13,Narwhal,Fog,Unicorn
+13,Narwhal,Solar,Unicorn
+13,Narwhal,Sun,Unicorn
+13,Narwhal,Sushi,Unicorn
+13,Narwhal,Lightning,Unicorn
+13,Poseidon,Narwhal,Unicorn
+22,Don Quixote,Rainbow,Unicorn
+12,Lake,Swamp Thing,Unicorn
+14,Locomotive,Rainbow,Rainbow Train
+15,Rainbow Train,Wine,Rainbow Train
+11,Volcanicus,Rainbow,Nothing
+11,Volcanicus,Marsh,Nothing
+13,Ice Swamp Thing,Water,Nothing
+13,Wasabi,Popcorn,Nothing
+13,Spicy Latte,Hydrofluoric Acid,Nothing
+15,Shrimp,Farmer,Nothing
+15,Shrimp,Eclipse,Nothing
+27,Alien,Sea Serpent,Nothing
+13,Ghost,Dragon,Nothing
+12,Thunder,Dragon,Nothing
+12,Fire,Ninja,Nothing
+15,Sweater,Soda,Nothing
+14,Earth,Google,Nothing
+19,Earth,Dust Bunny,Nothing
+12,Minotaur,Lightning,Nothing
+10,Lake,Coca-Cola,Nothing
+10,Hot Tub,Wine,Nothing
+10,Dada,Sushi,Nothing
+9,Slim Serpent,Rainbow,Nothing
+17,Hot Toddies,Aspirin,Nothing
+18,Wind,Mummy,Nothing
+12,Mario,Tea,Nothing
+23,Super Mario Divorce Party,Yaoi Yuri,Nothing
+23,Super Mario Divorce Party,Yaoi,Nothing
+23,Super Mario Divorce Party,Yaoi Yuri Manga,Nothing
+27,Mario Party 9,Super Gay Yaoi Yuri Mario Party,Nothing
+11,Volcanicus,Tsunami,Swamp Thing
+12,Swamp Thing,Rainbow,Swamp Thing
+12,Swamp Thing,Hurricane,Swamp Thing
+12,Swamp Thing,Tornado,Swamp Thing
+13,Ice Swamp Thing,Plant,Swamp Thing
+13,Ice Swamp Thing,Steam,Swamp Thing
+13,Ice Swamp Thing,Wind,Swamp Thing
+13,Poseidon,Ice Swamp Thing,Swamp Thing
+13,Jaws,Ice Swamp Thing,Swamp Thing
+13,Lake,Ice Swamp Thing,Swamp Thing
+12,Unicorn,Tsunami,Narwhal
+12,Sea,Unicorn,Narwhal
+13,Abominable Snowman,Whale,Narwhal
+12,Swamp Thing,Fish,Swamp Fish
+13,Swamp Fish,Water,Swamp Fish
+12,Swamp Thing,Mist,Swamp Fish
+15,Rainbow Train,Flying Fish,Rainbow Fish
+15,Sea,Rainbow Train,Rainbow Fish
+12,Swamp Thing,Iceberg,Ice Swamp Thing
+13,Narwhal,Engine,Submarine
+14,Sea,Locomotive,Submarine
+11,Sea,Rocket,Submarine
+13,Sea,Train,Submarine
+9,Sea,Transformer,Submarine
+19,Periscope,Sea Serpent,Submarine
+12,Lake,Robot,Submarine
+14,Jet,Fishbowl,Submarine
+13,Lake,Train,Submarine
+14,Lake,Submarine,Submarine
+13,Swamp Fish,Lava,Tank
+14,Tank,Tank,Tank
+16,Rainbow Fish,Ocean,Poseidon
+12,Atlantis,Tattoo,Poseidon
+10,Atlantis,Kraken,Poseidon
+9,Atlantis,Sea Monster,Poseidon
+13,Aquaman,Plesiosaur,Poseidon
+12,Minotaur,Ocean,Poseidon
+16,Hot Toddies,Vape,Poseidon
+7,Lake,Zeus,Poseidon
+8,Poseidon,Lake,Sea
+14,Parting,Marsh,Sea
+3,Lake,Ocean,Sea
+8,Poseidon,Steam,Steamboat
+14,Steamboat,Water,Steamboat
+22,Don Quixote,Engine,Steamboat
+30,Steampunk,Lake,Steamboat
+13,Reef,Steam,Steamboat
+15,Alligator,Steam,Steamboat
+13,Water,Chlorine,Steamboat
+8,Poseidon,Earth,Atlantis
+14,Poseidon,Submarine,Atlantis
+11,Sea,Volcanicus,Atlantis
+29,Sphinx,Tsunami,Atlantis
+29,Sphinx,Ocean,Atlantis
+13,Coral Reef,Holy Water,Atlantis
+17,Lake,Google Earth,Atlantis
+14,Tank,Submarine,Subtank
+12,Poseidon,Swamp Thing,Aquaman
+4,Sea,Avalanche,Kelp
+9,Loch Ness,Plant,Kelp
+6,Seaweed,Water,Kelp
+14,Steamboat,Octopus,Titanic
+12,Shipwreck,Electricity,Titanic
+15,Water,Love Boat,Titanic
+16,Heart,Iceberg,Titanic
+21,Earth,Cruise,Titanic
+18,Water,Hollywood,Titanic
+11,Atlantis,Coffee,Starbucks
+15,Subtank,Plesiosaur,Vape
+13,Aquaman,Hot Sauce,Spicy Aquaman
+12,Kelp,Hot Sauce,Wasabi
+15,Titanic,Hot Sauce,Spicy Boat
+12,Starbucks,Burnt Cookie,Spicy Latte
+16,Vape,Grill,Dab
+17,Dab,Money,Dab
+14,Spicy Aquaman,Toast,Shrimp
+13,Wasabi,Dinosaur,Godzilla
+16,Charon,Kaiju,Godzilla
+16,Spicy Boat,Spicy,Spicy Dinosaur
+13,Spicy Latte,Fountain,Cappuccino
+17,Dab,Gold,Mashed Potato
+18,Mashed Potato,Human,Mashed Potato
+15,Shrimp,Mine,Minecraft
+12,Minecraft,Oil,Minecraft
+11,Earth,Light,Minecraft
+14,Godzilla,Mine,Kaiju
+17,Spicy Dinosaur,Field,T-Rex
+12,Earth,Jaws,T-Rex
+14,Cappuccino,Human,Barista
+18,Mashed Potato,Oil,French Fries
+12,Minecraft,Snowman,Snow Golem
+15,Kaiju,Snowman,Yeti
+19,French Fries,Snowman,Yeti
+13,Snow Golem,Continent,Yeti
+13,Snow Golem,Forest,Yeti
+13,Abominable Snowman,Planet,Yeti
+13,Abominable Snowman,Rice,Yeti
+13,Abominable Snowman,Island,Yeti
+13,Abominable Snowman,Tree,Yeti
+13,Abominable Snowman,Mountain,Yeti
+13,Abominable Snowman,Ariel,Yeti
+11,Lake,Snowman,Yeti
+16,Charon,T-Rex,Yeti
+13,T-Rex,Snowman,Abominable Snowman
+12,Yeti,Meteor,Abominable Snowman
+12,Yeti,Teapot,Abominable Snowman
+12,Yeti,Pepper,Abominable Snowman
+12,Yeti,Snow,Abominable Snowman
+12,Yeti,Dirt,Abominable Snowman
+12,Yeti,Leviathan,Abominable Snowman
+27,Alien,Ice,Abominable Snowman
+15,Barista,Snowman,Snowflake
+13,Snow Golem,Bacteria,Snowflake
+10,Wind,Crystal,Snowflake
+19,French Fries,Continent,Europe
+13,Snow Golem,Meteor,Snowball
+9,Lake,Paradise,Snowball
+12,Yeti,Planet,Pluto
+13,Abominable Snowman,Lung,Hot Toddy
+16,Snowflake,Surfing,Snowboarding
+10,Snowball,Surfing,Snowboarding
+20,Europe,Surfing,Eurovision
+21,Eurovision,Hanglider,Eurovision
+10,Snowball,Flame,Fireball
+14,Hot Toddy,Flame,Fireball
+14,Hot Toddy,Firework,Fireball
+14,Hot Toddy,Aquarium,Fireball
+8,Fireball,Hangover,Fireball
+10,Sponge,Fire,Fireball
+15,Spaghetti,Fire,Fireball
+21,GPS,Fireball,Fireball
+7,Fire,Fishing Rod,Fireball
+15,Fire,Whiskey,Fireball
+14,Fire,Omelette,Fireball
+13,Pluto,Flame,Hades
+15,Fire,Styx,Hades
+18,Fire,Canal,Hades
+14,Hot Toddy,Curtain,Parasite
+17,Snowboarding,Curtain,Skiing
+21,Eurovision,Breeze,ABBA
+10,Fireball,Fluoride,Toothpaste
+14,Hades,Flu,Fluids
+15,Parasite,Flower,Symbiosis
+18,Skiing,Flower,Skier
+19,Skier,Mirage,Skier
+22,ABBA,Microscope,Rose
+30,Earth,Aphrodite,Rose
+11,Toothpaste,Lens,Dentist
+15,Fluids,Desert,Water Gun
+16,Symbiosis,Brick,Cactus
+18,Prickle,Wine,Cactus
+18,Prickle,Mud,Cactus
+18,Prickle,Dust Storm,Cactus
+19,Sunflower,Sandstorm,Cactus
+19,Earth,Periscope,Cactus
+19,Skier,Holy Water,Jesus
+21,Resurrection,Kite,Jesus
+24,Laser,Boat,Jesus
+23,Rose,Bird,Parrot
+13,Toucan,Energy,Parrot
+14,Psittacine,Eruption,Parrot
+14,Psittacine,Hurricane,Parrot
+14,Psittacine,Storm,Parrot
+14,Psittacine,Dust,Parrot
+14,Psittacine,Heat,Parrot
+14,Psittacine,Hot,Parrot
+14,Psittacine,Iceberg,Parrot
+14,Psittacine,Ice,Parrot
+14,Psittacine,Soup,Parrot
+14,Parrotfish,Bird,Parrot
+12,Porkimus Prime,Duck,Parrot
+12,Dentist,Bird,Toucan
+16,Water Gun,Oasis,Duck
+10,Lake,Dada,Duck
+11,Lake,Hay Fever,Duck
+17,Cactus,Energy,Prickle
+20,Jesus,Energy,Resurrection
+13,Parrot,Energy,Psittacine
+13,Toucan,Wine,Fruit
+12,Duck,Wine,Duck Sauce
+13,Duck Sauce,Sushi,Duck Sauce
+18,Prickle,Airplane,Porcupine
+21,Resurrection,Eruption,Don Quixote
+14,Psittacine,Stone,Pterodactyl
+14,Fruit,Solar,Fruit Salad
+13,Duck Sauce,Dragon,Dragon Sauce
+19,Porcupine,Lightning,Hedgehog
+22,Don Quixote,Fish,Swordfish
+15,Pterodactyl,Fish,Pteranodon
+15,Fruit Salad,Swamp,Swamp Salad
+16,Swamp Salad,Dust Storm,Swamp Wine
+17,Swamp Wine,Seed,Pilot
+9,Drunk,Airplane,Pilot
+18,Pilot,Seed,Sunflower
+19,Sunflower,Seed,Sunflower
+19,Sunflower,Flying Fish,Sunfish
+21,Flying Sunfish,Sun,Sunfish
+21,Flying Sunfish,Goldfish,Sunfish
+17,Fish Balloon,Sushi,Sunfish
+14,Solar Flare,Fish,Sunfish
+20,Sunfish,Mist,Flying Sunfish
+21,Flying Sunfish,Steam,Manta Ray
+22,Manta Ray,Steam,Steam Ray
+23,Steam Ray,Steam,Steam Ray
+23,Steam Ray,Penguin,Steam Ray
+23,Steam Ray,Fire,Laser
+23,Steam Ray,Holy Water,Steamship
+24,Laser,Mud,Beam
+24,Steamship,Flying,Airship
+26,Zeppelin,Windmill,Airship
+26,Zeppelin,Flying Fish,Airship
+25,Beam,Seed,UFO
+27,Alien,Iceberg,UFO
+27,Alien,Electricity,UFO
+27,Lake,Alien,UFO
+25,Airship,Windmill,Zeppelin
+26,UFO,Windmill,Crop Circle
+26,Zeppelin,Dandelion,Blimp
+27,Crop Circle,Tornado,Alien
+26,Lake,UFO,Alien
+27,Blimp,Heat,Hot Air Balloon
+15,Wind,Hot Toddies,Hot Air Balloon
+27,Alien,Stone,Statue
+16,Hot Air Balloon,Stone,Statue
+22,Golem,Water,Statue
+12,Shipwreck,Stone,Statue
+18,Clay,Stone,Statue
+16,Hot Air Balloon,Boiled Fish,Fish Balloon
+17,Fish Balloon,Lava,Fish Balloon
+28,Statue,Sun,Sphinx
+29,Sphinx,Cloud,Sphinx
+16,Nile,Sail,Sphinx
+17,Fish Balloon,Tsunami,Frog
+6,Lake,Toadstool,Frog
+29,Sphinx,Steam,Steampunk
+30,Steampunk,Steam,Steampunk
+7,Frog,Steam,Prince
+30,Steampunk,Earth,Robot
+11,Electricity,Mechanic,Robot
+13,Human,Tesla,Robot
+13,Cyborg,Human,Robot
+11,Human,Mechanic,Robot
+8,Prince,Earth,King
+12,Robot,Earth,Golem
+18,Clay,Solar,Golem
+18,Clay,Sushi,Golem
+21,Earth,Wizard,Golem
+9,King,Earth,Kingdom
+10,Kingdom,Smoke,Incense
+12,Prayer,Smoke,Incense
+11,Incense,Smoke,Prayer
+21,Wind,Religion,Prayer
+17,Wind,Google Wind,Prayer
+12,Prayer,Marsh,Moses
+14,Parting,Fish,Moses
+14,Parting,Swamp,Moses
+14,Parting,Cloud,Moses
+15,Red Sea,Ocean,Moses
+10,Cocaine,Fireworks,Moses
+14,Lake,Parting,Moses
+15,Lake,Red Sea,Moses
+13,Moses,Marsh,Parting
+13,Lake,Moses,Parting
+14,Parting,Ocean,Red Sea
+11,Sunburn,Ocean,Red Sea
+15,Red Sea,Plant,Coral
+13,Reef,Plant,Coral
+13,Reef,Earth,Coral
+13,Reef,Fire,Coral
+13,Reef,Water,Coral
+13,Reef,Flower,Coral
+13,Reef,Pond,Coral
+13,Reef,Microscope,Coral
+13,Reef,Vase,Coral
+13,Reef,Beach,Coral
+13,Reef,Blood,Coral
+13,Reef,Splash,Coral
+13,Reef,Puddle,Coral
+13,Reef,Magnifying Glass,Coral
+13,Reef,Lens,Coral
+13,Reef,Ceramic,Coral
+13,Reef,Pottery,Coral
+13,Reef,Soda,Coral
+13,Reef,Cannonball,Coral
+13,Reef,Burn,Coral
+13,Reef,Pop,Coral
+13,Reef,Vampire,Coral
+13,Reef,Explosion,Coral
+13,Reef,Alcohol,Coral
+13,Reef,Phoenix,Coral
+13,Reef,Crash,Coral
+13,Reef,Balloon,Coral
+13,Reef,Fireworks,Coral
+13,Reef,Ash,Coral
+13,Lake,Reef,Coral
+11,Ruby,Ocean,Coral
+12,Coral,Plant,Reef
+12,Coral,Wave,Reef
+12,Coral,Steam,Reef
+12,Coral,Lake,Reef
+12,Coral,Earth,Reef
+12,Coral,Wind,Coral Reef
+12,Coral,Flower,Anemone
+13,Reef,Penguin,Emperor
+13,Coral Reef,Bird,Parrotfish
+13,Anemone,Bird,Seagull
+15,Lake,Eagle,Seagull
+4,Lake,Dust Storm,Seagull
+14,Emperor,Bird,Eagle
+15,Death Star,Eagle,Eagle
+14,Parrotfish,Oasis,Paradise
+8,Sunset,Microscope,Paradise
+5,Seagull,Wine,Drunk
+8,Wind,Darth Vader,Drunk
+14,Gnome,Alcohol,Drunk
+15,Earth,Whiskey,Drunk
+15,Eagle,Mud,Vulture
+9,Paradise,Dust Storm,Lotus
+15,Lake,Croco-paramecium,Lotus
+5,Water Lily,Storm,Lotus
+10,Water Lily,Hot,Lotus
+5,Water Lily,Ice,Lotus
+5,Water Lily,Stone,Lotus
+5,Lake,Water Lily,Lotus
+3,Lake,Lily,Lotus
+9,Drunk,Sandstorm,Drunken
+16,Vulture,Hot Air,Politician
+11,Lotus,Hot Air,Buddha
+13,Enlightenment,Tornado,Buddha
+13,Enlightenment,Chai,Buddha
+13,Enlightenment,Tea,Buddha
+13,Enlightenment,Iceberg,Buddha
+13,Enlightenment,Rock,Buddha
+13,Lake,Enlightenment,Buddha
+13,Enlightenment,Human,Buddha
+10,Drunken,Windmill,Sailor
+12,Shipwreck,Soup,Sailor
+14,Lake,Slave,Sailor
+15,Wind,Worker,Sailor
+17,Politician,Dandelion,Disaster
+12,Buddha,Storm,Enlightenment
+11,Sailor,Storm,Shipwreck
+18,Disaster,Tornado,Twister
+12,Flying Pig,Tornado,Twister
+13,Enlightenment,Soup,Miso
+12,Shipwreck,Fog,Ghost
+10,Grave,Smoke,Ghost
+9,Wind,Loch Ness,Ghost
+10,Grave,Steam,Ghost
+11,Cemetery,Magnifying Glass,Ghost
+9,Skinny,Fog,Ghost
+9,Wind,Skeleton,Ghost
+13,Twister,Sun,Solar Flare
+18,Fire,Solar Wind,Solar Flare
+14,Miso,Dragon,Miso Soup
+13,Ghost,Lightning,Frankenstein
+10,Electricity,Human,Frankenstein
+14,Solar Flare,Tsunami,Sunami
+11,Sunburn,Tsunami,Sunami
+15,Miso Soup,Tsunami,Miso Tsunami
+11,Frankenstein,Cloud,Thunder
+12,Thunder,Fish,Shark
+18,Flipper,Puddle,Shark
+18,Jaws,Mirror,Shark
+16,Jaws,Pyramid,Shark
+12,Lake,Jaws,Shark
+12,Water,Jaws,Shark
+14,Water,Sharknado,Shark
+14,Fire,Sharknado,Shark
+19,Water,Power,Shark
+17,Water,Sharkicane,Shark
+13,Shark,Swamp,Crocodile
+15,Alligator,Swamp,Crocodile
+15,Alligator,Tsunami,Crocodile
+15,Alligator,Ocean,Crocodile
+15,Alligator,Wave,Crocodile
+15,Alligator,Lake,Crocodile
+15,Alligator,Earth,Crocodile
+15,Alligator,Fire,Crocodile
+15,Alligator,Water,Crocodile
+15,Alligator,Boiled Fish,Crocodile
+15,Alligator,Sun,Crocodile
+15,Alligator,Goldfish,Crocodile
+15,Alligator,Dragon,Crocodile
+15,Alligator,Lightning,Crocodile
+15,Alligator,Smoke,Crocodile
+15,Alligator,Rainbow,Crocodile
+15,Alligator,Rain,Crocodile
+15,Alligator,Fish,Crocodile
+14,Crocodile,Hanglider,Crocodile
+15,Alligator,Bubble,Crocodile
+16,Nile,Firefighter,Crocodile
+17,Croco-cola,Heat,Crocodile
+17,Water,Prism,Crocodile
+10,Grave,Fish,Crocodile
+9,Water Lily,Tea,Crocodile
+18,Lake,Clay,Crocodile
+16,Lake,Steve Irwin,Crocodile
+9,Geode,Electricity,Crocodile
+19,Jaws,Periscope,Crocodile
+13,Lake,Swamp Fish,Crocodile
+16,Jaws,Nile,Crocodile
+13,Jaws,Aquaman,Crocodile
+16,Lake,Croco-virus,Crocodile
+14,Crocodile,Swamp,Alligator
+18,Firecracker,Swamp,Alligator
+14,Crocodile,Solar,Egypt
+16,Nile,Water,Egypt
+16,Nile,Hangover,Egypt
+16,Nile,Cure,Egypt
+15,Egypt,Water,Nile
+15,Lake,Egypt,Nile
+17,Lake,Cleopatra,Nile
+17,Water,Cleopatra,Nile
+14,Crocodile,Bubble,Croco-paramecium
+15,Croco-paramecium,Hot Spring,Croco-paramecium
+15,Croco-paramecium,Hell,Croco-paramecium
+15,Croco-paramecium,Flu,Croco-paramecium
+16,Wind,Croco-virus,Croco-paramecium
+15,Alligator,Hangover,Dracula
+23,Stingray,Vampire,Dracula
+15,Egypt,Hangover,Pyramid
+16,Nile,Angel,Pyramid
+16,Earth,Nile,Pyramid
+17,Earth,Cleopatra,Pyramid
+16,Nile,Medicine,Aspirin
+15,Croco-paramecium,Amoeba,Croco-virus
+24,Dracula,Glass,Mirror
+19,Fire,Reflection,Mirror
+19,Reflection,Water,Mirror
+17,Lake,Obsidian,Mirror
+16,Pyramid,Glass,Prism
+16,Earth,Iphone 6s Plus,Prism
+10,Crystal,Sun,Prism
+17,Aspirin,Soda,Alka-Seltzer
+16,Croco-virus,Sand,Croco-cola
+17,Croco-cola,Chili,Croco-cola
+18,Mirror,Cannon,Periscope
+17,Prism,Mud,Clay
+13,Tan,Pottery,Clay
+18,Alka-Seltzer,Hurricane,Alka-seltzer
+17,Croco-cola,Soup,Ice-cold Croco-cola
+10,Grave,Wave,Ice-cold Croco-cola
+19,Periscope,Stone,Radar
+11,Earth,Frankenstein,Monster
+9,Loch Ness,Fire,Monster
+9,Water,Loch Ness,Monster
+9,Loch Ness,Volcano,Monster
+9,Loch Ness,Rain,Monster
+20,Fire,Radar,Monster
+9,Loch Ness,Cloud,Monster
+9,Loch Ness,Steam,Monster
+9,Loch Ness,Earth,Monster
+9,Lake,Loch Ness,Monster
+9,Lake,Amoeba,Monster
+19,Alka-seltzer,Dragon,Fire Breath
+20,Earth,Radar,Satellite
+19,Fire,Optimus Pig,Satellite
+15,Water,Croco-paramecium,Sonar
+16,Sonar,Rainbow,Dolphin
+18,Wind,Flipper,Dolphin
+18,Flipper,Water,Dolphin
+10,Grave,Plant,Dolphin
+16,Honeymoon,Lightning,Dolphin
+15,Hot Toddies,Turtle,Dolphin
+16,Water,Pyramid,Tomb
+16,Lake,Pyramid,Tomb
+21,Earth,Campfire,Tomb
+17,Tomb,Rainbow,Tombstone
+10,Grave,Tsunami,Tombstone
+17,Fire,Aspirin,Tombstone
+18,Tombstone,Rain,Grave
+18,Earth,Tombstone,Grave
+15,Earth,Warm Toddies,Grave
+9,Earth,Church,Grave
+10,Grave,Wind,Loch Ness
+18,Lake,Tombstone,Loch Ness
+8,Lake,Firework,Loch Ness
+17,Lake,Tomb,Loch Ness
+10,Lake,Grave,Loch Ness
+11,Lake,Electric Eel,Loch Ness
+18,Fire,Mirror,Reflection
+17,Wind,Dolphin,Flipper
+10,Grave,Earth,Cemetery
+18,Earth,Flipper,Turtle
+12,Water,Tortoise,Turtle
+12,Wind,Tortoise,Turtle
+12,Tortoise,Cannonball,Turtle
+12,Tortoise,Kiln,Turtle
+11,Lake,Turtle,Turtle
+10,Sponge,Ceramic,Turtle
+11,Earth,Turtle,Tortoise
+11,Turtle,Water,Tortoise
+11,Turtle,Glass,Tortoise
+11,Fire,Turtle,Ninja
+13,Samurai,Mirage,Ninja
+13,Samurai,Bird,Ninja
+14,Katana,Ice,Ninja
+13,Wind,Samurai,Ninja
+13,Earth,Samurai,Ninja
+14,Lake,Katana,Ninja
+11,Lake,Cookie,Ninja
+22,Lake,Manta Ray,Stingray
+23,Stingray,Explosion,Stingray
+23,Water,Stingray,Stingray
+24,Lake,Laser,Lightsaber
+11,Turtle,Soda,Cocaine
+9,Tire,Marsh,Cocaine
+18,Lake,Slingshot,Cocaine
+28,Lake,Statue,Venus
+30,Water,Aphrodite,Venus
+12,Ninja,Cannon,Samurai
+23,Stingray,Crash,Steve Irwin
+17,Crocodile Hunter,Dust Storm,Steve Irwin
+15,Lake,Miso Soup,Steve Irwin
+17,Crocodile Hunter,Kite,Steve Irwin
+17,Water,Crocodile Hunter,Steve Irwin
+13,Lake,Fairy,Steve Irwin
+25,Lightsaber,Balloon,Darth Vader
+9,Darth Hydrous,Sun,Darth Vader
+13,Water,Fairy,Darth Vader
+11,Water,Pig,Darth Vader
+26,Water,Yoda,Darth Vader
+17,Darth Fish,Marsh,Darth Vader
+17,Water,iPhone,Darth Vader
+17,Darth Fish,Wave,Darth Vader
+17,Darth Fish,Lake,Darth Vader
+16,Water,Darth Rainbow,Darth Vader
+17,Darth Fish,Water,Darth Vader
+13,Flamingo,Rainbow,Darth Vader
+16,Fire,Darth Rainbow,Darth Vader
+9,Wind,Darth Hydrous,Darth Vader
+12,Ugly Duckling,Holy Water,Darth Vader
+9,Fire,Star Wars,Darth Vader
+15,Lake,Darth Magma,Darth Vader
+7,Wind,Jar Jar Binks,Darth Vader
+7,Lake,Moon,Darth Vader
+8,Lake,Darth Vader,Darth Vader
+18,Darth Snow,Prickle,Darth Vader
+16,Lake,Darth Rainbow,Darth Vader
+17,Earth,Darth Maul,Darth Vader
+15,Fire,Skywalker,Darth Vader
+13,Lake,Anemone,Nymph
+11,Lake,Swan,Nymph
+14,Lake,Parrotfish,Love Boat
+9,Lake,Drunk,Swim
+16,Steve Irwin,Boat,Crocodile Hunter
+4,Lake,Lotus,Water Lily
+5,Water Lily,Tornado,Water Lily
+12,Nymph,Energy,Fairy
+15,Love Boat,Wine,Honeymoon
+10,Swim,Mud,Pig
+10,Bacon,Swamp,Pig
+10,Lake,Bacon,Pig
+19,Pigcasso,Cloud,Pig
+19,Pigcasso,Earth,Pig
+19,Pigcasso,Fire,Pig
+10,Crystal,Iceberg,Pig
+26,Water,Piglet,Pig
+13,Water,Swine,Pig
+26,Wind,Piglet,Pig
+13,Wind,Swine,Pig
+13,Earth,Googolplex,Pig
+26,Earth,Piglet,Pig
+13,Earth,Swine Flu,Pig
+14,Lake,Crocodile,Steve
+20,Lake,Satellite,Google
+12,Minotaur,Swamp,Google
+13,Fire,Swine Flu,Google
+13,Fairy,Dragon,Dragonfly
+25,Lake,Lightsaber,Yoda
+15,Lake,Google Chrome,Yoda
+27,Lake,Jedi,Yoda
+11,Pig,Rainbow,Bacon
+11,Fire,Pig,Bacon
+26,Fire,Piglet,Bacon
+9,Fire,Porkimus Prime,Bacon
+29,Lake,Venus,Aphrodite
+14,Google,Rainbow,Google Chrome
+10,Lake,Swim,Swan
+12,Lake,Leda,Swan
+12,Leda,Fire,Swan
+11,Water,Swan,Swan
+11,Wind,Swan,Swan
+12,Ugly Duckling,Energy,Swan
+13,Moisture,Fish,Swan
+12,Lake,Ugly Duckling,Swan
+12,Lake,Flying Pig,Swan
+10,Lake,Hot Tub,Swan
+13,Lake,Cygnus,Swan
+16,Lake,Google Lake,Swan
+21,Lake,Cottage,Swan
+11,Water,Movie,Swan
+13,Water,Ballet,Swan
+13,Wind,Cygnus,Swan
+12,Wind,Swan Lake,Swan
+13,Earth,Cygnus,Swan
+15,Earth,Waterfall,Swan
+26,Yoda,Fish,Jedi
+26,Fire,Yoda,Jedi
+16,Lake,Honeymoon,Love
+30,Aphrodite,Tsunami,Love
+16,Heart,Tea,Love
+16,Heart,Hot,Love
+16,Heart,Sun,Love
+16,Heart,Sushi,Love
+16,Heart,Lightning,Love
+16,Wind,Heart,Love
+14,Lake,Jet,Love
+15,Lake,Steve,Steve Jobs
+14,Lake,Dragonfly,Google Cloud
+12,Google Cloud,Wind,Google Cloud
+11,Google Bean,Plant,Google Cloud
+12,Google Wave,Cloud,Google Cloud
+11,Swan,Ocean,Leda
+27,Jedi,Steam,Steamroller
+28,Fire,Steamroller,Steamroller
+16,Lake,Steve Jobs,Apple
+18,Earth,Iphone 6,Apple
+16,Africa,Steve Jobs,Apple
+16,Steve Jobs,Earth,iPhone
+17,Lake,Apple,Pineapple
+18,Lake,Pineapple,Pina Colada
+19,Water,Pina Colada,Pina Colada
+10,Water,Cocaine,Coca-Cola
+9,Lake,Transformer,Coca-Cola
+8,Water,Darth Vader,Darth Hydrous
+9,Darth Hydrous,Solar,Darth Hydrous
+9,Water,Darth Hydrous,Darth Hydrous
+14,Water,Google,Darth Magma
+15,Darth Magma,Rainbow,Darth Rainbow
+16,Wind,Darth Rainbow,Darth Rainbow
+16,Darth Rainbow,Fishbowl,Darth Fish
+12,Water,Google Cloud,Darth Fish
+17,Darth Fish,Tsunami,Darth Fish
+16,Darth Rainbow,Rock,Crack
+13,Fire,Samurai,Katana
+8,Fire,Darth Vader,Geode
+14,Katana,Sea Serpent,Burning Love
+9,Geode,Fog,Gem
+11,Ruby,Tsunami,Gem
+10,Crystal,Seed,Gem
+15,Burning Love,Sun,FireFox
+10,Gem,Dragon,Jewel
+15,Fire,Love,Firefox
+11,Jewel,Engine,Car
+10,Earth,Sponge,Car
+9,Earth,Tire,Car
+7,Lake,Fishing Rod,Car
+12,Fire,Wheel,Car
+12,Earth,Wheel,Car
+12,Earth,Road,Car
+16,Firefox,Lava,Google Fire
+18,Fire,Google Water,Google Fire
+8,Car,Smoke,Exhaust
+17,Google Fire,Volcano,Iphone 7
+13,Water,Iphone 7,Iphone 7
+12,Wind,Flying Pig,Iphone 7
+17,Iphone 6s,Lake,Iphone 7
+13,Lake,Iphone 7,Iphone 7
+14,Lake,Iphone 7 Plus,Iphone 7
+19,Fire,Pina Colada,Flamingo
+14,Pink,Fish,Flamingo
+12,Garnet,Lake,Flamingo
+14,Lake,Flamenco,Flamingo
+14,Lake,Pink,Flamingo
+13,Iphone 7,Volcano,Iphone 7 Plus
+13,Flamingo,Marsh,Pink
+13,Earth,Flamingo,Pink
+13,Lake,Flamingo,Pink
+17,Fire,Crack,Firecracker
+10,Fire,Gem,Ruby
+12,Fire,Garnet,Ruby
+12,Fire,Sapphire,Ruby
+11,Wind,Ruby,Ruby
+12,Wind,Garnet,Ruby
+10,Crystal,Hurricane,Ruby
+16,Fire,Onyx,Ruby
+11,Fire,Jewel,Diamond
+11,Pressure,Earth,Diamond
+11,Pressure,Fire,Diamond
+12,Wind,Sapphire,Diamond
+29,Wall,Dust Storm,Diamond
+11,Earth,Jewel,Diamond
+14,Earth,Pink,Diamond
+11,Earth,Ruby,Diamond
+12,Earth,Sapphire,Diamond
+10,Crystal,Ice,Diamond
+11,Lake,Pressure,Diamond
+9,Lake,Mine,Diamond
+14,Earth,Ice Golem,Diamond
+14,Earth,Coal,Diamond
+14,Fire,Coal,Diamond
+11,Ruby,Wave,Garnet
+10,Diamond,Steam,Pressure
+11,Fire,Ruby,Sapphire
+15,Water,Burning Love,Genie
+16,Water,FireFox,Icefox
+16,Water,Firefox,Icefox
+17,Icefox,Rainbow,Rainfox
+18,Rainfox,Plant,Rainforest
+20,Amazon,Earth,Rainforest
+19,Rainforest,Lake,Amazon
+19,Rainforest,Water,Amazon
+18,Rainfox,Airplane,Dust Bunny
+19,Rainforest,Hot Air,Global Warming
+11,Wind,Pig,Flying Pig
+26,Wind,Yoda,Force
+15,Wind,Love,Heart
+16,Heart,Ice,Heart
+12,Flying Pig,Tea,Flying Tea
+17,Wind,iPhone,Iphone 6
+19,Pigcasso,Ocean,Iphone 6
+13,Wind,Flamingo,Flamenco
+13,Flying Tea,Smoke,Jet
+18,Iphone 6,Volcano,Iphone 6s
+17,Iphone 6s,Ocean,Iphone 6s
+15,Plane,Water,Iphone 6s
+16,Water,Iphone 6s Plus,Iphone 6s
+16,Lake,Iphone 6s Plus,Iphone 6s
+14,Flamenco,Rainbow,Spain
+15,Water,Spain,Spain
+14,Jet,Swamp,Plane
+14,Wind,Jet,Plane
+14,Water,Jet,Plane
+14,SpongeBob,Jet,Plane
+15,Wind,Spain,Iphone 6s Plus
+15,Spain,Fire,Bull
+15,Earth,Spain,Bull
+11,Taurus,Earth,Bull
+12,Minotaur,Rain,Bull
+11,Wind,Taurus,Bull
+12,Bull,Fish,Aries
+11,Taurus,Fire,Aries
+12,Aries,Swamp,Pigcasso
+19,Pigcasso,Tsunami,Pigcasso
+19,Pigcasso,Wave,Pigcasso
+19,Pigcasso,Lake,Pigcasso
+12,Water,Aries,Pigcasso
+19,Pigcasso,Water,Pigcasso
+16,Fire,Heart,Pigcasso
+18,Fire,Iphone 6,Pigcasso
+19,Pigcasso,Plant,Pigcasso
+19,Pigcasso,Steam,Pigcasso
+19,Fishing,Pigcasso,Pigcasso
+12,Fire,Flying Pig,Ram
+12,Fire,Aries,Ram
+13,Fire,Ram,Lamb
+13,Ram,Water,Lamb
+12,Wind,Aries,Lamb
+13,Wind,Ram,Lamb
+15,Wind,Mutton,Lamb
+15,Lake,Mutton,Lamb
+10,Lake,Sponge,Lamb
+14,Lamb,Water,Mutton
+14,Lake,Lamb,Mutton
+13,Ram,Earth,Wool
+12,Lake,Smog,Wool
+6,Fire,Flying Mushroom,Wool
+14,Water,Wool,Sponge
+10,Sponge,Water,Sponge
+14,Water,Lamborghini,Sponge
+9,Water,Pool,Sponge
+13,Fire,Spongebob,Sponge
+14,Fire,Wool,Sweater
+11,Water,Wet Sweater,Sweater
+7,Seaplane,Airplane,Sweater
+15,Yarn,Chili,Sweater
+15,Lake,Sweater,Sweater
+10,Wind,Sponge,Wet Sweater
+15,Sweater,Water,Wet Sweater
+11,Wind,Wet Sweater,Cold
+10,Sponge,Pottery,Coca Plant
+8,Earth,Darth Vader,Tatooine
+7,Jar Jar Binks,Desert,Tatooine
+17,Earth,Crocodile Hunter,Slingshot
+13,Earth,Fairy,Gnome
+11,Earth,Pig,Coca Cola
+8,Tatooine,Cannon,Star Wars
+8,Fire,Tatooine,Star Wars
+10,Naboo,Sun,Star Wars
+26,Earth,Yoda,Stake
+11,Earth,Swan,Ugly Duckling
+12,Coca Cola,Crash,Wall
+28,Earth,Fence,Wall
+17,Earth,iPhone,Google Earth
+15,Yarn,Rock,Google Earth
+18,Lake,Google Ocean,Google Earth
+16,Earth,Google Lake,Google Earth
+18,Earth,Google Water,Google Earth
+17,Earth,Google Wind,Google Earth
+27,Stake,Mirage,Mudslide
+9,Earth,Geode,Crystal
+8,Earth,Car,Tire
+15,Earth,Mutton,Tire
+17,Google Earth,Seed,Google Bean
+11,Lake,Taurus,Google Bean
+10,Sunset,Crystal,Google Bean
+9,Earth,Exhaust,Fertilizer
+10,Crystal,Sushi,Taurus
+12,Lake,Aries,Taurus
+27,Earth,Stake,Fence
+11,Google Bean,Steam,Landslide
+10,Earth,Fertilizer,Algae
+14,Lake,Toxic,Algae
+10,Lake,Fertilizer,Algae
+12,Lake,Green,Algae
+13,Water,Pepsi,Algae
+11,Algae,Smoke,Smog
+13,Wind,Pollution,Smog
+11,Sunburn,Wave,Smog
+12,Smog,Volcano,Moisture
+17,Water,Google Earth,Google Ocean
+16,Water,Google Dream,Google Ocean
+10,Water,Crystal,Google Swamp
+11,Water,Google Bean,Google Wave
+12,Fire,Google Wave,Google Wave
+11,Water,Taurus,Minotaur
+12,Water,Google Wave,Minotaur
+13,Water,Labyrinth,Minotaur
+12,Minotaur,Volcano,Minotaur
+13,Fire,Labyrinth,Minotaur
+12,Lake,Bull,Minotaur
+11,Flying Spaghetti Dragon,Fireworks,Minotaur
+18,Water,Google Ocean,Labyrinth
+12,Minotaur,Sun,Labyrinth
+12,Lake,Minotaur,Labyrinth
+12,Minotaur,Cloud,Zeus
+10,Dada,Lightning,Zeus
+6,Angel,Lightning,Zeus
+10,Human,Lightning,Zeus
+12,Fire,Smog,Pollution
+14,Lake,Trash,Pollution
+13,Lake,Swine,Pollution
+12,Earth,Oil Spill,Pollution
+13,Earth,Swine,Pollution
+18,Fire,Google Ocean,Fire Ocean
+13,Pollution,Lake,Toxic
+13,Water,Pollution,Acid
+15,Water,Poison,Acid
+14,Acid,Water,Poison
+14,Acid,Soup,Poison
+15,Fire,Poison,Venom
+14,Acid,Electricity,Battery
+15,Poison,Sun,Sunburn
+13,Tan,Splash,Sunburn
+10,Sunset,Fertilizer,Sunburn
+11,Wind,Google Bean,Electric Eel
+15,Lake,Battery,Electric Eel
+17,Jabba The Spaghetti,Marsh,Electric Eel
+10,Lake,Eel,Electric Eel
+11,Sunburn,Lake,Gas
+13,Wind,Chlorine,Gas
+12,Gas,Wind,Tan
+13,Earth,Pollution,Trash
+15,Earth,Poison,Fish Tank
+12,Gas,Blood,Vapor
+17,Lake,Google Fire,?
+18,?,Ship,?
+18,?,Boat,?
+18,Lake,?,?
+18,Water,?,?
+18,Lake,Firecracker,Boom
+10,Lake,Diamond,Culture
+16,Fish Tank,Ash,Hot Tub
+20,Lake,Global Warming,Hot Tub
+9,Fire,Pool,Hot Tub
+13,Lake,Flying Tea,Tea Bag
+15,Lake,Plane,Seaplane
+6,Lake,Airplane,Seaplane
+19,Boom,Oasis,Mushroom
+4,Lake,Rock,Mushroom
+11,Culture,Energy,Art
+10,Painting,Steam,Art
+8,Fire,Methane,Art
+10,Hot Tub,Dust Storm,Sauna
+7,Fire,Seaplane,Sauna
+10,Fire,Sweat,Sauna
+9,Wind,Finland,Sauna
+14,Lake,Wool,Yarn
+9,Lake,Star Wars,Naboo
+5,Mushroom,Flying Fish,Flying Mushroom
+9,Art,Dandelion,Dada
+10,Dada,Swamp,Dada
+10,Water,Dada,Dada
+9,Sauna,Tea,Sweat
+13,Lake,Labyrinth,Noodle
+10,Ramen,Lightning,Noodle
+10,Lake,Ramen,Noodle
+10,Naboo,Sushi,Jabba
+10,Dada,Cloud,Toadstool
+5,Lake,Mushroom,Toadstool
+7,Frog,Mushroom,Toadstool
+8,Lake,Sauna,Finland
+9,Water,Finland,Finland
+9,Lake,Finland,Finland
+16,Earth,Eurovision Song Contest,Finland
+14,Noodle,Plant,Gungan
+10,Water,Naboo,Gungan
+9,Jar Jar,Earth,Gungan
+11,Jar Jar Binks,Algae,Gungan
+10,Lake,Naboo,Gungan
+7,Lake,Jabba The Hutt,Gungan
+14,Lake,Noodle,Ramen
+9,Noodles,Tsunami,Ramen
+9,Noodles,Lake,Ramen
+10,Water,Ramen,Ramen
+9,Fire,Noodles,Ramen
+8,Water,Sauna,Noodles
+9,Fire,Art,Painting
+9,Noodles,Wave,Jabba the Hutt
+11,Lake,Jabba,Jabba the Hutt
+8,Fire,Gungan,Jar Jar
+8,Lake,Gungan,Jar Jar
+10,Jabba the Hutt,Lake,Jabba The Hutt
+17,Jabba The Spaghetti,Tsunami,Jabba The Hutt
+17,Jabba The Spaghetti,Binks,Jabba The Hutt
+17,Jabba The Spaghetti,Skeleton,Jabba The Hutt
+6,Lake,Goldfish,Jabba The Hutt
+17,Lake,Jabba The Spaghetti,Jabba The Hutt
+6,Lake,Jabba The Hut,Jabba The Hutt
+10,Lake,Fishing,Jabba The Hutt
+10,Fire,Fishing,Jabba The Hutt
+10,Fire,Jabba the Hutt,Sith
+7,Sith,Fire,Sith
+6,Jabba The Hut,Fire,Sith
+17,Darth Maul,Twister,Sith
+7,Jabba The Hutt,Wind,Fart
+6,Wind,Jabba The Hut,Fart
+7,Water,Jabba The Hutt,Slim
+9,Lake,Skinny,Slim
+8,Slim,Water,Skinny
+8,Wind,Slim,Skinny
+8,Slim,Fire,Skeleton
+9,Skinny,Water,Skeleton
+12,Fire,Zombie,Skeleton
+8,Slim,Stone,Slim Serpent
+9,Skinny,Dragon,Snake
+10,Water,Flying Noodle,Snake
+9,Skeleton,Volcano,Flying Noodle
+9,Slim Serpent,Tsunami,Eel
+9,Wind,Jar Jar,Binks
+7,Wind,Sith,Spaghetti
+16,Pasta,Culture,Spaghetti
+14,Earth,Tea Bag,Spaghetti
+16,Pasta,Art,Spaghetti
+6,Earth,Flying Mushroom,Spaghetti
+16,Pasta,Dada,Spaghetti
+6,Earth,Toadstool,Spaghetti
+10,Eel,Plant,Seaweed
+6,Lake,Seaweed,Seaweed
+5,Lake,Kelp,Seaweed
+11,Lake,Algae,Seaweed
+11,Water,Emerald,Seaweed
+15,Wind,Spaghetti,Pasta
+5,Flying Spaghetti Monster,Flying Spaghetti Monster,Pasta
+5,Flying Spaghetti Monster,Water,Pasta
+16,Lake,Pasta,Pasta
+16,Wind,Pasta,Flying Spaghetti Monster
+10,Flying Spaghetti Monster,Snake,Flying Spaghetti Monster
+15,Flying Spaghetti Monster,Spaghetti,Flying Spaghetti Monster
+11,Fire,Flying Spaghetti Dragon,Flying Spaghetti Monster
+11,Flying Spaghetti Dragon,Wind,Flying Spaghetti Monster
+20,Flying Spaghetti Dragon,God,Flying Spaghetti Monster
+11,Flying Spaghetti Dragon,Electricity,Flying Spaghetti Monster
+11,Flying Spaghetti Dragon,Culture,Flying Spaghetti Monster
+4,Lake,Kite,Flying Spaghetti Monster
+11,Flying Spaghetti Dragon,Seed,Flying Spaghetti Monster
+14,Lake,Acid,Flying Spaghetti Monster
+6,Earth,Winter,Flying Spaghetti Monster
+5,Flying Spaghetti Monster,Earth,Steam Monster
+18,Seaweed,?,Spaghetti Monster
+19,Lake,Spaghetti Monster,Spaghetti Monster
+16,Pasta,Jabba the Hutt,Jabba The Spaghetti
+19,Spaghetti Monster,Jabba The Spaghetti,Jabba The Spaghetti
+19,Fire,Spaghetti Monster,Jabba The Hut
+5,Lake,Rainbow,Jabba The Hut
+17,Jabba The Spaghetti,Jabba The Spaghetti,Jabba The Hut
+17,Jabba The Spaghetti,Fire,Jabba The Hut
+7,Water,Jar Jar Binks,Jabba The Hut
+7,Lake,Sith,Jabba The Hut
+10,Water,Fishing,Jabba The Hut
+10,Wind,Fishing,Jabba The Hut
+10,Flying Spaghetti Monster,Jabba the Hutt,Flying Spaghetti Dragon
+6,Steam Monster,Smoke,Jar Jar Binks
+19,Spaghetti Monster,Fart,God
+4,Lake,Sun,Sunset
+10,Jabba The Hut,Ramen,Jabba The Ramen
+11,Flying Spaghetti Dragon,Alcohol,Flying Spaghetti Phoenix
+28,Lake,Fence,Fishing
+9,Lake,Basket,Fishing
+20,God,Pop,Religion
+5,Sunset,Flower,Winter
+10,Lake,Fever,SpongeBob
+13,Flying Spaghetti Phoenix,Ram,Lamborghini
+6,Lake,Sail,Fishing Rod
+21,Religion,House,Christianity
+15,Winter,Spain,Siesta
+7,Lake,Telescope,Galileo
+9,Lake,Sneeze,Allergy
+7,Lake,Hanglider,Water Ski
+19,Lake,Skier,Water Ski
+18,Lake,Rainfox,Parachristianity
+4,Lake,Island,Parachristianity
+5,Parachristianity,Planet,Parachristianity
+16,Siesta,Fireplace,Nap
+11,Galileo,Pressure,Necklace
+12,Lake,Sapphire,Necklace
+10,Allergy,Diamond,Hay Fever
+8,Lake,Hot Water,Hot Springs
+15,Parachristianity,Burning Love,Parachurch
+12,Wind,Necklace,Parachurch
+18,Nap,Pineapple,Sleep
+8,Water,Galileo,Sleep
+17,Water,Nap,Sleep
+10,Water,Dream,Sleep
+12,Fire,Necklace,Sleep
+12,Necklace,Continent,Africa
+11,Hay Fever,Soil,Hay
+9,Hot Springs,Oil,Tar
+11,Fire,Asphalt,Tar
+12,Lake,Google Cloud,Data Lake
+12,Lake,Database,Data Lake
+9,Sleep,Field,Dream
+13,Africa,Farmer,Slave
+12,Hay,Swan,Cygnus
+10,Tar,Fuel,Asphalt
+13,Earth,Data Lake,Asphalt
+13,Data Lake,Money,Swan Lake
+11,Fire,Movie,Swan Lake
+15,Dream,Google Chrome,Google Dream
+14,Slave,Emulsion,Waterfall
+14,Lake,Google,Googol
+11,Asphalt,Pig,Oil Spill
+16,Swan Lake,Honeymoon,Swine Lake
+10,Lake,Popcorn,Movie
+18,Earth,Hollywood,Movie
+15,Waterfall,Cheese,Fondue
+15,Googol,Samurai,Googolplex
+12,Lake,Oil Spill,Googolplex
+15,Wind,Googol,Googolplex
+12,Oil Spill,Burnt Cookie,BP
+25,Swine Lake,Lightsaber,Piglet
+11,Movie,Plesiosaur,Jaws
+11,Lake,Movie,Jaws
+7,Lake,Soggy Toast,Soggy Bread
+5,Lake,Nessie,Death Star
+20,BP,Fire Breath,GPS
+18,Lake,Ice-cold Croco-cola,Optimus Pig
+13,Lake,Wasabi,Sharknado
+14,Sharknado,Parting,Sharknado
+14,Sharknado,Prayer,Sharknado
+17,Fire,Sharkicane,Sharknado
+15,Soggy Bread,Miso Soup,French Onion Soup
+17,Fire,Darth Maul,French Onion Soup
+13,Death Star,Coral Reef,Darth Snow
+14,Darth Snow,Psittacine,Darth Snow
+14,Lake,Darth Snow,Darth Snow
+14,Fire,Darth Snow,Darth Snow
+14,Lake,Hades,Styx
+19,Optimus Pig,Toothpaste,Porkimus Prime
+26,Lake,Zeppelin,Porkimus Prime
+23,Lake,Steam Ray,Porkimus Prime
+20,Porkimus Prime,Sunfish,Porkimus Prime
+23,Porkimus Prime,Swordfish,Porkimus Prime
+27,Porkimus Prime,Blimp,Porkimus Prime
+22,Lake,Don Quixote,Porkimus Prime
+7,Lake,Frog,Porkimus Prime
+12,Porkimus Prime,Prayer,Porkimus Prime
+8,Lake,Fireball,Porkimus Prime
+14,Lake,French Onion Soup Gun,Porkimus Prime
+15,Water,Rose Shark,Porkimus Prime
+9,Earth,Porkimus Prime,Porkimus Prime
+14,Sharknado,Kingdom,Rose Shark
+16,Wind,Eurovision Song Contest,Rose Shark
+13,Lake,Toucan,French Onion Soup Gun
+16,Lake,Hot Air Balloon,Darth Maul
+17,Lake,Darth Maul,Darth Maul
+15,Lake,Fruit Salad,Charon
+9,Porkimus Prime,Lotus,Eurovision Song Contest
+15,Water,Hot Toddies,Eurovision Song Contest
+14,Lake,Hot Toddy,Hot Toddies
+16,Hot Toddies,Sonar,Hot Toddies
+15,Lake,Hot Toddies,Hot Toddies
+15,Fire,Warm Toddies,Hot Toddies
+18,Water,Mummy,Hot Toddies
+16,Lake,Snowflake,Bribe
+13,Lake,Snow Golem,Ice Golem
+13,Lake,Shark,Piranha
+15,Fire,Rose Shark,Piranha
+16,Eurovision Song Contest,Egypt,Cleopatra
+15,Hot Toddies,Darth Vader,Industrial Revolution
+26,Lake,Yoda,Swine
+17,Lake,Swine Lake,Swine
+12,Water,Cinema,Swine
+19,Lake,Pina Colada,Vacation
+15,Lake,Burning Love,Onyx
+10,Lake,Gem,Emerald
+11,Lake,Ruby,Emerald
+19,Lake,Dust Bunny,Seal
+20,Lake,Seal,Seal
+20,Fire,Seal,Seal
+29,Lake,Wall,Coke
+12,Water,Wheel,Coke
+11,Lake,Google Bean,Wheel
+11,Lake,Google Swamp,Swamp Lake
+13,Lake,Tan,Tanning
+15,Lake,Yarn,Monet
+10,Lake,Painting,Monet
+7,Lake,Fart,Methane
+5,Lake,Sunset,Sunrise
+5,Water,Sunset,Sunrise
+5,Wind,Sunset,Sunrise
+21,Lake,Religion,Baptism
+16,Lake,Siesta,Baptism
+12,Lake,Necklace,Baptism
+14,Lake,Baptist,Baptism
+21,Water,Religion,Baptism
+22,Water,Christianity,Baptism
+13,Water,Africa,Baptism
+11,Water,Nightmare,Baptism
+9,Water,Church,Baptism
+11,Water,Holy Spirit,Baptism
+13,Lake,Africa,Baptist
+13,Lake,Data Lake,Data
+10,Lake,Dream,Nightmare
+10,Fire,Dream,Nightmare
+12,Lake,Swan Lake,Ballet
+15,Lake,Waterfall,Google Lake
+16,Lake,Eurovision Song Contest,Ferry
+17,Lake,Ferry,Ferry
+20,Lake,Vacation,Cottage
+16,Lake,Onyx,Obsidian
+11,Lake,Emerald,Green
+11,Fire,Emerald,Green
+12,Lake,Wheel,Pepsi
+11,Lake,Nightmare,Database
+13,Lake,Pepsi,Mountain Dew
+13,Water,Mountain Dew,Mountain Dew
+13,Wind,Mountain Dew,Mountain Dew
+12,Earth,Database,Mountain Dew
+12,Water,Necklace,Pearl
+14,Water,Wet Haystack,Pearl
+14,Fire,Oyster,Pearl
+14,Water,Pearl Diver,Pearl
+14,Earth,Oyster,Pearl
+12,Water,Hay,Haystack
+13,Water,Data Lake,Pitch
+19,Water,Optimus Pig,Pigimus Prime
+20,Wind,Pigimus Prime,Pigimus Prime
+14,Water,Ice Golem,Whiskey
+16,Water,Moonshine,Whiskey
+16,Earth,Moonshine,Whiskey
+20,Water,Vacation,Cruise
+16,Water,Onyx,Sink
+22,Water,Drain,Sink
+20,Water,Seal,Sealion
+8,Water,Methane,Leather
+14,Wind,Tanning,Leather
+14,Earth,Tanning,Leather
+17,Water,Ferry,Google Water
+12,Water,Database,Leak
+13,Water,Pearl,Oyster
+13,Fire,Haystack,Oyster
+14,Fire,Pearl Diver,Oyster
+14,Earth,Pearl Diver,Oyster
+13,Water,Haystack,Wet Haystack
+15,Water,Whiskey,Moonshine
+21,Water,Sealion,Drain
+21,Wind,Sealion,Drain
+18,Water,Google Water,Boot
+8,Fire,Galileo,Napalm
+5,Fire,Parachristianity,Fire Ski
+13,Fire,Data Lake,Data Fire
+14,Fire,Data Fire,Data Fire
+14,Fire,Slave,Worker
+13,Fire,Googolplex,Big Bang
+15,Fire,Universe,Big Bang
+13,Fire,BP,Bp
+14,Fire,Bp,Bp
+6,Fire,Death Star,Death
+14,Fire,Ice Golem,Warm Toddies
+17,Fire,Cleopatra,Mummy
+20,Fire,Vacation,Campfire
+11,Fire,Nightmare,Information
+14,Wind,Data,Information
+16,Fire,Google Lake,Fire Lake
+17,Fire,Ferry,Fireboat
+12,Fire,Green,Chlorine
+13,Fire,Mountain Dew,Hack
+15,Fire,Hacker,Hack
+14,Fire,Pitch,Torch
+9,Fire,Leather,Shoe
+9,Earth,Leather,Shoe
+19,Earth,Boot,Shoe
+19,Fire,Boot,Roast
+14,Fire,Chicken,Roast
+14,Fire,Big Bang,Blacksmith
+21,Fire,Campfire,Bonfire
+18,Fire,Fireboat,Knowledge
+17,Water,Fire Lake,Knowledge
+13,Fire,Chlorine,Bleach
+14,Fire,Hack,Hacker
+15,Earth,Torch,Hacker
+10,Fire,Shoe,Light
+15,Fire,Blacksmith,Sword
+16,Wind,Steel,Sword
+18,Fire,Knowledge,Power
+15,Water,Blacksmith,Steel
+19,Water,Metal,Steel
+15,Water,Hacker,Clean
+16,Water,Clean,Rust
+16,Fire,Steel,Rust
+17,Water,Rust,Iron
+18,Fire,Iron,Iron
+8,Wind,Galileo,Church
+13,Earth,Africa,Church
+16,Wind,Google Dream,Google Wind
+17,Wind,Swine Lake,Swine Flu
+12,Wind,Cinema,Swine Flu
+11,Wind,Movie,Cinema
+16,Wind,French Onion Soup,Sharkicane
+17,Wind,Sharkicane,Sharkicane
+14,Wind,Darth Snow,Darth Blizzard
+15,Wind,Darth Blizzard,Darth Blizzard
+15,Fire,Darth Blizzard,Darth Blizzard
+9,Wind,Porkimus Prime,Zephyr
+15,Wind,Blacksmith,Zephyr
+10,Wind,Baptism,Holy Spirit
+13,Wind,Pearl,Pearl Diver
+16,Wind,Moonshine,Scarecrow
+19,Wind,Boot,Gust
+14,Wind,Data Fire,Fire Tornado
+14,Wind,Big Bang,Universe
+15,Wind,Roast,Sandwich
+15,Wind,Universe,Galaxy
+16,Wind,Galaxy,Solar System
+17,Wind,Solar System,Solar Wind
+18,Wind,Solar Wind,Solar Wind
+16,Water,Galaxy,Soggy
+17,Water,Soggy,Wet
+19,Water,Dry,Wet
+17,Fire,Scarecrow,Witch
+19,Fire,Dry,Witch
+20,Earth,Witch,Witch
+18,Fire,Wet,Dry
+20,Water,Witch,Wizard
+11,Earth,SpongeBob,Patrick
+7,Earth,Fishing Rod,Rich
+16,Earth,Siesta,Easter
+11,Earth,Hay Fever,Eden
+11,Earth,Asphalt,Road
+14,Earth,Darth Snow,Hoth
+15,Earth,Darth Blizzard,Hoth
+15,Earth,Styx,Tartarus
+16,Earth,Charon,Underworld
+13,Earth,Coke,Coal
+6,Earth,Sunrise,Day
+11,Earth,Nightmare,Zombie
+13,Earth,Ballet,Dance
+12,Earth,Green,Grass
+22,Earth,Lawn,Grass
+20,Earth,Pigimus Prime,Baseball
+22,Earth,Drain,Sinkhole
+16,Earth,Sword,Knight
+16,Earth,Steel,Plow
+19,Earth,Metal,Plow
+18,Earth,Iron,Metal
+17,Earth,Sharkicane,Hollywood
+12,Earth,Eden,Egg
+18,Earth,Wampa,Egg
+17,Water,Easter,Egg
+16,Earth,Tartarus,Tauntaun
+7,Earth,Day,Night
+21,Earth,Baseball,Lawn
+13,Earth,Egg,Chicken
+17,Earth,Tauntaun,Wampa
+17,Fire,Tauntaun,Wampa
+12,Water,Patrick,Spongebob
+8,Water,Rich,Pool
+12,Water,Road,Garden
+12,Wind,Eden,Garden
+17,Water,Underworld,River Styx
+18,Water,River Styx,River Styx
+17,Water,Plow,Canal
+18,Water,Canal,Venice
+20,Water,Gondola,Venice
+19,Water,Venice,Gondola
+20,Fire,Gondola,Gondola
+12,Fire,Patrick,Star
+17,Fire,Easter,Bunny
+12,Fire,Road,Traffic
+13,Fire,Grass,Firefly
+23,Fire,Sinkhole,Home Run
+13,Fire,Egg,Omelette
+18,Fire,Wampa,Luke
+12,Wind,Patrick,Luke
+13,Fire,Traffic,Jam
+14,Fire,Jam,Skywalker
+14,Water,Jam,Skywalker
+13,Water,Traffic,Rabbit
+10,Human,Mushroom,Toad
+11,Mushroom,Toad,Mario
+10,Tea,Teapot,Tea Party
+12,Mario,Tea Party,Mario Party
+23,Mario Party,Super Gay Party,Mario Party
+10,King,Kingdom,Castle
+11,Castle,King,Queen
+15,Love,Queen,Marriage
+16,Marriage,Queen,Divorce
+17,Flying,Knight,Pegasus
+12,Lightning,Robot,Tesla
+13,Robot,Tesla,Tesla
+10,Engine,Human,Mechanic
+12,Human,Robot,Cyborg
+10,Car,Human,Driver
+19,Human,Power,Superhero
+20,Mario Party,Superhero,Mario Party 9
+26,Mario Party 9,Super Gay Yaoi Yuri Party,Mario Party 9
+20,Human,Superhero,Superman
+21,Mario Party,Superman,Super Mario Party
+21,Mario Party 9,Superman,Super Mario Party
+23,Mario Party 10,Superman,Super Mario Party
+22,Mario Party 9,Super Mario Party,Mario Party 10
+22,Divorce,Super Mario Party,Super Mario Divorce Party
+4,Forest,Tree,Wood
+5,Tree,Wood,Paper
+6,Paper,Wood,Book
+5,House,House,Town
+6,Town,Town,City
+5,Island,Sushi,Japan
+7,Book,Japan,Manga
+9,Church,Rainbow,Gay
+10,Gay,Manga,Yaoi
+14,Queen,Yaoi Yuri,Yaoi
+11,Book,Yaoi,Yaoi Manga
+12,Queen,Yaoi Manga,Yuri Manga
+13,Yaoi,Yuri Manga,Yaoi Yuri
+14,Yaoi Manga,Yaoi Yuri,Yaoi Yuri Manga
+23,Gay,Super Mario Divorce Party,Gaymer
+22,Gay,Super Mario Party,Super Gay Party
+23,Super Gay Party,Super Mario Party,Super Gay Mario Party
+24,Super Gay Mario Party,Yaoi,Super Gay Yaoi Mario Party
+25,Super Gay Yaoi Mario Party,Yuri,Super Gay Yaoi Mario Party
+26,Super Gay Yaoi Mario Party,Super Gay Yaoi Yuri Party,Super Gay Yaoi Mario Party
+12,Queen,Yaoi,Yuri
+24,Super Gay Mario Party,Yuri,Super Gay Yuri Party
+25,Super Gay Yaoi Mario Party,Super Gay Yuri Party,Super Gay Yaoi Yuri Party
+25,Super Gay Yuri Party,Super Mario Party,Super Gay Yuri Mario Party
+26,Super Gay Yaoi Mario Party,Super Gay Yuri Mario Party,Super Gay Yaoi Yuri Mario Party
+23,Mario Party 10,Super Mario Party,Mario Party: The Top 100
+24,Gay,Mario Party: The Top 100,Gayio Party
+25,Gayio Party,Super Gay Mario Party,Super Gayio Party
+26,Super Gayio Party,Yuri,Yuri Party
+27,Super Gayio Party,Yuri Party,Super Gayio Yuri Party
+28,Super Gayio Yuri Party,Yaoi Yuri,Yuri Yaoi
+29,Super Gayio Party,Yuri Yaoi,Yaoi Yuri Party
+30,Super Gayio Party,Yaoi Yuri Party,Super Yaoi Yuri Party
+31,Super Gayio Party,Super Yaoi Yuri Party,Super Gayio Yuri Yaoi Party

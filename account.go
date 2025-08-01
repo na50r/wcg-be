@@ -16,7 +16,7 @@ import (
 // @Tags account
 // @Accept json
 // @Produce json
-// @Security ApiKeyAuth
+// @Security BearerAuth
 // @Param username path string true "Username"
 // @Success 200 {object} AccountDTO
 // @Failure 400 {object} APIError
@@ -53,6 +53,8 @@ func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) err
 // @Tags account
 // @Accept json
 // @Produce json
+// @Security BearerAuth
+// @Param username path string true "Username"
 // @Success 200 {object} ImagesResponse
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError
@@ -88,7 +90,9 @@ func (s *APIServer) handleAccount(w http.ResponseWriter, r *http.Request) error 
 // @Tags account
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param account body EditAccountRequest true "Account to edit"
+// @Param username path string true "Username"
 // @Success 200 {object} GenericResponse
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError
@@ -225,6 +229,7 @@ func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
 // @Tags auth
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Success 200 {object} GenericResponse
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError
@@ -295,6 +300,8 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 // @Tags 
 // @Accept json
 // @Produce json
+// @Security BearerAuth
+// @Param username path string true "Username"
 // @Success 200 {array} ChallengeEntryDTO
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError

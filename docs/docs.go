@@ -19,7 +19,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BearerAuth": []
                     }
                 ],
                 "description": "Get an account",
@@ -64,6 +64,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Edit an account",
                 "consumes": [
                     "application/json"
@@ -84,6 +89,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/main.EditAccountRequest"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Username",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -110,6 +122,11 @@ const docTemplate = `{
         },
         "/account/{username}/images": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get all potential profile pictures",
                 "consumes": [
                     "application/json"
@@ -121,6 +138,15 @@ const docTemplate = `{
                     "account"
                 ],
                 "summary": "Get all potential profile pictures",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Username",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -145,6 +171,11 @@ const docTemplate = `{
         },
         "/account/{username}/leaderboard": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get the leaderboard",
                 "consumes": [
                     "application/json"
@@ -156,6 +187,15 @@ const docTemplate = `{
                     ""
                 ],
                 "summary": "Get the leaderboard",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Username",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -264,6 +304,11 @@ const docTemplate = `{
         },
         "/games/{lobbyCode}/{playerName}/combinations": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Make a move",
                 "consumes": [
                     "application/json"
@@ -284,6 +329,20 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/main.WordRequest"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Lobby code",
+                        "name": "lobbyCode",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Player name",
+                        "name": "playerName",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -310,6 +369,11 @@ const docTemplate = `{
         },
         "/games/{lobbyCode}/{playerName}/end": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "End a game",
                 "consumes": [
                     "application/json"
@@ -321,6 +385,22 @@ const docTemplate = `{
                     "game"
                 ],
                 "summary": "End a game (owner)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Lobby code",
+                        "name": "lobbyCode",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Player name",
+                        "name": "playerName",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -345,6 +425,11 @@ const docTemplate = `{
         },
         "/games/{lobbyCode}/{playerName}/game": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get game stats",
                 "consumes": [
                     "application/json"
@@ -356,6 +441,22 @@ const docTemplate = `{
                     "game"
                 ],
                 "summary": "Get game stats",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Lobby code",
+                        "name": "lobbyCode",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Player name",
+                        "name": "playerName",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -378,6 +479,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Start a game",
                 "consumes": [
                     "application/json"
@@ -398,6 +504,20 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/main.StartGameRequest"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Lobby code",
+                        "name": "lobbyCode",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Player name",
+                        "name": "playerName",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -422,6 +542,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Delete a game",
                 "consumes": [
                     "application/json"
@@ -433,6 +558,22 @@ const docTemplate = `{
                     "game"
                 ],
                 "summary": "Delete a game (owner)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Lobby code",
+                        "name": "lobbyCode",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Player name",
+                        "name": "playerName",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -457,6 +598,11 @@ const docTemplate = `{
         },
         "/games/{lobbyCode}/{playerName}/words": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get a player's words",
                 "consumes": [
                     "application/json"
@@ -468,6 +614,15 @@ const docTemplate = `{
                     "game"
                 ],
                 "summary": "Get a player's words",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Lobby code",
+                        "name": "lobbyCode",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -572,6 +727,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create a lobby",
                 "consumes": [
                     "application/json"
@@ -618,6 +778,11 @@ const docTemplate = `{
         },
         "/lobbies/{lobbyCode}/{playerName}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get a lobby",
                 "consumes": [
                     "application/json"
@@ -629,6 +794,22 @@ const docTemplate = `{
                     "lobby"
                 ],
                 "summary": "Get a lobby",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Lobby code",
+                        "name": "lobbyCode",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Player name",
+                        "name": "playerName",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -653,6 +834,11 @@ const docTemplate = `{
         },
         "/lobbies/{lobbyCode}/{playerName}/edit": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Edit a game mode in the lobby",
                 "consumes": [
                     "application/json"
@@ -673,6 +859,20 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/main.EditGameRequest"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Lobby code",
+                        "name": "lobbyCode",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Player name",
+                        "name": "playerName",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -699,6 +899,11 @@ const docTemplate = `{
         },
         "/lobbies/{lobbyCode}/{playerName}/leave": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Leave a lobby",
                 "consumes": [
                     "application/json"
@@ -710,6 +915,22 @@ const docTemplate = `{
                     "lobby"
                 ],
                 "summary": "Leave a lobby",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Lobby code",
+                        "name": "lobbyCode",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Player name",
+                        "name": "playerName",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -780,6 +1001,11 @@ const docTemplate = `{
         },
         "/logout": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Logs out a user",
                 "consumes": [
                     "application/json"
@@ -1182,7 +1408,7 @@ const docTemplate = `{
         }
     },
     "securityDefinitions": {
-        "ApiKeyAuth": {
+        "BearerAuth": {
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"

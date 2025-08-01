@@ -15,6 +15,9 @@ import (
 // @Tags lobby
 // @Accept json
 // @Produce json
+// @Security BearerAuth
+// @Param lobbyCode path string true "Lobby code"
+// @Param playerName path string true "Player name"
 // @Success 200 {object} LobbyDTO
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError
@@ -54,6 +57,9 @@ func (s *APIServer) handleGetLobby(w http.ResponseWriter, r *http.Request) error
 // @Tags lobby
 // @Accept json
 // @Produce json
+// @Security BearerAuth
+// @Param lobbyCode path string true "Lobby code"
+// @Param playerName path string true "Player name"
 // @Success 200 {object} GenericResponse
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError
@@ -178,6 +184,7 @@ func (s *APIServer) handleLobbies(w http.ResponseWriter, r *http.Request) error 
 // @Accept json
 // @Produce json
 // @Param lobby body CreateLobbyRequest true "Lobby to create"
+// @Security BearerAuth
 // @Success 200 {object} CreateLobbyResponse
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError
@@ -268,6 +275,9 @@ func (s *APIServer) handleGetLobbies(w http.ResponseWriter, r *http.Request) err
 // @Accept json
 // @Produce json
 // @Param game body EditGameRequest true "Game mode to change to"
+// @Security BearerAuth
+// @Param lobbyCode path string true "Lobby code"
+// @Param playerName path string true "Player name"
 // @Success 200 {object} GenericResponse
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError

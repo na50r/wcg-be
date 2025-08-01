@@ -30,6 +30,9 @@ func (s *APIServer) handleGame(w http.ResponseWriter, r *http.Request) error {
 // @Tags game
 // @Accept json
 // @Produce json
+// @Security BearerAuth
+// @Param lobbyCode path string true "Lobby code"
+// @Param playerName path string true "Player name"
 // @Success 200 {object} GenericResponse
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError
@@ -72,6 +75,8 @@ func (s *APIServer) handleDeleteGame(w http.ResponseWriter, r *http.Request) err
 // @Tags game
 // @Accept json
 // @Produce json
+// @Security BearerAuth
+// @Param lobbyCode path string true "Lobby code"
 // @Success 200 {object} Words
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError
@@ -104,6 +109,9 @@ func (s *APIServer) handleGetWords(w http.ResponseWriter, r *http.Request) error
 // @Accept json
 // @Produce json
 // @Param game body StartGameRequest true "Game to start"
+// @Security BearerAuth
+// @Param lobbyCode path string true "Lobby code"
+// @Param playerName path string true "Player name"
 // @Success 200 {object} GenericResponse
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError
@@ -175,6 +183,9 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 // @Accept json
 // @Produce json
 // @Param move body WordRequest true "Move to make"
+// @Security BearerAuth
+// @Param lobbyCode path string true "Lobby code"
+// @Param playerName path string true "Player name"
 // @Success 200 {object} WordResponse
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError
@@ -222,6 +233,9 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 // @Tags game
 // @Accept json
 // @Produce json
+// @Security BearerAuth
+// @Param lobbyCode path string true "Lobby code"
+// @Param playerName path string true "Player name"
 // @Success 200 {object} GameEndResponse
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError
@@ -266,6 +280,9 @@ func (s *APIServer) handleGetGameStats(w http.ResponseWriter, r *http.Request) e
 // @Tags game
 // @Accept json
 // @Produce json
+// @Security BearerAuth
+// @Param lobbyCode path string true "Lobby code"
+// @Param playerName path string true "Player name"
 // @Success 200 {object} GenericResponse
 // @Failure 400 {object} APIError
 // @Failure 405 {object} APIError

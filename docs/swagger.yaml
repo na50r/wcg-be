@@ -273,7 +273,7 @@ paths:
           schema:
             $ref: '#/definitions/main.APIError'
       security:
-      - ApiKeyAuth: []
+      - BearerAuth: []
       summary: Get an account
       tags:
       - account
@@ -288,6 +288,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/main.EditAccountRequest'
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -303,6 +308,8 @@ paths:
           description: Method Not Allowed
           schema:
             $ref: '#/definitions/main.APIError'
+      security:
+      - BearerAuth: []
       summary: Edit an account
       tags:
       - account
@@ -311,6 +318,12 @@ paths:
       consumes:
       - application/json
       description: Get all potential profile pictures
+      parameters:
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -326,6 +339,8 @@ paths:
           description: Method Not Allowed
           schema:
             $ref: '#/definitions/main.APIError'
+      security:
+      - BearerAuth: []
       summary: Get all potential profile pictures
       tags:
       - account
@@ -334,6 +349,12 @@ paths:
       consumes:
       - application/json
       description: Get the leaderboard
+      parameters:
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -351,6 +372,8 @@ paths:
           description: Method Not Allowed
           schema:
             $ref: '#/definitions/main.APIError'
+      security:
+      - BearerAuth: []
       summary: Get the leaderboard
       tags:
       - ""
@@ -419,6 +442,16 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/main.WordRequest'
+      - description: Lobby code
+        in: path
+        name: lobbyCode
+        required: true
+        type: string
+      - description: Player name
+        in: path
+        name: playerName
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -434,6 +467,8 @@ paths:
           description: Method Not Allowed
           schema:
             $ref: '#/definitions/main.APIError'
+      security:
+      - BearerAuth: []
       summary: Make a move
       tags:
       - game
@@ -442,6 +477,17 @@ paths:
       consumes:
       - application/json
       description: End a game
+      parameters:
+      - description: Lobby code
+        in: path
+        name: lobbyCode
+        required: true
+        type: string
+      - description: Player name
+        in: path
+        name: playerName
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -457,6 +503,8 @@ paths:
           description: Method Not Allowed
           schema:
             $ref: '#/definitions/main.APIError'
+      security:
+      - BearerAuth: []
       summary: End a game (owner)
       tags:
       - game
@@ -465,6 +513,17 @@ paths:
       consumes:
       - application/json
       description: Delete a game
+      parameters:
+      - description: Lobby code
+        in: path
+        name: lobbyCode
+        required: true
+        type: string
+      - description: Player name
+        in: path
+        name: playerName
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -480,6 +539,8 @@ paths:
           description: Method Not Allowed
           schema:
             $ref: '#/definitions/main.APIError'
+      security:
+      - BearerAuth: []
       summary: Delete a game (owner)
       tags:
       - game
@@ -487,6 +548,17 @@ paths:
       consumes:
       - application/json
       description: Get game stats
+      parameters:
+      - description: Lobby code
+        in: path
+        name: lobbyCode
+        required: true
+        type: string
+      - description: Player name
+        in: path
+        name: playerName
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -502,6 +574,8 @@ paths:
           description: Method Not Allowed
           schema:
             $ref: '#/definitions/main.APIError'
+      security:
+      - BearerAuth: []
       summary: Get game stats
       tags:
       - game
@@ -516,6 +590,16 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/main.StartGameRequest'
+      - description: Lobby code
+        in: path
+        name: lobbyCode
+        required: true
+        type: string
+      - description: Player name
+        in: path
+        name: playerName
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -531,6 +615,8 @@ paths:
           description: Method Not Allowed
           schema:
             $ref: '#/definitions/main.APIError'
+      security:
+      - BearerAuth: []
       summary: Start a game (owner)
       tags:
       - game
@@ -539,6 +625,12 @@ paths:
       consumes:
       - application/json
       description: Get a player's words
+      parameters:
+      - description: Lobby code
+        in: path
+        name: lobbyCode
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -554,6 +646,8 @@ paths:
           description: Method Not Allowed
           schema:
             $ref: '#/definitions/main.APIError'
+      security:
+      - BearerAuth: []
       summary: Get a player's words
       tags:
       - game
@@ -608,6 +702,8 @@ paths:
           description: Method Not Allowed
           schema:
             $ref: '#/definitions/main.APIError'
+      security:
+      - BearerAuth: []
       summary: Create a lobby (requires account)
       tags:
       - lobby
@@ -645,6 +741,17 @@ paths:
       consumes:
       - application/json
       description: Get a lobby
+      parameters:
+      - description: Lobby code
+        in: path
+        name: lobbyCode
+        required: true
+        type: string
+      - description: Player name
+        in: path
+        name: playerName
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -660,6 +767,8 @@ paths:
           description: Method Not Allowed
           schema:
             $ref: '#/definitions/main.APIError'
+      security:
+      - BearerAuth: []
       summary: Get a lobby
       tags:
       - lobby
@@ -675,6 +784,16 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/main.EditGameRequest'
+      - description: Lobby code
+        in: path
+        name: lobbyCode
+        required: true
+        type: string
+      - description: Player name
+        in: path
+        name: playerName
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -690,6 +809,8 @@ paths:
           description: Method Not Allowed
           schema:
             $ref: '#/definitions/main.APIError'
+      security:
+      - BearerAuth: []
       summary: Edit a game mode in the lobby (owner)
       tags:
       - lobby
@@ -698,6 +819,17 @@ paths:
       consumes:
       - application/json
       description: Leave a lobby
+      parameters:
+      - description: Lobby code
+        in: path
+        name: lobbyCode
+        required: true
+        type: string
+      - description: Player name
+        in: path
+        name: playerName
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -713,6 +845,8 @@ paths:
           description: Method Not Allowed
           schema:
             $ref: '#/definitions/main.APIError'
+      security:
+      - BearerAuth: []
       summary: Leave a lobby
       tags:
       - lobby
@@ -766,11 +900,13 @@ paths:
           description: Method Not Allowed
           schema:
             $ref: '#/definitions/main.APIError'
+      security:
+      - BearerAuth: []
       summary: Log out an account
       tags:
       - auth
 securityDefinitions:
-  ApiKeyAuth:
+  BearerAuth:
     in: header
     name: Authorization
     type: apiKey

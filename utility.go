@@ -223,7 +223,7 @@ func getToken(r *http.Request) (jwt.Token, bool, error) {
 		// Anon player
 		return jwt.Token{}, false, nil
 	}
-
+	tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
 	token, err := parseJWT(tokenString)
 	if err != nil && token != nil && !token.Valid {
 		return jwt.Token{}, true, fmt.Errorf("unauthorized")

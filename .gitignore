@@ -3,5 +3,6 @@
 *.db*
 api_test.go
 bin/
+*.csv
 *.sh
 *.txt

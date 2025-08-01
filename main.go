@@ -5,14 +5,10 @@ package main
 // @description This is the API for Wombo Combo Go
 // @host localhost:3030
 // @BasePath /
-// @securityDefinitions.apikey ApiKeyAuth
+// @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Authorization
 
-// Current: Authorization: <Token>
-// TODO: Authorization: Bearer <Token>
-// Because of Current, use securityDefinitions.apikey rather than securityDefinitions.bearer
-// https://swagger.io/docs/specification/v3_0/authentication/api-keys/
 import (
 	"flag"
 	"log"
@@ -70,7 +66,7 @@ func main() {
 	seed := flag.Bool("seed", false, "seed images & elements")
 	flag.Parse()
 
-	store, err := NewPostgresStore()
+	store, err := NewSQLiteStore("store")
 	if err != nil {
 		log.Fatal(err)
 	}
