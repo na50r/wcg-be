@@ -8,8 +8,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
-	jwt "github.com/golang-jwt/jwt"
 )
 
 type Message struct {
@@ -24,11 +22,11 @@ type Broker struct {
 }
 
 type Subscription struct {
-	ChannelID int    `json:"channelId"`
-	Channel   chan []byte `json:"channel"`
-	LobbyCode string `json:"lobbyCode"`
-	PlayerName string `json:"playerName"`
-	IsPlayer bool   `json:"isPlayer"`
+	ChannelID  int         `json:"channelId"`
+	Channel    chan []byte `json:"channel"`
+	LobbyCode  string      `json:"lobbyCode"`
+	PlayerName string      `json:"playerName"`
+	IsPlayer   bool        `json:"isPlayer"`
 }
 
 func NewBroker() *Broker {
@@ -41,7 +39,7 @@ func NewBroker() *Broker {
 	return &b
 }
 
-func (b* Broker) CreateChannel() (int, chan []byte) {
+func (b *Broker) CreateChannel() (int, chan []byte) {
 	b.cnt++
 	b.ClientChannels[b.cnt] = make(chan []byte)
 	return b.cnt, b.ClientChannels[b.cnt]
@@ -92,30 +90,23 @@ func (s *APIServer) SSEHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Connection", "keep-alive")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	token, tokenExists, err := getToken(r)
+	token, tokenExists := getToken(r)
 	log.Printf("Token exists: %v", tokenExists)
-	if err != nil {
-		return
-	}
-	var lobbyCode string
-	var playerName string
+
 	channelID, channel := b.CreateChannel()
 	var sub Subscription
 	sub.ChannelID = channelID
 	sub.Channel = channel
 	sub.IsPlayer = false
 	if tokenExists {
-		claims, ok := token.Claims.(jwt.MapClaims)
-		if !ok {
+		playerClaims, err := verifyPlayerJWT(token)
+		if err != nil {
+			log.Printf("Failed to verify player JWT: %v", err)
 			return
 		}
-		if claims["type"] == "player" {
-			lobbyCode = claims["lobbyCode"].(string)
-			playerName = claims["playerName"].(string)
-			sub.LobbyCode = lobbyCode
-			sub.PlayerName = playerName
-			sub.IsPlayer = true
-		}
+		sub.LobbyCode = playerClaims.LobbyCode
+		sub.PlayerName = playerClaims.PlayerName
+		sub.IsPlayer = true
 	}
 	b.newClients <- sub
 	clientGone := r.Context().Done()
@@ -200,7 +191,6 @@ func (s *APIServer) PublishToChannel(w http.ResponseWriter, r *http.Request) {
 	}
 	b.ClientChannels[channelID] <- data
 }
-
 
 func (s *APIServer) Broadcast(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {

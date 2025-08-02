@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 
-	jwt "github.com/golang-jwt/jwt"
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
@@ -104,78 +103,4 @@ func (s *APIServer) Run() {
 	router := s.router
 	log.Fatal(http.ListenAndServe(s.listenAddr, router))
 
-}
-
-// Authentication Middleware Adapted from Anthony GG's tutorial
-func withJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		token, tokenExists, err := getToken(r)
-		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
-			return
-		}
-		if !tokenExists {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
-			return
-		}
-
-		username, err := getUsername(r)
-		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
-			return
-		}
-
-		claims, ok := token.Claims.(jwt.MapClaims)
-		if !ok {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
-			return
-		}
-		if username != claims["username"] {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
-			return
-		}
-		handlerFunc(w, r)
-	}
-}
-
-func withLobbyAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		token, tokenExists, err := getToken(r)
-		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
-			log.Println("Unauthorized (Outdated Token)", err)
-			return
-		}
-		if !tokenExists {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
-			log.Println("Unauthorized (No Token)", err)
-			return
-		}
-
-		lobbyCode, err := getLobbyCode(r)
-		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
-			log.Println("Unauthorized (No Lobby Code)", err)
-			return
-		}
-		playerName, err := getPlayername(r)
-		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
-			log.Println("Unauthorized (No Player Name)", err)
-			return
-		}
-
-		claims, ok := token.Claims.(jwt.MapClaims)
-		if !ok {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
-			log.Println("Unauthorized (No Claims)", err)
-			return
-		}
-		if lobbyCode != claims["lobbyCode"] || playerName != claims["playerName"] {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
-			log.Println("Unauthorized (Invalid Lobby Code or Player Name)", err)
-			return
-		}
-		handlerFunc(w, r)
-	}
 }

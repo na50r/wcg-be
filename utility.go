@@ -5,13 +5,11 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"time"
 	"unicode"
 	"github.com/gorilla/mux"
 	"bytes"
 	"encoding/csv"
 	"encoding/json"
-	jwt "github.com/golang-jwt/jwt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -177,63 +175,6 @@ func getLobbyCode(r *http.Request) (string, error) {
 func getPlayername(r *http.Request) (string, error) {
 	playerName := mux.Vars(r)["playerName"]
 	return playerName, nil
-}
-
-func createJWT(account *Account) (string, error) {
-	claims := &jwt.MapClaims{
-		"exp":      time.Now().Add(time.Hour * 4).Unix(),
-		"username": account.Username,
-		"type":     "account",
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	return token.SignedString([]byte(JWT_SECRET))
-}
-
-func createLobbyToken(player *Player) (string, error) {
-	claims := &jwt.MapClaims{
-		"exp":        time.Now().Add(time.Hour * 4).Unix(),
-		"playerName": player.Name,
-		"lobbyCode":  player.LobbyCode,
-		"hasAccount": player.HasAccount,
-		"isOwner":    player.IsOwner,
-		"type":       "player",
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(JWT_SECRET))
-}
-
-func parseJWT(tokenString string) (*jwt.Token, error) {
-	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte(JWT_SECRET), nil
-	})
-}
-
-func getToken(r *http.Request) (jwt.Token, bool, error) {
-	tokenString := r.Header.Get("Authorization")
-	if tokenString == "" {
-		// Anon player
-		return jwt.Token{}, false, nil
-	}
-	tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
-	token, err := parseJWT(tokenString)
-	if err != nil && !token.Valid {
-		return jwt.Token{}, true, fmt.Errorf("unauthorized")
-	}
-
-	claims, ok := token.Claims.(jwt.MapClaims);
-	if !ok {
-		return jwt.Token{}, true, fmt.Errorf("unauthorized")
-	}
-
-	if claims["exp"].(float64) < float64(time.Now().Unix()) {
-		return jwt.Token{}, true, fmt.Errorf("session expired")
-	}
-	
-	return *token, true, nil
 }
 
 func passwordValid(password string) error {

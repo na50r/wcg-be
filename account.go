@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-
-	jwt "github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
 	"sort"
 )
@@ -239,19 +237,16 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
 		return err
 	}
-	token, tokenExists, err := getToken(r)
-	if err != nil {
-		return err
-	}
+	token, tokenExists := getToken(r)
+
 	if !tokenExists {
 		return fmt.Errorf("unauthorized")
 	}
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
-		return fmt.Errorf("unauthorized")
+	accountClaims, err := verifyAccountJWT(token)
+	if err != nil {
+		return err
 	}
-	username := claims["username"].(string)
-	acc, err := s.store.GetAccountByUsername(username)
+	acc, err := s.store.GetAccountByUsername(accountClaims.Username)
 	if err != nil {
 		return err
 	}
@@ -264,7 +259,7 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	// Delete Lobby of logged out owner
-	lobbyCode, err := s.store.GetLobbyForOwner(username)
+	lobbyCode, err := s.store.GetLobbyForOwner(accountClaims.Username)
 	if err != nil {
 		return err
 	}
@@ -282,7 +277,7 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		if err := s.store.DeletePlayerWordsByLobbyCode(lobbyCode); err != nil {
 			return err
 		}
-		err = s.store.SetIsOwner(username, false)
+		err = s.store.SetIsOwner(accountClaims.Username, false)
 		if err != nil {
 			return err
 		}

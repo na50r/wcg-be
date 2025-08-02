@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"math/rand"
 	"sort"
-	jwt "github.com/golang-jwt/jwt"
-
 )
 
 func (s *APIServer) handleGame(w http.ResponseWriter, r *http.Request) error {
@@ -39,21 +37,18 @@ func (s *APIServer) handleGame(w http.ResponseWriter, r *http.Request) error {
 // @Failure 405 {object} APIError
 // @Router /games/{lobbyCode}/{playerName}/game [delete]
 func (s *APIServer) handleDeleteGame(w http.ResponseWriter, r *http.Request) error {
-	token, tokenExists, err := getToken(r)
-	if err != nil {
-		return err
-	}
+	token, tokenExists:= getToken(r)
 	if !tokenExists {
 		return fmt.Errorf("unauthorized")
 	}
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
+	playerClaims, err := verifyPlayerJWT(token)
+	if err != nil {
+		return err
+	}
+	if !playerClaims.IsOwner {
 		return fmt.Errorf("unauthorized")
 	}
-	isOwner := claims["isOwner"].(bool)
-	if !isOwner {
-		return fmt.Errorf("unauthorized")
-	}
+
 	lobbyCode, err := getLobbyCode(r)
 	if err != nil {
 		return err
@@ -118,21 +113,18 @@ func (s *APIServer) handleGetWords(w http.ResponseWriter, r *http.Request) error
 // @Failure 405 {object} APIError
 // @Router /games/{lobbyCode}/{playerName}/game [post]
 func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) error {
-	token, tokenExists, err := getToken(r)
-	if err != nil {
-		return err
-	}
+	token, tokenExists := getToken(r)
 	if !tokenExists {
 		return fmt.Errorf("unauthorized")
 	}
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
+	playerClaims, err := verifyPlayerJWT(token)
+	if err != nil {
+		return err
+	}
+	if !playerClaims.IsOwner {
 		return fmt.Errorf("unauthorized")
 	}
-	isOwner := claims["isOwner"].(bool)
-	if !isOwner {
-		return fmt.Errorf("unauthorized")
-	}
+
 	lobbyCode, err := getLobbyCode(r)
 	if err != nil {
 		return err
@@ -293,24 +285,20 @@ func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) 
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
 		return err
 	}
-	token, tokenExists, err := getToken(r)
+	token, tokenExists := getToken(r)
+	if !tokenExists {
+		return fmt.Errorf("unauthorized")
+	}
+	playerClaims, err := verifyPlayerJWT(token)
 	if err != nil {
 		return err
 	}
-	if !tokenExists {
+	if !playerClaims.IsOwner {
 		return fmt.Errorf("unauthorized")
 	}
 	lobbyCode, err := getLobbyCode(r)
 	if err != nil {
 		return err
-	}
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
-		return fmt.Errorf("unauthorized")
-	}
-	isOwner := claims["isOwner"].(bool)
-	if !isOwner {
-		return fmt.Errorf("unauthorized")
 	}
 	game := s.games[lobbyCode]
 	if game == nil {
