@@ -130,20 +130,24 @@ func withAccountAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 		token, tokenExists := getToken(r)
 		if !tokenExists {
 			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			log.Println("Unauthorized (No Token)")
 			return
 		}
 		accountClaims, err := verifyAccountJWT(token)
 		if err != nil {
 			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			log.Println("Unauthorized (Invalid Token)", err)
 			return
 		}
 		username, err := getUsername(r)
 		if err != nil {
 			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			log.Println("Unauthorized (No Username)", err)
 			return
 		}
 		if accountClaims.Username != username {
 			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			log.Println("Unauthorized (Invalid Username)", err)
 			return
 		}
 		ctx := context.WithValue(r.Context(), authKey{}, accountClaims)
@@ -188,3 +192,6 @@ func withPlayerAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 		handlerFunc(w, r)
 	}
 }
+
+
+// Refresh Tokens

@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
-	"golang.org/x/crypto/bcrypt"
 	"sort"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // handleGetAccount godoc
@@ -218,6 +220,7 @@ func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 	resp := LoginResponse{Token: tokenString}
+	log.Printf("User %s logged in\n", acc.Username)
 	return WriteJSON(w, http.StatusOK, resp)
 }
 
@@ -237,7 +240,15 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
 		return err
 	}
-	accountClaims := r.Context().Value(authKey{}).(*AccountClaims)
+	token, tokenExists := getToken(r)
+	if !tokenExists {
+		return fmt.Errorf("unauthorized")
+	}
+
+	accountClaims, err := verifyAccountJWT(token)
+	if err != nil {
+		return err
+	}
 	acc, err := s.store.GetAccountByUsername(accountClaims.Username)
 	if err != nil {
 		return err
@@ -278,13 +289,14 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		s.PublishToLobby(lobbyCode, Message{Data: GAME_DELETED})
 		s.Publish(Message{Data: LOBBY_DELETED})
 	}
+	log.Printf("User %s logged out\n", accountClaims.Username)
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Logout successful"})
 }
 
 // handleLeaderboard godoc
 // @Summary Get the leaderboard
 // @Description Get the leaderboard
-// @Tags 
+// @Tags
 // @Accept json
 // @Produce json
 // @Security BearerAuth

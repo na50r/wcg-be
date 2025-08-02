@@ -140,6 +140,19 @@ func (s *SQLiteStore) createDailyChallengeTable() error {
 	return err
 }
 
+func (s *SQLiteStore) createSessionTable() error {
+	query := `create table if not exists session (
+		id text primary key,
+		refresh_token text,
+		username text,
+		is_revoked boolean,
+		created_at datetime,
+		expires_at datetime
+		)`
+	_, err := s.db.Exec(query)
+	return err
+}
+
 func (s *SQLiteStore) Init() error {
 	if err := s.createAccountTable(); err != nil {
 		return err
@@ -167,6 +180,9 @@ func (s *SQLiteStore) Init() error {
 		return err
 	}
 	if err := s.createDailyChallengeTable(); err != nil {
+		return err
+	}
+	if err := s.createSessionTable(); err != nil {
 		return err
 	}
 	return nil
@@ -865,4 +881,40 @@ func (s *SQLiteStore) GetImageByUsername(username string) ([]byte, error) {
 		return nil, err
 	}
 	return s.GetImage(imageName)
+}
+
+func (s *SQLiteStore) CreateSession(session *Session) error {
+	query := `insert into session 
+	(id, refresh_token, username, is_revoked, created_at, expires_at)
+	values (?, ?, ?, ?, ?, ?)`
+	_, err := s.db.Exec(
+		query,
+		session.ID,
+		session.RefreshToken,
+		session.Username,
+		session.IsRevoked,
+		session.CreatedAt,
+		session.ExpiresAt,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SQLiteStore) GetSession(id string) (*Session, error) {
+	rows, err := s.db.Query("select * from session where id = ?", id)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		defer rows.Close()
+		return scanIntoSession(rows)
+	}
+	return nil, fmt.Errorf("session %s not found", id)
+}
+
+func (s *SQLiteStore) RevokeSession(id string) error {
+	_, err := s.db.Exec("update session set is_revoked = ? where id = ?", true, id)
+	return err
 }

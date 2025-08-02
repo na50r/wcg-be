@@ -2,8 +2,6 @@ package main
 
 import (
 	"net/http"
-	"time"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type CohereResponse struct {
@@ -27,16 +25,6 @@ type GenericResponse struct {
 	Message string `json:"message"`
 }
 
-type Account struct {
-	Username  string `db:"username"`
-	Password  string `db:"password"`
-	Wins      int    `db:"wins"`
-	Losses    int    `db:"losses"`
-	ImageName string `db:"image_name"`
-	CreatedAt string `db:"created_at"`
-	Status    Status `db:"status"`
-	IsOwner   bool   `db:"is_owner"`
-}
 
 type RegisterRequest struct {
 	Username string `json:"username"`
@@ -76,24 +64,6 @@ type JoinLobbyRespone struct {
 	LobbyDTO `json:"lobby"`
 }
 
-type Player struct {
-	LobbyCode  string `db:"lobby_code"`
-	Name       string `db:"name"`
-	ImageName  string `db:"image_name"`
-	IsOwner    bool   `db:"is_owner"`
-	HasAccount bool   `db:"has_account"`
-	TargetWord string `db:"target_word"`
-	Points     int    `db:"points"`
-}
-
-type Lobby struct {
-	Name        string `db:"name"`
-	ImageName   string `db:"image_name"`
-	LobbyCode   string `db:"lobby_code"`
-	GameMode    GameMode `db:"game_mode"`
-	PlayerCount int    `db:"player_count"`
-}
-
 type PlayerDTO struct {
 	Name  string `json:"name"`
 	Image []byte `json:"image"`
@@ -120,10 +90,6 @@ type UpdateAccountRequest struct {
 	ImageName string `json:"imageName"`
 }
 
-type Image struct {
-	Name string `db:"name"`
-	Data []byte `db:"data"`
-}
 
 type ImagesResponse struct {
 	Names []string `json:"names"`
@@ -166,18 +132,6 @@ type Game struct {
 	Timer       *Timer   `json:"timer"`
 }
 
-type Combination struct {
-	A      string `db:"a"`
-	B      string `db:"b"`
-	Result string `db:"result"`
-	Depth  int    `db:"depth"`
-}
-
-type Word struct {
-	Word         string  `db:"word"`
-	Depth        int     `db:"depth"`
-	Reachability float64 `db:"reachability"`
-}
 
 type WordRequest struct {
 	A string `json:"a"`
@@ -200,12 +154,6 @@ type StartGameRequest struct {
 	Duration  int    `json:"duration"`
 }
 
-type PlayerWord struct {
-	PlayerName string `db:"player_name"`
-	Word       string `db:"word"`
-	LobbyCode  string `db:"lobby_code"`
-	Timestamp  string `db:"timestamp"`
-}
 
 type PlayerWordCount struct {
 	PlayerName string `json:"playerName"`
@@ -229,11 +177,6 @@ type TimeEvent struct {
 	SecondsLeft int `json:"secondsLeft"`
 }
 
-type ChallengeEntry struct {
-	Timestamp time.Time `db:"timestamp"`
-	WordCount int `db:"word_count"`
-	Username string `db:"username"`
-}
 
 type ChallengeEntryDTO struct {
 	WordCount int `json:"wordCount"`
@@ -241,48 +184,8 @@ type ChallengeEntryDTO struct {
 	Image []byte `json:"image"`
 }
 
-func NewAccount(username, password string) (*Account, error) {
-	encpw, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return nil, err
-	}
-	imageName := "default.png"
-	return &Account{
-		Username:  username,
-		Password:  string(encpw),
-		Wins:      0,
-		Losses:    0,
-		ImageName: imageName,
-		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
-		Status:    OFFLINE,
-		IsOwner:   false,
-	}, nil
-}
-
-func NewPlayer(name, lobbyCode, imageName string, isOwner, hasAccount bool) *Player {
-	return &Player{
-		LobbyCode:  lobbyCode,
-		Name:       name,
-		ImageName:  imageName,
-		IsOwner:    isOwner,
-		HasAccount: hasAccount,
-		TargetWord: "",
-		Points:     0,
-	}
-}
-
 func NewGameModes() []GameMode {
 	return []GameMode{VANILLA, WOMBO_COMBO, FUSION_FRENZY, DAILY_CHALLENGE}
-}
-
-func NewLobby(name, lobbyCode, imageName string) *Lobby {
-	return &Lobby{
-		Name:        name,
-		ImageName:   imageName,
-		LobbyCode:   lobbyCode,
-		GameMode:    VANILLA,
-		PlayerCount: 1,
-	}
 }
 
 func NewLobbyDTO(lobby *Lobby, owner string, players []*PlayerDTO) *LobbyDTO {
@@ -296,6 +199,3 @@ func NewLobbyDTO(lobby *Lobby, owner string, players []*PlayerDTO) *LobbyDTO {
 	}
 }
 
-func NewTimer(durationMinutes int) *Timer {
-	return &Timer{durationMinutes: durationMinutes}
-}
