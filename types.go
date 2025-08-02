@@ -3,9 +3,6 @@ package main
 import (
 	"net/http"
 	"time"
-
-	"context"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -228,10 +225,6 @@ type GameEndResponse struct {
 	PlayerWords []*PlayerResultDTO `json:"playerResults"`
 }
 
-type Timer struct {
-	durationMinutes int
-	cancelFunc      context.CancelFunc
-}
 type TimeEvent struct {
 	SecondsLeft int `json:"secondsLeft"`
 }

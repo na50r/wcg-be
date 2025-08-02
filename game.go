@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
-	jwt "github.com/golang-jwt/jwt"
+	"math/rand"
 	"sort"
+	jwt "github.com/golang-jwt/jwt"
+
 )
 
 func (s *APIServer) handleGame(w http.ResponseWriter, r *http.Request) error {
@@ -330,3 +331,84 @@ func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) 
 }
 
 
+// Game Logic
+func (g *Game) SetTarget() (string, error) {
+	if g.GameMode == VANILLA {
+		return "", nil
+	}
+	if g.GameMode == WOMBO_COMBO {
+		log.Println("Number of target words ", len(g.TargetWords))
+		targetWord := g.TargetWords[rand.Intn(len(g.TargetWords))]
+		return targetWord, nil
+	}
+	if g.GameMode == FUSION_FRENZY {
+		return g.TargetWord, nil
+	}
+	if g.GameMode == DAILY_CHALLENGE {
+		return g.TargetWord, nil
+	}
+	return "", fmt.Errorf("game mode %s not found", g.GameMode)
+}
+
+func ProcessMove(server *APIServer, game *Game, player *Player, result string) error {
+	if game.GameMode == FUSION_FRENZY && player.TargetWord == result {
+		game.StopTimer()
+		game.Winner = player.Name
+		if err := server.store.UpdateAccountWinsAndLosses(game.LobbyCode, player.Name); err != nil {
+			return err
+		}
+		server.PublishToLobby(game.LobbyCode, Message{Data: GAME_OVER})
+		server.PublishToLobby(game.LobbyCode, Message{Data: ACCOUNT_UPDATE})
+		return nil
+	}
+	if game.GameMode == WOMBO_COMBO && player.TargetWord == result {
+		var newTargetWord string
+		var err error
+		for {
+			newTargetWord, err = game.SetTarget()
+			if err != nil {
+				return err
+			}
+			if newTargetWord != player.TargetWord {
+				break
+			}
+		}
+		log.Printf("Player %s reached target word %s, new target word is %s", player.Name, player.TargetWord, newTargetWord)
+		if err := server.store.SetPlayerTargetWord(player.Name, newTargetWord, game.LobbyCode); err != nil {
+			return err
+		}
+		if err := server.store.IncrementPlayerPoints(player.Name, game.LobbyCode, 10); err != nil {
+			return err
+		}
+		server.PublishToLobby(game.LobbyCode, Message{Data: WOMBO_COMBO_EVENT})
+	}
+	if game.GameMode == DAILY_CHALLENGE && player.TargetWord == result {
+		wordCounts, err := server.store.GetWordCountByLobbyCode(game.LobbyCode)
+		if err != nil {
+			return err
+		}
+		wordCount := wordCounts[0].WordCount
+		log.Printf("Player %s completed daily challenge with word count %d", player.Name, wordCount)
+		if err := server.store.AddDailyChallengeEntry(wordCount, player.Name); err != nil {
+			return err
+		}
+		server.PublishToLobby(game.LobbyCode, Message{Data: GAME_OVER})
+		return nil
+	}
+	if err := server.store.AddPlayerWord(player.Name, result, game.LobbyCode); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (g *Game) StartTimer(s *APIServer) {
+	if g.WithTimer {
+		g.Timer.Start(s, g.LobbyCode, g)
+	}
+}
+
+func (g *Game) StopTimer() {
+	if g.WithTimer {
+		g.Timer.Stop()
+	}
+}
