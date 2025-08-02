@@ -66,7 +66,7 @@ func main() {
 	seed := flag.Bool("seed", false, "seed images & elements")
 	flag.Parse()
 
-	store, err := NewSQLiteStore("store")
+	store, err := NewPostgresStore()
 	if err != nil {
 		log.Fatal(err)
 	}
