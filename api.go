@@ -15,6 +15,9 @@ func WriteJSON(w http.ResponseWriter, status int, v any) error {
 	return json.NewEncoder(w).Encode(v)
 }
 
+// Allows error handling
+type APIFunc func(http.ResponseWriter, *http.Request) error
+
 func makeHTTPHandleFunc(f APIFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := f(w, r); err != nil {

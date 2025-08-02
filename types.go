@@ -1,9 +1,5 @@
 package main
 
-import (
-	"net/http"
-)
-
 type CohereResponse struct {
 	ID      string `json:"id"`
 	Message struct {
@@ -14,8 +10,6 @@ type CohereResponse struct {
 		} `json:"content"`
 	} `json:"message"`
 }
-
-type APIFunc func(http.ResponseWriter, *http.Request) error
 
 type APIError struct {
 	Error string `json:"error"`
