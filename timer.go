@@ -28,10 +28,10 @@ func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
 	ticker := time.NewTicker(time.Second)
 	total := mt.durationMinutes * 60
 	half := total / 2
-	quarter := half / 2
-	three_quarter := half + quarter
+	one_quarter := half / 2
+	three_quarter := half + one_quarter
 	now := time.Now()
-	triggers := map[int]bool{three_quarter: false, half: false, quarter: false}
+	triggers := map[int]bool{three_quarter: false, half: false, one_quarter: false}
 	publishTimeEvent := func(secondsLeft int) {
 		s.PublishToLobby(lobbyCode, Message{Data: TimeEvent{SecondsLeft: secondsLeft}})
 	}
@@ -54,8 +54,8 @@ func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
 				case secondsLeft <= half && triggers[half] == false:
 					triggers[half] = true
 					publishTimeEvent(secondsLeft)
-				case secondsLeft <= quarter && triggers[quarter] == false:
-					triggers[quarter] = true
+				case secondsLeft <= one_quarter && triggers[one_quarter] == false:
+					triggers[one_quarter] = true
 					publishTimeEvent(secondsLeft)
 				case secondsLeft <= 10 && secondsLeft > 0:
 					publishTimeEvent(secondsLeft)
