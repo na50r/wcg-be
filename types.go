@@ -20,7 +20,6 @@ type CohereResponse struct {
 	} `json:"message"`
 }
 
-
 type APIFunc func(http.ResponseWriter, *http.Request) error
 
 type APIError struct {
@@ -32,14 +31,14 @@ type GenericResponse struct {
 }
 
 type Account struct {
-	Username  string `json:"username"`
-	Password  string `json:"password"`
-	Wins      int    `json:"wins"`
-	Losses    int    `json:"losses"`
-	ImageName string `json:"imageName"`
-	CreatedAt string `json:"createdAt"`
-	Status    Status `json:"status"`
-	IsOwner   bool   `json:"isOwner"`
+	Username  string `db:"username"`
+	Password  string `db:"password"`
+	Wins      int    `db:"wins"`
+	Losses    int    `db:"losses"`
+	ImageName string `db:"image_name"`
+	CreatedAt string `db:"created_at"`
+	Status    Status `db:"status"`
+	IsOwner   bool   `db:"is_owner"`
 }
 
 type RegisterRequest struct {
@@ -81,21 +80,21 @@ type JoinLobbyRespone struct {
 }
 
 type Player struct {
-	LobbyCode  string `json:"lobbyCode"`
-	Name       string `json:"name"`
-	ImageName  string `json:"imageName"`
-	IsOwner    bool   `json:"isOwner"`
-	HasAccount bool   `json:"hasAccount"`
-	TargetWord string `json:"targetWord"`
-	Points     int    `json:"points"`
+	LobbyCode  string `db:"lobby_code"`
+	Name       string `db:"name"`
+	ImageName  string `db:"image_name"`
+	IsOwner    bool   `db:"is_owner"`
+	HasAccount bool   `db:"has_account"`
+	TargetWord string `db:"target_word"`
+	Points     int    `db:"points"`
 }
 
 type Lobby struct {
-	Name        string `json:"name"`
-	ImageName   string `json:"imageName"`
-	LobbyCode   string `json:"lobbyCode"`
-	GameMode    GameMode `json:"gameMode"`
-	PlayerCount int    `json:"playerCount"`
+	Name        string `db:"name"`
+	ImageName   string `db:"image_name"`
+	LobbyCode   string `db:"lobby_code"`
+	GameMode    GameMode `db:"game_mode"`
+	PlayerCount int    `db:"player_count"`
 }
 
 type PlayerDTO struct {
@@ -125,8 +124,8 @@ type UpdateAccountRequest struct {
 }
 
 type Image struct {
-	Name string `json:"name"`
-	Data []byte `json:"data"`
+	Name string `db:"name"`
+	Data []byte `db:"data"`
 }
 
 type ImagesResponse struct {
@@ -171,16 +170,16 @@ type Game struct {
 }
 
 type Combination struct {
-	A      string `json:"a"`
-	B      string `json:"b"`
-	Result string `json:"result"`
-	Depth  int    `json:"depth"`
+	A      string `db:"a"`
+	B      string `db:"b"`
+	Result string `db:"result"`
+	Depth  int    `db:"depth"`
 }
 
 type Word struct {
-	Word         string  `json:"word"`
-	Depth        int     `json:"depth"`
-	Reachability float64 `json:"reachability"`
+	Word         string  `db:"word"`
+	Depth        int     `db:"depth"`
+	Reachability float64 `db:"reachability"`
 }
 
 type WordRequest struct {
@@ -205,10 +204,10 @@ type StartGameRequest struct {
 }
 
 type PlayerWord struct {
-	PlayerName string `json:"playerName"`
-	Word       string `json:"word"`
-	LobbyCode  string `json:"lobbyCode"`
-	Timestamp  string `json:"timestamp"`
+	PlayerName string `db:"player_name"`
+	Word       string `db:"word"`
+	LobbyCode  string `db:"lobby_code"`
+	Timestamp  string `db:"timestamp"`
 }
 
 type PlayerWordCount struct {
@@ -238,9 +237,9 @@ type TimeEvent struct {
 }
 
 type ChallengeEntry struct {
-	Timestamp time.Time `json:"timestamp"`
-	WordCount int `json:"wordCount"`
-	Username string `json:"username"`
+	Timestamp time.Time `db:"timestamp"`
+	WordCount int `db:"word_count"`
+	Username string `db:"username"`
 }
 
 type ChallengeEntryDTO struct {

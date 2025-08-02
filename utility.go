@@ -186,7 +186,7 @@ func getPlayername(r *http.Request) (string, error) {
 
 func createJWT(account *Account) (string, error) {
 	claims := &jwt.MapClaims{
-		"exp":      time.Now().Add(time.Hour * 12).Unix(),
+		"exp":      time.Now().Add(time.Hour * 4).Unix(),
 		"username": account.Username,
 		"type":     "account",
 	}
@@ -225,9 +225,19 @@ func getToken(r *http.Request) (jwt.Token, bool, error) {
 	}
 	tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
 	token, err := parseJWT(tokenString)
-	if err != nil && token != nil && !token.Valid {
+	if err != nil && !token.Valid {
 		return jwt.Token{}, true, fmt.Errorf("unauthorized")
 	}
+
+	claims, ok := token.Claims.(jwt.MapClaims);
+	if !ok {
+		return jwt.Token{}, true, fmt.Errorf("unauthorized")
+	}
+
+	if claims["exp"].(float64) < float64(time.Now().Unix()) {
+		return jwt.Token{}, true, fmt.Errorf("session expired")
+	}
+	
 	return *token, true, nil
 }
 
