@@ -24,26 +24,26 @@ func makeHTTPHandleFunc(f APIFunc) http.HandlerFunc {
 }
 
 type APIServer struct {
-	router       *mux.Router
-	listenAddr   string
-	store        Storage
-	broker       *Broker
-	lobbyClients map[string]map[int]bool // Maps a lobby code to a SET of clients
-	playerClient map[string]int          // Maps each player to a client
+	router        *mux.Router
+	listenAddr    string
+	store         Storage
+	broker        *Broker
+	lobbyClients  map[string]map[int]bool // Maps a lobby code to a SET of clients
+	playerClient  map[string]int          // Maps each player to a client
 	accountClient map[string]int
-	games        map[string]*Game
+	games         map[string]*Game
 }
 
 func NewAPIServer(listenAddr string, store Storage) *APIServer {
 	s := APIServer{
-		router:       mux.NewRouter(),
-		listenAddr:   listenAddr,
-		store:        store,
-		broker:       NewBroker(),
-		lobbyClients: make(map[string]map[int]bool),
-		playerClient: make(map[string]int),
+		router:        mux.NewRouter(),
+		listenAddr:    listenAddr,
+		store:         store,
+		broker:        NewBroker(),
+		lobbyClients:  make(map[string]map[int]bool),
+		playerClient:  make(map[string]int),
 		accountClient: make(map[string]int),
-		games:        make(map[string]*Game),
+		games:         make(map[string]*Game),
 	}
 	go s.listen()
 	return &s
@@ -70,21 +70,21 @@ func (s *APIServer) RegisterRoutes() error {
 	router.HandleFunc("/logout", makeHTTPHandleFunc(s.handleLogout))
 
 	router.HandleFunc("/accounts", makeHTTPHandleFunc(s.handleRegister))
-	router.HandleFunc("/account/{username}", withJWTAuth(makeHTTPHandleFunc(s.handleAccount)))
-	router.HandleFunc("/account/{username}/images", withJWTAuth(makeHTTPHandleFunc(s.handleGetImages)))
-	router.HandleFunc("/account/{username}/leaderboard", withJWTAuth(makeHTTPHandleFunc(s.handleLeaderboard)))
+	router.HandleFunc("/account/{username}", withAccountAuth(makeHTTPHandleFunc(s.handleAccount)))
+	router.HandleFunc("/account/{username}/images", withAccountAuth(makeHTTPHandleFunc(s.handleGetImages)))
+	router.HandleFunc("/account/{username}/leaderboard", withAccountAuth(makeHTTPHandleFunc(s.handleLeaderboard)))
 
 	// Lobby Endpoints
 	router.HandleFunc("/lobbies", makeHTTPHandleFunc(s.handleLobbies))
-	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}", withLobbyAuth(makeHTTPHandleFunc(s.handleGetLobby)))
-	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/leave", withLobbyAuth(makeHTTPHandleFunc(s.handleLeaveLobby)))
-	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/edit", withLobbyAuth(makeHTTPHandleFunc(s.handleEditGameMode)))
+	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}", withPlayerAuth(makeHTTPHandleFunc(s.handleGetLobby)))
+	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/leave", withPlayerAuth(makeHTTPHandleFunc(s.handleLeaveLobby)))
+	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/edit", withPlayerAuth(makeHTTPHandleFunc(s.handleEditGameMode)))
 
 	// Game endpoints
-	router.HandleFunc("/games/{lobbyCode}/{playerName}/game", withLobbyAuth(makeHTTPHandleFunc(s.handleGame)))
-	router.HandleFunc("/games/{lobbyCode}/{playerName}/combinations", withLobbyAuth(makeHTTPHandleFunc(s.handleCombination)))
-	router.HandleFunc("/games/{lobbyCode}/{playerName}/words", withLobbyAuth(makeHTTPHandleFunc(s.handleGetWords)))
-	router.HandleFunc("/games/{lobbyCode}/{playerName}/end", withLobbyAuth(makeHTTPHandleFunc(s.handleManualGameEnd)))
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/game", withPlayerAuth(makeHTTPHandleFunc(s.handleGame)))
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/combinations", withPlayerAuth(makeHTTPHandleFunc(s.handleCombination)))
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/words", withPlayerAuth(makeHTTPHandleFunc(s.handleGetWords)))
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/end", withPlayerAuth(makeHTTPHandleFunc(s.handleManualGameEnd)))
 
 	// Events
 	router.HandleFunc("/events", s.SSEHandler)

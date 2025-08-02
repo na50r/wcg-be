@@ -37,14 +37,7 @@ func (s *APIServer) handleGame(w http.ResponseWriter, r *http.Request) error {
 // @Failure 405 {object} APIError
 // @Router /games/{lobbyCode}/{playerName}/game [delete]
 func (s *APIServer) handleDeleteGame(w http.ResponseWriter, r *http.Request) error {
-	token, tokenExists:= getToken(r)
-	if !tokenExists {
-		return fmt.Errorf("unauthorized")
-	}
-	playerClaims, err := verifyPlayerJWT(token)
-	if err != nil {
-		return err
-	}
+	playerClaims := r.Context().Value(authKey{}).(*PlayerClaims)
 	if !playerClaims.IsOwner {
 		return fmt.Errorf("unauthorized")
 	}
@@ -113,14 +106,7 @@ func (s *APIServer) handleGetWords(w http.ResponseWriter, r *http.Request) error
 // @Failure 405 {object} APIError
 // @Router /games/{lobbyCode}/{playerName}/game [post]
 func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) error {
-	token, tokenExists := getToken(r)
-	if !tokenExists {
-		return fmt.Errorf("unauthorized")
-	}
-	playerClaims, err := verifyPlayerJWT(token)
-	if err != nil {
-		return err
-	}
+	playerClaims := r.Context().Value(authKey{}).(*PlayerClaims)
 	if !playerClaims.IsOwner {
 		return fmt.Errorf("unauthorized")
 	}
@@ -285,14 +271,7 @@ func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) 
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
 		return err
 	}
-	token, tokenExists := getToken(r)
-	if !tokenExists {
-		return fmt.Errorf("unauthorized")
-	}
-	playerClaims, err := verifyPlayerJWT(token)
-	if err != nil {
-		return err
-	}
+	playerClaims := r.Context().Value(authKey{}).(*PlayerClaims)
 	if !playerClaims.IsOwner {
 		return fmt.Errorf("unauthorized")
 	}

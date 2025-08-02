@@ -122,7 +122,6 @@ func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) err
 // @Router /lobbies [put]
 func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) error {
 	token, tokenExists := getToken(r)
-
 	_, err := verifyAccountJWT(token)
 	if err != nil {
 		return err

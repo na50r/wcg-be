@@ -237,15 +237,7 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
 		return err
 	}
-	token, tokenExists := getToken(r)
-
-	if !tokenExists {
-		return fmt.Errorf("unauthorized")
-	}
-	accountClaims, err := verifyAccountJWT(token)
-	if err != nil {
-		return err
-	}
+	accountClaims := r.Context().Value(authKey{}).(*AccountClaims)
 	acc, err := s.store.GetAccountByUsername(accountClaims.Username)
 	if err != nil {
 		return err

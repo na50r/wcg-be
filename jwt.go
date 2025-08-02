@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"time"
+
 	jwt "github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
-	"log"
+	"context"
 )
 
 func getToken(r *http.Request) (string, bool) {
@@ -19,7 +21,6 @@ func getToken(r *http.Request) (string, bool) {
 	tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
 	return tokenString, true
 }
-
 
 func verifyAccountJWT(tokenString string) (*AccountClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &AccountClaims{}, func(token *jwt.Token) (interface{}, error) {
@@ -56,7 +57,7 @@ func verifyPlayerJWT(tokenString string) (*PlayerClaims, error) {
 }
 
 func createJWT(account *Account) (string, error) {
-	claims, err := NewAccountClaims(account.Username, time.Hour * 4)
+	claims, err := NewAccountClaims(account.Username, time.Hour*4)
 	if err != nil {
 		return "", err
 	}
@@ -65,7 +66,7 @@ func createJWT(account *Account) (string, error) {
 }
 
 func createLobbyToken(player *Player) (string, error) {
-	claims, err := NewPlayerClaims(player, time.Hour * 4)
+	claims, err := NewPlayerClaims(player, time.Hour*4)
 	if err != nil {
 		return "", err
 	}
@@ -73,10 +74,8 @@ func createLobbyToken(player *Player) (string, error) {
 	return token.SignedString([]byte(JWT_SECRET))
 }
 
-
 type AccountClaims struct {
 	Username string `json:"username"`
-	Type     string `json:"type"`
 	jwt.StandardClaims
 }
 
@@ -87,7 +86,6 @@ func NewAccountClaims(username string, duration time.Duration) (*AccountClaims, 
 	}
 	return &AccountClaims{
 		Username: username,
-		Type:     "account",
 		StandardClaims: jwt.StandardClaims{
 			IssuedAt:  time.Now().Unix(),
 			ExpiresAt: time.Now().Add(duration).Unix(),
@@ -102,7 +100,6 @@ type PlayerClaims struct {
 	LobbyCode  string `json:"lobbyCode"`
 	HasAccount bool   `json:"hasAccount"`
 	IsOwner    bool   `json:"isOwner"`
-	Type       string `json:"type"`
 	jwt.StandardClaims
 }
 
@@ -116,19 +113,19 @@ func NewPlayerClaims(player *Player, duration time.Duration) (*PlayerClaims, err
 		LobbyCode:  player.LobbyCode,
 		HasAccount: player.HasAccount,
 		IsOwner:    player.IsOwner,
-		Type:       "player",
 		StandardClaims: jwt.StandardClaims{
 			IssuedAt:  time.Now().Unix(),
 			ExpiresAt: time.Now().Add(duration).Unix(),
 			Id:        tokenID.String(),
 			Subject:   "player",
 		},
-		}, nil
+	}, nil
 }
 
+type authKey struct{}
 
 // Authentication Middleware Adapted from Anthony GG's tutorial
-func withJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
+func withAccountAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		token, tokenExists := getToken(r)
 		if !tokenExists {
@@ -149,13 +146,15 @@ func withJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
 			return
 		}
+		ctx := context.WithValue(r.Context(), authKey{}, accountClaims)
+		r = r.WithContext(ctx)
 		handlerFunc(w, r)
 	}
 }
 
-func withLobbyAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
+func withPlayerAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		token, tokenExists:= getToken(r)
+		token, tokenExists := getToken(r)
 		if !tokenExists {
 			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
 			log.Println("Unauthorized (No Token)")
@@ -184,6 +183,8 @@ func withLobbyAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 			log.Println("Unauthorized (Invalid Lobby Code or Player Name)", err)
 			return
 		}
+		ctx := context.WithValue(r.Context(), authKey{}, playerClaims)
+		r = r.WithContext(ctx)
 		handlerFunc(w, r)
 	}
 }
