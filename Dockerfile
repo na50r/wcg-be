@@ -21,4 +21,5 @@ USER appuser
 ENV WORDS=/app/Words.csv
 ENV COMBINATIONS=/app/Combinations.csv
 ENV ICONS=/app/icons
+ENV DB="POSTGRES"
 CMD ["./wombo-combo-go-be"]

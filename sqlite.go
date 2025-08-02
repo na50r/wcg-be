@@ -588,6 +588,7 @@ func (s *SQLiteStore) GetTargetWords(minReachability, maxReachability float64, m
 		}
 		targetWords = append(targetWords, word.Word)
 	}
+	log.Printf("Number of target words: %d", len(targetWords))
 	return targetWords, nil
 }
 
@@ -614,21 +615,21 @@ func (s *SQLiteStore) NewGame(lobbyCode string, gameMode GameMode, withTimer boo
 		return game, nil
 	}
 	if gameMode == FUSION_FRENZY {
-		game.TargetWord, err = s.GetTargetWord(0.4, 10, 10)
+		game.TargetWord, err = s.GetTargetWord(0.0375, 0.2, 10)
 		if err != nil {
 			return nil, err
 		}
 		return game, nil
 	}
 	if gameMode == WOMBO_COMBO {
-		game.TargetWords, err = s.GetTargetWords(0.4, 10, 10)
+		game.TargetWords, err = s.GetTargetWords(0.0375, 0.2, 10)
 		if err != nil {
 			return nil, err
 		}
 		return game, nil
 	}
 	if gameMode == DAILY_CHALLENGE {
-		game.TargetWord, err = s.CreateOrGetDailyWord(0.4, 8, 8)
+		game.TargetWord, err = s.CreateOrGetDailyWord(0.0375, 0.2, 8)
 		if err != nil {
 			log.Printf("Error creating or getting daily word: %v", err)
 			return nil, err
@@ -637,6 +638,7 @@ func (s *SQLiteStore) NewGame(lobbyCode string, gameMode GameMode, withTimer boo
 	}
 	return nil, err
 }
+
 
 func (s *SQLiteStore) AddPlayerWord(playerName, word, lobbyCode string) error {
 	_, err := s.db.Exec(

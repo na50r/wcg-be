@@ -15,6 +15,7 @@ import (
 	"os"
 	"github.com/joho/godotenv"
 	_ "github.com/na50r/wombo-combo-go-be/docs"
+	"fmt"
 )
 
 var JWT_SECRET string
@@ -24,6 +25,7 @@ var COMBINATIONS string
 var WORDS string
 var COHERE_API_KEY string
 var POSTGRES_CONNECTION string
+var DB string
 
 func init() {
 	err := godotenv.Load()
@@ -37,6 +39,7 @@ func init() {
 	WORDS = os.Getenv("WORDS")
 	COHERE_API_KEY = os.Getenv("COHERE_API_KEY")
 	POSTGRES_CONNECTION = os.Getenv("POSTGRES_CONNECTION")
+	DB = os.Getenv("DB")
 
 	if JWT_SECRET == "" {
 		log.Fatal("JWT_SECRET not set")
@@ -59,14 +62,27 @@ func init() {
 	if POSTGRES_CONNECTION == "" {
 		log.Fatal("POSTGRES_CONNECTION not set")
 	}
+	if DB == "" {
+		log.Fatal("DB not set")
+	}
 }
 
+func NewStore() (Storage, error) {
+	log.Printf("Using database [%s]", DB)
+	if DB == "POSTGRES" {
+		return NewPostgresStore()
+	}
+	if DB == "SQLITE" {
+		return NewSQLiteStore("store")
+	}
+	return nil, fmt.Errorf("DB [%s] not found", DB)
+}
 
 func main() {
 	seed := flag.Bool("seed", false, "seed images & elements")
 	flag.Parse()
 
-	store, err := NewPostgresStore()
+	store, err := NewStore()
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -545,11 +545,32 @@ func (s *PostgresStore) AddNewCombination(a, b, result string) error {
 		result,
 		depth,
 	)
-	reachability := 1.0 / float64(int(1) << uint(depth))
+	updateDepth := depth
+	oldDepth := 999;
+	err = s.db.QueryRow("select depth from word where word = $1", result).Scan(&oldDepth)
+	if err != nil && err != sql.ErrNoRows {
+		log.Printf("No depth for word %s", result)
+	}
+	oldReachability := 0.0;
+	oldWeight:= 0.25
+	newWeight := 0.75
+	err = s.db.QueryRow("select reachability from word where word = $1", result).Scan(&oldReachability)
+	if err != nil && err != sql.ErrNoRows {
+		oldWeight = 0.0
+		newWeight = 1.0
+		log.Printf("No reachability for word %s", result)
+	}
+	if oldDepth < depth {
+		updateDepth = oldDepth
+		oldWeight = 0.75
+		newWeight = 0.25
+	}
+
+	reachability := newWeight * (1.0 / float64(int(1) << uint(depth))) + oldWeight * oldReachability
 	_, err = s.db.Exec(
 		"insert into word (word, depth, reachability) values ($1, $2, $3) on conflict do nothing",
 		result,
-		depth,
+		updateDepth,
 		reachability,
 	)
 	return err
@@ -581,6 +602,7 @@ func (s *PostgresStore) GetTargetWords(minReachability, maxReachability float64,
 		}
 		targetWords = append(targetWords, word.Word)
 	}
+	log.Printf("Number of target words: %d", len(targetWords))
 	return targetWords, nil
 }
 
@@ -607,21 +629,21 @@ func (s *PostgresStore) NewGame(lobbyCode string, gameMode GameMode, withTimer b
 		return game, nil
 	}
 	if gameMode == FUSION_FRENZY {
-		game.TargetWord, err = s.GetTargetWord(0.4, 10, 10)
+		game.TargetWord, err = s.GetTargetWord(0.0375, 0.2, 10)
 		if err != nil {
 			return nil, err
 		}
 		return game, nil
 	}
 	if gameMode == WOMBO_COMBO {
-		game.TargetWords, err = s.GetTargetWords(0.4, 10, 10)
+		game.TargetWords, err = s.GetTargetWords(0.0375, 0.2, 10)
 		if err != nil {
 			return nil, err
 		}
 		return game, nil
 	}
 	if gameMode == DAILY_CHALLENGE {
-		game.TargetWord, err = s.CreateOrGetDailyWord(0.4, 8, 8)
+		game.TargetWord, err = s.CreateOrGetDailyWord(0.0375, 0.2, 8)
 		if err != nil {
 			log.Printf("Error creating or getting daily word: %v", err)
 			return nil, err
