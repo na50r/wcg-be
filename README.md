@@ -28,5 +28,11 @@ The database is seeded with some initial data, namely:
 
 The icons were taken from @wayou's [anonymous-animals](https://github.com/wayou/anonymous-animals)
 
-The combinations are from @napstaa967's [infinite-craft-database](https://github.com/napstaa967/infinite-craft-database/blob/main/items.json), JSON was converted and filtered to the appropriate CSV using a Python script. The CSV files can be found [here](https://drive.google.com/drive/folders/18pcu6pGdO9eN8S_FBiOg6PQXcBCe52YO?usp=drive_link)
-
+The combinations are from @napstaa967's [infinite-craft-database](https://github.com/napstaa967/infinite-craft-database/blob/main/items.json), JSON was converted and filtered to the appropriate CSV using a Python script. 
+```sh
+cd add
+curl -O https://raw.githubusercontent.com/napstaa967/infinite-craft-database/main/items.json
+python3 generateData1.py
+mv Combinations.csv ../
+mv Words.csv ../
+```
