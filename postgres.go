@@ -5,10 +5,10 @@ import (
 	"fmt"
 
 	_ "github.com/lib/pq"
-	"time"
 	"log"
 	"math/rand"
 	"strings"
+	"time"
 )
 
 type PostgresStore struct {
@@ -171,7 +171,7 @@ func (s *PostgresStore) Init() error {
 
 func (s *PostgresStore) AddDailyChallengeEntry(wordCount int, username string) error {
 	today := time.Now().Format("2006-01-02")
-	var oldCount int 
+	var oldCount int
 	err := s.db.QueryRow("select word_count from daily_challenge where username = $1 and timestamp = $2", username, today).Scan(&oldCount)
 	if err != nil && err != sql.ErrNoRows {
 		return err
@@ -186,7 +186,6 @@ func (s *PostgresStore) AddDailyChallengeEntry(wordCount int, username string) e
 	}
 	return nil
 }
-
 
 func (s *PostgresStore) CreateOrGetDailyWord(minReachability, maxReachability float64, maxDepth int) (string, error) {
 	log.Println("Creating or getting daily word")
@@ -349,16 +348,19 @@ func (s *PostgresStore) GetImage(name string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	images := []*Image{}
 	defer rows.Close()
 	for rows.Next() {
-		var image []byte
-		err := rows.Scan(&image)
+		image, err := scanIntoImage(rows)
 		if err != nil {
 			return nil, err
 		}
-		return image, nil
+		images = append(images, image)
 	}
-	return nil, fmt.Errorf("image for account %s not found", name)
+	if len(images) > 1 {
+		return nil, fmt.Errorf("Multiple images for account %s", name)
+	}
+	return images[0].Data, fmt.Errorf("Image for account %s not found", name)
 }
 
 func (s *PostgresStore) GetImages() ([]*Image, error) {
@@ -419,6 +421,7 @@ func (s *PostgresStore) GetLobbyForOwner(owner string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	lobbyCodes := []string{}
 	var lobbyCode string
 	defer rows.Close()
 	for rows.Next() {
@@ -427,9 +430,12 @@ func (s *PostgresStore) GetLobbyForOwner(owner string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		return lobbyCode, nil
+		lobbyCodes = append(lobbyCodes, lobbyCode)
 	}
-	return "", nil
+	if len(lobbyCodes) > 1 {
+		return "", fmt.Errorf("Multiple lobbies for owner")
+	}
+	return lobbyCodes[0], nil
 }
 
 func (s *PostgresStore) DeletePlayersForLobby(lobbyCode string) error {
@@ -546,13 +552,13 @@ func (s *PostgresStore) AddNewCombination(a, b, result string) error {
 		depth,
 	)
 	updateDepth := depth
-	oldDepth := 999;
+	oldDepth := 999
 	err = s.db.QueryRow("select depth from word where word = $1", result).Scan(&oldDepth)
 	if err != nil && err != sql.ErrNoRows {
 		log.Printf("No depth for word %s", result)
 	}
-	oldReachability := 0.0;
-	oldWeight:= 0.25
+	oldReachability := 0.0
+	oldWeight := 0.25
 	newWeight := 0.75
 	err = s.db.QueryRow("select reachability from word where word = $1", result).Scan(&oldReachability)
 	if err != nil && err != sql.ErrNoRows {
@@ -566,7 +572,7 @@ func (s *PostgresStore) AddNewCombination(a, b, result string) error {
 		newWeight = 0.25
 	}
 
-	reachability := newWeight * (1.0 / float64(int(1) << uint(depth))) + oldWeight * oldReachability
+	reachability := newWeight*(1.0/float64(int(1)<<uint(depth))) + oldWeight*oldReachability
 	_, err = s.db.Exec(
 		"insert into word (word, depth, reachability) values ($1, $2, $3) on conflict do nothing",
 		result,
@@ -575,7 +581,6 @@ func (s *PostgresStore) AddNewCombination(a, b, result string) error {
 	)
 	return err
 }
-
 
 func (s *PostgresStore) AddWord(word *Word) error {
 	w := strings.ToLower(word.Word)
@@ -808,7 +813,7 @@ func (s *PostgresStore) IncrementPlayerPoints(playerName, lobbyCode string, poin
 	return err
 }
 
-func (s *PostgresStore) ResetPlayerPoints(lobbyCode string) error { 
+func (s *PostgresStore) ResetPlayerPoints(lobbyCode string) error {
 	_, err := s.db.Exec("update player set points = 0 where lobby_code = $1", lobbyCode)
 	return err
 }
@@ -836,6 +841,7 @@ func (s *PostgresStore) SelectWinnerByPoints(lobbyCode string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	winners := []string{}
 	var winner string
 	defer rows.Close()
 	for rows.Next() {
@@ -843,9 +849,12 @@ func (s *PostgresStore) SelectWinnerByPoints(lobbyCode string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		return winner, nil
+		winners = append(winners, winner)
 	}
-	return "", nil
+	if len(winners) > 1 {
+		return "", fmt.Errorf("Multiple winners")
+	}
+	return winners[0], nil
 }
 
 func (s *PostgresStore) DeleteAccount(username string) error {

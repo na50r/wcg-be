@@ -28,3 +28,7 @@ const (
 	ONLINE Status = "ONLINE"
 	OFFLINE Status = "OFFLINE"
 )
+
+const (
+	Unauthorized string = "You are not authorized to perform this action."
+)

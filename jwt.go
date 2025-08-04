@@ -124,29 +124,29 @@ func NewPlayerClaims(player *Player, duration time.Duration) (*PlayerClaims, err
 
 type authKey struct{}
 
-// Authentication Middleware Adapted from Anthony GG's tutorial
+// Protect account endpoint
 func withAccountAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		token, tokenExists := getToken(r)
 		if !tokenExists {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
 			log.Println("Unauthorized (No Token)")
 			return
 		}
 		accountClaims, err := verifyAccountJWT(token)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
 			log.Println("Unauthorized (Invalid Token)", err)
 			return
 		}
 		username, err := getUsername(r)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
 			log.Println("Unauthorized (No Username)", err)
 			return
 		}
 		if accountClaims.Username != username {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
 			log.Println("Unauthorized (Invalid Username)", err)
 			return
 		}
@@ -156,34 +156,35 @@ func withAccountAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+// Protect player endpoints
 func withPlayerAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		token, tokenExists := getToken(r)
 		if !tokenExists {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
 			log.Println("Unauthorized (No Token)")
 			return
 		}
 		playerClaims, err := verifyPlayerJWT(token)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
 			log.Println("Unauthorized (Invalid Token)", err)
 			return
 		}
 		lobbyCode, err := getLobbyCode(r)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
 			log.Println("Unauthorized (No Lobby Code)", err)
 			return
 		}
 		playerName, err := getPlayername(r)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
 			log.Println("Unauthorized (No Player Name)", err)
 			return
 		}
 		if lobbyCode != playerClaims.LobbyCode || playerName != playerClaims.PlayerName {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: "unauthorized"})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
 			log.Println("Unauthorized (Invalid Lobby Code or Player Name)", err)
 			return
 		}

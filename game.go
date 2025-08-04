@@ -108,7 +108,7 @@ func (s *APIServer) handleGetWords(w http.ResponseWriter, r *http.Request) error
 func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) error {
 	playerClaims := r.Context().Value(authKey{}).(*PlayerClaims)
 	if !playerClaims.IsOwner {
-		return fmt.Errorf("unauthorized")
+		return fmt.Errorf(Unauthorized)
 	}
 
 	lobbyCode, err := getLobbyCode(r)
@@ -128,7 +128,7 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 	}
 	if req.GameMode == DAILY_CHALLENGE {
 		if lobby.PlayerCount > 1 || req.WithTimer {
-			return fmt.Errorf("daily challenge must be played solo and without a timer!")
+			return fmt.Errorf("Daily challenge must be played solo and without a timer")
 		}
 	}
 	game, err := s.store.NewGame(lobbyCode, req.GameMode, req.WithTimer, req.Duration)
@@ -180,7 +180,7 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 	}
 	game := s.games[lobbyCode]
 	if game == nil {
-		return fmt.Errorf("game not found")
+		return fmt.Errorf("Game not found")
 	}
 	req := new(WordRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
@@ -273,7 +273,7 @@ func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) 
 	}
 	playerClaims := r.Context().Value(authKey{}).(*PlayerClaims)
 	if !playerClaims.IsOwner {
-		return fmt.Errorf("unauthorized")
+		return fmt.Errorf(Unauthorized)
 	}
 	lobbyCode, err := getLobbyCode(r)
 	if err != nil {
@@ -281,7 +281,7 @@ func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) 
 	}
 	game := s.games[lobbyCode]
 	if game == nil {
-		return fmt.Errorf("game not found")
+		return fmt.Errorf("Game not found")
 	}
 	game.StopTimer()
 	winner, err := s.store.SelectWinnerByPoints(lobbyCode)
@@ -314,7 +314,7 @@ func (g *Game) SetTarget() (string, error) {
 	if g.GameMode == DAILY_CHALLENGE {
 		return g.TargetWord, nil
 	}
-	return "", fmt.Errorf("game mode %s not found", g.GameMode)
+	return "", fmt.Errorf("Game mode %s not found", g.GameMode)
 }
 
 func ProcessMove(server *APIServer, game *Game, player *Player, result string) error {

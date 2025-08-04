@@ -190,7 +190,7 @@ func (s *SQLiteStore) Init() error {
 
 func (s *SQLiteStore) AddDailyChallengeEntry(wordCount int, username string) error {
 	today := time.Now().Format("2006-01-02")
-	var oldCount int 
+	var oldCount int
 	err := s.db.QueryRow("select word_count from daily_challenge where username = ? and timestamp = ?", username, today).Scan(&oldCount)
 	if err != nil && err != sql.ErrNoRows {
 		return err
@@ -367,16 +367,19 @@ func (s *SQLiteStore) GetImage(name string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	images := []*Image{}
 	defer rows.Close()
 	for rows.Next() {
-		var image []byte
-		err := rows.Scan(&image)
+		image, err := scanIntoImage(rows)
 		if err != nil {
 			return nil, err
 		}
-		return image, nil
+		images = append(images, image)
 	}
-	return nil, fmt.Errorf("image for account %s not found", name)
+	if len(images) > 1 {
+		return nil, fmt.Errorf("Multiple images for account %s", name)
+	}
+	return images[0].Data, fmt.Errorf("Image for account %s not found", name)
 }
 
 func (s *SQLiteStore) GetImages() ([]*Image, error) {
@@ -437,6 +440,7 @@ func (s *SQLiteStore) GetLobbyForOwner(owner string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	lobbyCodes := []string{}
 	var lobbyCode string
 	defer rows.Close()
 	for rows.Next() {
@@ -445,9 +449,12 @@ func (s *SQLiteStore) GetLobbyForOwner(owner string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		return lobbyCode, nil
+		lobbyCodes = append(lobbyCodes, lobbyCode)
 	}
-	return "", nil
+	if len(lobbyCodes) > 1 {
+		return "", fmt.Errorf("Multiple lobbies for owner")
+	}
+	return lobbyCodes[0], nil
 }
 
 func (s *SQLiteStore) DeletePlayersForLobby(lobbyCode string) error {
@@ -568,16 +575,15 @@ func (s *SQLiteStore) AddNewCombination(a, b, result string) error {
 	if err != nil && err != sql.ErrNoRows {
 		log.Printf("No reachability for word %s", result)
 	}
-	reachability := 1.0 / float64(int(1) << uint(depth))
+	reachability := 1.0 / float64(int(1)<<uint(depth))
 	_, err = s.db.Exec(
 		"insert or ignore into word (word, depth, reachability) values (?, ?, ?)",
 		result,
 		depth,
-		reachability + oldReachability,
+		reachability+oldReachability,
 	)
 	return err
 }
-
 
 func (s *SQLiteStore) AddWord(word *Word) error {
 	w := strings.ToLower(word.Word)
@@ -654,7 +660,6 @@ func (s *SQLiteStore) NewGame(lobbyCode string, gameMode GameMode, withTimer boo
 	}
 	return nil, err
 }
-
 
 func (s *SQLiteStore) AddPlayerWord(playerName, word, lobbyCode string) error {
 	_, err := s.db.Exec(
@@ -811,7 +816,7 @@ func (s *SQLiteStore) IncrementPlayerPoints(playerName, lobbyCode string, points
 	return err
 }
 
-func (s * SQLiteStore) ResetPlayerPoints(lobbyCode string) error { 
+func (s *SQLiteStore) ResetPlayerPoints(lobbyCode string) error {
 	_, err := s.db.Exec("update player set points = 0 where lobby_code = ?", lobbyCode)
 	return err
 }
@@ -839,6 +844,7 @@ func (s *SQLiteStore) SelectWinnerByPoints(lobbyCode string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	winners := []string{}
 	var winner string
 	defer rows.Close()
 	for rows.Next() {
@@ -846,9 +852,12 @@ func (s *SQLiteStore) SelectWinnerByPoints(lobbyCode string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		return winner, nil
+		winners = append(winners, winner)
 	}
-	return "", nil
+	if len(winners) > 1 {
+		return "", fmt.Errorf("Multiple winners")
+	}
+	return winners[0], nil
 }
 
 func (s *SQLiteStore) DeleteAccount(username string) error {

@@ -242,7 +242,7 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 	}
 	token, tokenExists := getToken(r)
 	if !tokenExists {
-		return fmt.Errorf("unauthorized")
+		return fmt.Errorf(Unauthorized)
 	}
 
 	accountClaims, err := verifyAccountJWT(token)
