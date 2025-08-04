@@ -356,7 +356,7 @@ func ProcessMove(server *APIServer, game *Game, player *Player, result string) e
 		}
 		wordCount := wordCounts[0].WordCount
 		log.Printf("Player %s completed daily challenge with word count %d", player.Name, wordCount)
-		if err := server.store.AddDailyChallengeEntry(wordCount, player.Name); err != nil {
+		if err := server.store.AddDailyChallengeEntry(wordCount+1, player.Name); err != nil {
 			return err
 		}
 		server.PublishToLobby(game.LobbyCode, Message{Data: GAME_OVER})
