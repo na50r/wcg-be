@@ -363,23 +363,26 @@ func (s *SQLiteStore) AddImage(data []byte, name string) error {
 }
 
 func (s *SQLiteStore) GetImage(name string) ([]byte, error) {
-	rows, err := s.db.Query("select data from image where name = ?", name)
+	rows, err := s.db.Query("select * from image where name = ?", name)
 	if err != nil {
 		return nil, err
 	}
 	images := []*Image{}
 	defer rows.Close()
 	for rows.Next() {
-		image, err := scanIntoImage(rows)
+		img, err := scanIntoImage(rows)
 		if err != nil {
 			return nil, err
 		}
-		images = append(images, image)
+		images = append(images, img)
 	}
 	if len(images) > 1 {
-		return nil, fmt.Errorf("Multiple images for account %s", name)
+		return nil, fmt.Errorf("Multiple images for name %s", name)
 	}
-	return images[0].Data, fmt.Errorf("Image for account %s not found", name)
+	if len(images) == 0 {
+		return nil, fmt.Errorf("Image for name %s not found", name)
+	}
+	return images[0].Data, nil
 }
 
 func (s *SQLiteStore) GetImages() ([]*Image, error) {
@@ -444,7 +447,6 @@ func (s *SQLiteStore) GetLobbyForOwner(owner string) (string, error) {
 	var lobbyCode string
 	defer rows.Close()
 	for rows.Next() {
-		defer rows.Close()
 		err := rows.Scan(&lobbyCode)
 		if err != nil {
 			return "", err
@@ -453,6 +455,10 @@ func (s *SQLiteStore) GetLobbyForOwner(owner string) (string, error) {
 	}
 	if len(lobbyCodes) > 1 {
 		return "", fmt.Errorf("Multiple lobbies for owner")
+	}
+	if len(lobbyCodes) == 0 {
+		log.Printf("No lobby found for owner %s", owner)
+		return "", nil
 	}
 	return lobbyCodes[0], nil
 }
@@ -854,8 +860,8 @@ func (s *SQLiteStore) SelectWinnerByPoints(lobbyCode string) (string, error) {
 		}
 		winners = append(winners, winner)
 	}
-	if len(winners) > 1 {
-		return "", fmt.Errorf("Multiple winners")
+	if len(winners) == 0 {
+		return "", fmt.Errorf("No players found")
 	}
 	return winners[0], nil
 }
