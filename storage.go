@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"time"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -31,13 +32,11 @@ type Storage interface {
 	EditGameMode(lobbyCode string, gameMode GameMode) error
 	AddCombination(element *Combination) error
 	GetCombination(a, b string) (*string, bool, error)
-	NewGame(lobbyCode string, gameMode GameMode, withTimer bool, duration int) (*Game, error)
 	AddWord(word *Word) error
 	AddPlayerWord(playerName, word, lobbyCode string) error
 	GetPlayerWords(playerName, lobbyCode string) ([]string, error)
 	DeletePlayerWordsByLobbyCode(lobbyCode string) error
 	DeletePlayerWordsByPlayerAndLobbyCode(playerName, lobbyCode string) error
-	SeedPlayerWords(lobbyCode string, game *Game) error
 	GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCount, error)
 	UpdateAccountWinsAndLosses(lobbyCode, winner string) error
 	SetPlayerTargetWord(playerName, targetWord, lobbyCode string) error
@@ -51,8 +50,10 @@ type Storage interface {
 	AddNewCombination(a, b, result string) error
 	CreateOrGetDailyWord(minReachability, maxReachability float64, maxDepth int) (string, error)
 	AddDailyChallengeEntry(wordCount int, username string) error
-	GetChallengeEntries() ([]*ChallengeEntry, error)
+	GetChallengeEntries() ([]*Challenger, error)
 	GetImageByUsername(username string) ([]byte, error)
+	GetTargetWords(minReachability, maxReachability float64, maxDepth int) ([]string, error)
+	GetTargetWord(minReachability, maxReachability float64, maxDepth int) (string, error)
 }
 
 // DB Types
@@ -78,11 +79,11 @@ type Player struct {
 }
 
 type Lobby struct {
-	Name        string `db:"name"`
-	ImageName   string `db:"image_name"`
-	LobbyCode   string `db:"lobby_code"`
+	Name        string   `db:"name"`
+	ImageName   string   `db:"image_name"`
+	LobbyCode   string   `db:"lobby_code"`
 	GameMode    GameMode `db:"game_mode"`
-	PlayerCount int    `db:"player_count"`
+	PlayerCount int      `db:"player_count"`
 }
 
 type Image struct {
@@ -97,13 +98,11 @@ type Combination struct {
 	Depth  int    `db:"depth"`
 }
 
-
 type Word struct {
 	Word         string  `db:"word"`
 	Depth        int     `db:"depth"`
 	Reachability float64 `db:"reachability"`
 }
-
 
 type PlayerWord struct {
 	PlayerName string `db:"player_name"`
@@ -112,23 +111,22 @@ type PlayerWord struct {
 	Timestamp  string `db:"timestamp"`
 }
 
-type ChallengeEntry struct {
+type Challenger struct {
 	Timestamp time.Time `db:"timestamp"`
-	WordCount int `db:"word_count"`
-	Username string `db:"username"`
+	WordCount int       `db:"word_count"`
+	Username  string    `db:"username"`
 }
 
 type Session struct {
-	ID           string `db:"id"`
-	RefreshToken string `db:"refresh_token"`
-	Username     string `db:"username"`
-	IsRevoked    bool   `db:"is_revoked"`
+	ID           string    `db:"id"`
+	RefreshToken string    `db:"refresh_token"`
+	Username     string    `db:"username"`
+	IsRevoked    bool      `db:"is_revoked"`
 	CreatedAt    time.Time `db:"created_at"`
 	ExpiresAt    time.Time `db:"expires_at"`
 }
 
-
-//Constructors
+// Constructors
 func NewAccount(username, password string) (*Account, error) {
 	encpw, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -168,8 +166,6 @@ func NewLobby(name, lobbyCode, imageName string) *Lobby {
 		PlayerCount: 1,
 	}
 }
-
-
 
 // Convert SQL rows into an defined Go types
 func scanIntoAccount(rows *sql.Rows) (*Account, error) {
@@ -232,7 +228,6 @@ func scanIntoWord(rows *sql.Rows) (*Word, error) {
 	return word, err
 }
 
-
 func scanIntoPlayerWord(rows *sql.Rows) (*PlayerWord, error) {
 	playerWord := new(PlayerWord)
 	err := rows.Scan(
@@ -253,8 +248,8 @@ func scanIntoPlayerWordCount(rows *sql.Rows) (*PlayerWordCount, error) {
 	return wordCount, err
 }
 
-func scanIntoChallengeEntry(rows *sql.Rows) (*ChallengeEntry, error) {
-	entry := new(ChallengeEntry)
+func scanIntoChallengeEntry(rows *sql.Rows) (*Challenger, error) {
+	entry := new(Challenger)
 	err := rows.Scan(
 		&entry.Timestamp,
 		&entry.WordCount,

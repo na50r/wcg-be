@@ -14,11 +14,17 @@ import (
 
 func getToken(r *http.Request) (string, bool) {
 	tokenString := r.Header.Get("Authorization")
-	if tokenString == "" {
-		// Anon player
+	if !strings.HasPrefix(tokenString, "Bearer ") {
+		log.Println("No Bearer Token")
 		return "", false
 	}
-	tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
+
+	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+	tokenString = strings.TrimSpace(tokenString) 
+
+	if tokenString == "" {
+		return "", false
+	}
 	return tokenString, true
 }
 

@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"github.com/google/uuid"
+	"net/http"
+	"log"
 )
 
 // handleGetLobby godoc
@@ -122,24 +123,26 @@ func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) err
 // @Router /lobbies [put]
 func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) error {
 	token, tokenExists := getToken(r)
-	_, err := verifyAccountJWT(token)
-	if err != nil {
-		return err
-	}
 
 	req := new(JoinLobbyRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
-	imageName := s.store.NewImageForUsername(req.PlayerName)
 	var player *Player
 	if tokenExists {
+		// Verify only if a Token is used, otherwise ignore
+		log.Println("Token Exists, Verifying...")
+		_, err := verifyAccountJWT(token)
+		if err != nil {
+			return err
+		}
 		player, err = s.store.GetPlayerForAccount(req.PlayerName)
 		if err != nil {
 			return err
 		}
 		player.LobbyCode = req.LobbyCode
 	} else {
+		imageName := s.store.NewImageForUsername(req.PlayerName)
 		player = NewPlayer(req.PlayerName, req.LobbyCode, imageName, false, false)
 	}
 	if err := s.store.AddPlayerToLobby(req.LobbyCode, player); err != nil {

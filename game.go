@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
 	"math/rand"
+	"net/http"
 	"sort"
 )
 
@@ -131,7 +131,7 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 			return fmt.Errorf("Daily challenge must be played solo and without a timer")
 		}
 	}
-	game, err := s.store.NewGame(lobbyCode, req.GameMode, req.WithTimer, req.Duration)
+	game, err := NewGame(s.store, lobbyCode, req.GameMode, req.WithTimer, req.Duration)
 	if err != nil {
 		return err
 	}
@@ -143,7 +143,7 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 	if err := s.store.ResetPlayerPoints(lobbyCode); err != nil {
 		return err
 	}
-	if err := s.store.SeedPlayerWords(lobbyCode, game); err != nil {
+	if err := SeedPlayerWords(s.store, lobbyCode, game); err != nil {
 		return err
 	}
 	log.Printf("Game created\nLobby code: %s", lobbyCode)
@@ -239,7 +239,7 @@ func (s *APIServer) handleGetGameStats(w http.ResponseWriter, r *http.Request) e
 		if err != nil {
 			return err
 		}
-		playerWordsDTO = append(playerWordsDTO, &PlayerResultDTO{PlayerName: player.Name, Image: img, WordCount: playerWordCount.WordCount, Points: player.Points+playerWordCount.WordCount})
+		playerWordsDTO = append(playerWordsDTO, &PlayerResultDTO{PlayerName: player.Name, Image: img, WordCount: playerWordCount.WordCount, Points: player.Points + playerWordCount.WordCount})
 	}
 	sort.Slice(playerWordsDTO, func(i, j int) bool {
 		if playerWordsDTO[i].PlayerName == winner {
@@ -250,7 +250,7 @@ func (s *APIServer) handleGetGameStats(w http.ResponseWriter, r *http.Request) e
 		}
 		return playerWordsDTO[i].Points > playerWordsDTO[j].Points
 	})
-	return WriteJSON(w, http.StatusOK, GameEndResponse{Winner: winner, PlayerWords: playerWordsDTO, GameMode: s.games[lobbyCode].GameMode})
+	return WriteJSON(w, http.StatusOK, GameEndResponse{Winner: winner, PlayerWords: playerWordsDTO, GameMode: s.games[lobbyCode].GameMode, ManualEnd: s.games[lobbyCode].ManualEnd})
 }
 
 // handleManualGameEnd godoc
@@ -293,10 +293,10 @@ func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) 
 	}
 	s.PublishToLobby(lobbyCode, Message{Data: ACCOUNT_UPDATE})
 	game.Winner = winner
+	game.ManualEnd = true
 	s.PublishToLobby(lobbyCode, Message{Data: GAME_OVER})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game ended"})
 }
-
 
 // Game Logic
 func (g *Game) SetTarget() (string, error) {
@@ -378,4 +378,25 @@ func (g *Game) StopTimer() {
 	if g.WithTimer {
 		g.Timer.Stop()
 	}
+}
+
+func SeedPlayerWords(s Storage, lobbyCode string, game *Game) error {
+	players, err := s.GetPlayersByLobbyCode(lobbyCode)
+	if err != nil {
+		return err
+	}
+	for _, player := range players {
+		target, err := game.SetTarget()
+		if err != nil {
+			return err
+		}
+		if err := s.SetPlayerTargetWord(player.Name, target, lobbyCode); err != nil {
+			return err
+		}
+		s.AddPlayerWord(player.Name, "fire", lobbyCode)
+		s.AddPlayerWord(player.Name, "water", lobbyCode)
+		s.AddPlayerWord(player.Name, "earth", lobbyCode)
+		s.AddPlayerWord(player.Name, "wind", lobbyCode)
+	}
+	return nil
 }

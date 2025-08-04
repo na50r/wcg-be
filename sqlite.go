@@ -3,11 +3,12 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"math/rand"
 	"strings"
 	"time"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type SQLiteStore struct {
@@ -628,45 +629,6 @@ func (s *SQLiteStore) GetTargetWord(minReachability, maxReachability float64, ma
 	return targetWords[rand.Intn(len(targetWords))], nil
 }
 
-func (s *SQLiteStore) NewGame(lobbyCode string, gameMode GameMode, withTimer bool, duration int) (*Game, error) {
-	game := new(Game)
-	game.LobbyCode = lobbyCode
-	game.GameMode = gameMode
-	game.WithTimer = withTimer
-
-	if withTimer {
-		game.Timer = NewTimer(duration)
-	}
-
-	err := fmt.Errorf("game mode %s not found", gameMode)
-	if gameMode == VANILLA {
-		return game, nil
-	}
-	if gameMode == FUSION_FRENZY {
-		game.TargetWord, err = s.GetTargetWord(0.0375, 0.2, 10)
-		if err != nil {
-			return nil, err
-		}
-		return game, nil
-	}
-	if gameMode == WOMBO_COMBO {
-		game.TargetWords, err = s.GetTargetWords(0.0375, 0.2, 10)
-		if err != nil {
-			return nil, err
-		}
-		return game, nil
-	}
-	if gameMode == DAILY_CHALLENGE {
-		game.TargetWord, err = s.CreateOrGetDailyWord(0.0375, 0.2, 8)
-		if err != nil {
-			log.Printf("Error creating or getting daily word: %v", err)
-			return nil, err
-		}
-		return game, nil
-	}
-	return nil, err
-}
-
 func (s *SQLiteStore) AddPlayerWord(playerName, word, lobbyCode string) error {
 	_, err := s.db.Exec(
 		"insert or ignore into player_word (player_name, word, lobby_code) values (?, ?, ?)",
@@ -703,27 +665,6 @@ func (s *SQLiteStore) GetPlayerTargetWord(playerName, lobbyCode string) (string,
 		return "", err
 	}
 	return targetWord, nil
-}
-
-func (s *SQLiteStore) SeedPlayerWords(lobbyCode string, game *Game) error {
-	players, err := s.GetPlayersByLobbyCode(lobbyCode)
-	if err != nil {
-		return err
-	}
-	for _, player := range players {
-		target, err := game.SetTarget()
-		if err != nil {
-			return err
-		}
-		if err := s.SetPlayerTargetWord(player.Name, target, lobbyCode); err != nil {
-			return err
-		}
-		s.AddPlayerWord(player.Name, "fire", lobbyCode)
-		s.AddPlayerWord(player.Name, "water", lobbyCode)
-		s.AddPlayerWord(player.Name, "earth", lobbyCode)
-		s.AddPlayerWord(player.Name, "wind", lobbyCode)
-	}
-	return nil
 }
 
 func (s *SQLiteStore) GetPlayerWords(playerName, lobbyCode string) ([]string, error) {
@@ -839,7 +780,7 @@ func (s *SQLiteStore) SetIsOwner(username string, setOwner bool) error {
 		return err
 	}
 	if isOwner {
-		return fmt.Errorf("user is already owner!")
+		return fmt.Errorf("User is already owner!")
 	}
 	_, err = s.db.Exec("update account set is_owner = ? where username = ?", setOwner, username)
 	return err
@@ -871,13 +812,13 @@ func (s *SQLiteStore) DeleteAccount(username string) error {
 	return err
 }
 
-func (s *SQLiteStore) GetChallengeEntries() ([]*ChallengeEntry, error) {
+func (s *SQLiteStore) GetChallengeEntries() ([]*Challenger, error) {
 	today := time.Now().Format("2006-01-02")
 	rows, err := s.db.Query("select * from daily_challenge where timestamp = ?", today)
 	if err != nil {
 		return nil, err
 	}
-	entries := []*ChallengeEntry{}
+	entries := []*Challenger{}
 	defer rows.Close()
 	for rows.Next() {
 		entry, err := scanIntoChallengeEntry(rows)
