@@ -344,7 +344,7 @@ func (s *PostgresStore) AddImage(data []byte, name string) error {
 }
 
 func (s *PostgresStore) GetImage(name string) ([]byte, error) {
-	rows, err := s.db.Query("select data from image where name = $1", name)
+	rows, err := s.db.Query("select * from image where name = $1", name)
 	if err != nil {
 		return nil, err
 	}
