@@ -75,6 +75,8 @@ func (s *PostgresStore) createAccountTable() error {
 		created_at timestamp,
 		status text,
 		is_owner boolean
+		new_word_count integer,
+		word_count integer
 		)`
 	_, err := s.db.Exec(query)
 	return err
@@ -99,6 +101,8 @@ func (s *PostgresStore) createPlayerTable() error {
 		target_word varchar(100),
 		points integer,
 		primary key (name, lobby_code)
+		word_count integer,
+		new_word_count integer
 		)`
 	_, err := s.db.Exec(query)
 	return err
@@ -212,7 +216,7 @@ func (s *PostgresStore) Init() error {
 }
 
 func (s *PostgresStore) UnlockAchievement(username, achievementTitle string) (bool, error) {
-	res, err := s.db.Exec("insert into unlocked (username, achievement_title) values (?, ?)", username, achievementTitle)
+	res, err := s.db.Exec("insert into unlocked (username, achievement_title) values ($1, $2)", username, achievementTitle)
 	if err != nil {
 		return false, err
 	}
@@ -225,7 +229,7 @@ func (s *PostgresStore) UnlockAchievement(username, achievementTitle string) (bo
 
 func (s *PostgresStore) AddAchievement(entry *AchievementEntry) error {
 	_, err := s.db.Exec(
-		"insert into achievement (type, title, value, description, image_name) values (?, ?, ?, ?, ?)",
+		"insert into achievement (type, title, value, description, image_name) values ($1, $2, $3, $4, $5)",
 		entry.Type,
 		entry.Title,
 		entry.Value,
@@ -275,8 +279,8 @@ func (s *PostgresStore) CreateOrGetDailyWord(minReachability, maxReachability fl
 
 func (s *PostgresStore) CreateAccount(acc *Account) error {
 	query := `insert into account 
-	(username, image_name, password, wins, losses, created_at, status, is_owner)
-	values ($1, $2, $3, $4, $5, $6, $7, $8)`
+	(username, image_name, password, wins, losses, created_at, status, is_owner, new_word_count, word_count)
+	values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
 	_, err := s.db.Exec(
 		query,
 		acc.Username,
@@ -296,8 +300,8 @@ func (s *PostgresStore) CreateAccount(acc *Account) error {
 
 func (s *PostgresStore) CreatePlayer(player *Player) error {
 	query := `insert into player 
-	(name, lobby_code, image_name, is_owner, has_account, target_word, points)
-	values ($1, $2, $3, $4, $5, $6, $7)`
+	(name, lobby_code, image_name, is_owner, has_account, target_word, points, word_count, new_word_count)
+	values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
 	_, err := s.db.Exec(
 		query,
 		player.Name,
@@ -940,7 +944,7 @@ func (s *PostgresStore) AddAchievementImage(data []byte, name string) error {
 }
 
 func (s *PostgresStore) GetAchievementImage(name string) ([]byte, error) {
-	rows, err := s.db.Query("select * from achievement_image where name = ?", name)
+	rows, err := s.db.Query("select * from achievement_image where name = $1", name)
 	if err != nil {
 		return nil, err
 	}
@@ -964,7 +968,7 @@ func (s *PostgresStore) GetAchievementImage(name string) ([]byte, error) {
 
 
 func (s *PostgresStore) GetAchievementByTitle(title string) (*AchievementEntry, error) {
-	rows, err := s.db.Query("select * from achievement where title = ?", title)
+	rows, err := s.db.Query("select * from achievement where title = $1", title)
 	if err != nil {
 		return nil, err
 	}
@@ -976,7 +980,7 @@ func (s *PostgresStore) GetAchievementByTitle(title string) (*AchievementEntry, 
 }
 
 func (s *PostgresStore) GetAchievementsForUser(username string) ([]string, error) {
-	rows, err := s.db.Query("select achievement_title from unlocked where username = ?", username)
+	rows, err := s.db.Query("select achievement_title from unlocked where username = $1", username)
 	if err != nil {
 		return nil, err
 	}
