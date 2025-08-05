@@ -74,7 +74,7 @@ func (s *PostgresStore) createAccountTable() error {
 		losses integer,
 		created_at timestamp,
 		status text,
-		is_owner boolean
+		is_owner boolean,
 		new_word_count integer,
 		word_count integer
 		)`
@@ -100,9 +100,9 @@ func (s *PostgresStore) createPlayerTable() error {
 		has_account boolean,
 		target_word varchar(100),
 		points integer,
-		primary key (name, lobby_code)
 		word_count integer,
-		new_word_count integer
+		new_word_count integer,
+		primary key (name, lobby_code)
 		)`
 	_, err := s.db.Exec(query)
 	return err
@@ -291,6 +291,8 @@ func (s *PostgresStore) CreateAccount(acc *Account) error {
 		acc.CreatedAt,
 		acc.Status,
 		acc.IsOwner,
+		acc.NewWordCount,
+		acc.WordCount,
 	)
 	if err != nil {
 		return err
@@ -311,6 +313,8 @@ func (s *PostgresStore) CreatePlayer(player *Player) error {
 		player.HasAccount,
 		player.TargetWord,
 		player.Points,
+		player.WordCount,
+		player.NewWordCount,
 	)
 	if err != nil {
 		return err
@@ -390,8 +394,10 @@ func (s *PostgresStore) UpdateAccount(acc *Account) error {
 	password = $3,
 	wins = 	$4,
 	losses = $5,
-	status = $6
-	where username = $7`
+	status = $6,
+	new_word_count = $7,
+	word_count = $8
+	where username = $9`
 	_, err := s.db.Exec(
 		query,
 		acc.Username,
@@ -400,6 +406,8 @@ func (s *PostgresStore) UpdateAccount(acc *Account) error {
 		acc.Wins,
 		acc.Losses,
 		acc.Status,
+		acc.NewWordCount,
+		acc.WordCount,
 		acc.Username,
 	)
 	return err
