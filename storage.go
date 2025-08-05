@@ -54,7 +54,13 @@ type Storage interface {
 	GetImageByUsername(username string) ([]byte, error)
 	GetTargetWords(minReachability, maxReachability float64, maxDepth int) ([]string, error)
 	GetTargetWord(minReachability, maxReachability float64, maxDepth int) (string, error)
+	GetAchievements() ([]*AchievementEntry, error)
+	UpdateAccountWordCount(username string, newWordCount, wordCount int) error
+	UpdatePlayerWordCount(playerName, lobbyCode string, newWordCount, wordCount int) error
+	AddAchievement(entry *AchievementEntry) error
+	UnlockAchievement(username, achievementTitle string) (bool, error)
 }
+
 
 // DB Types
 type Account struct {
@@ -66,6 +72,8 @@ type Account struct {
 	CreatedAt string `db:"created_at"`
 	Status    Status `db:"status"`
 	IsOwner   bool   `db:"is_owner"`
+	NewWordCount int `db:"new_word_count"`
+	WordCount int `db:"word_count"`
 }
 
 type Player struct {
@@ -76,6 +84,8 @@ type Player struct {
 	HasAccount bool   `db:"has_account"`
 	TargetWord string `db:"target_word"`
 	Points     int    `db:"points"`
+	WordCount int `db:"word_count"`
+	NewWordCount int `db:"new_word_count"`
 }
 
 type Lobby struct {
@@ -126,6 +136,20 @@ type Session struct {
 	ExpiresAt    time.Time `db:"expires_at"`
 }
 
+type AchievementEntry struct {
+	ID int `db:"id"`
+	Title string `db:"title"`
+	Type Achievement `db:"type"`
+	Value string `db:"value"`
+	Description string `db:"description"`
+	ImageName string `db:"image_name"`
+}
+
+type Unlocked struct {
+	Username string `db:"username"`
+	AchievmentTitle string `db:"achievement_title"`
+}
+
 // Constructors
 func NewAccount(username, password string) (*Account, error) {
 	encpw, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -142,10 +166,12 @@ func NewAccount(username, password string) (*Account, error) {
 		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
 		Status:    OFFLINE,
 		IsOwner:   false,
+		NewWordCount: 0,
+		WordCount: 0,
 	}, nil
 }
 
-func NewPlayer(name, lobbyCode, imageName string, isOwner, hasAccount bool) *Player {
+func NewPlayer(name, lobbyCode, imageName string, isOwner, hasAccount bool, newWordCount, wordCount int) *Player {
 	return &Player{
 		LobbyCode:  lobbyCode,
 		Name:       name,
@@ -154,6 +180,8 @@ func NewPlayer(name, lobbyCode, imageName string, isOwner, hasAccount bool) *Pla
 		HasAccount: hasAccount,
 		TargetWord: "",
 		Points:     0,
+		WordCount: 0,
+		NewWordCount: 0,
 	}
 }
 
@@ -179,6 +207,8 @@ func scanIntoAccount(rows *sql.Rows) (*Account, error) {
 		&acc.CreatedAt,
 		&acc.Status,
 		&acc.IsOwner,
+		&acc.NewWordCount,
+		&acc.WordCount,
 	)
 	return acc, err
 }
@@ -202,6 +232,8 @@ func scanIntoPlayer(rows *sql.Rows) (*Player, error) {
 		&player.HasAccount,
 		&player.TargetWord,
 		&player.Points,
+		&player.WordCount,
+		&player.NewWordCount,
 	)
 	return player, err
 }
@@ -269,4 +301,26 @@ func scanIntoSession(rows *sql.Rows) (*Session, error) {
 		&session.ExpiresAt,
 	)
 	return session, err
+}
+
+func scanIntoAchievementEntry(rows *sql.Rows) (*AchievementEntry, error) {
+	entry := new(AchievementEntry)
+	err := rows.Scan(
+		&entry.ID,
+		&entry.Title,
+		&entry.Type,
+		&entry.Value,
+		&entry.Description,
+		&entry.ImageName,
+	)
+	return entry, err
+}
+
+func scanIntoUnlocked(rows *sql.Rows) (*Unlocked, error) {
+	unlocked := new(Unlocked)
+	err := rows.Scan(
+		&unlocked.Username,
+		&unlocked.AchievmentTitle,
+	)
+	return unlocked, err
 }

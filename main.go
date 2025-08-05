@@ -26,6 +26,7 @@ var WORDS string
 var COHERE_API_KEY string
 var POSTGRES_CONNECTION string
 var DB string
+var ACHIEVEMENTS string
 
 func init() {
 	err := godotenv.Load()
@@ -40,6 +41,7 @@ func init() {
 	COHERE_API_KEY = os.Getenv("COHERE_API_KEY")
 	POSTGRES_CONNECTION = os.Getenv("POSTGRES_CONNECTION")
 	DB = os.Getenv("DB")
+	ACHIEVEMENTS = os.Getenv("ACHIEVEMENTS")
 
 	if JWT_SECRET == "" {
 		log.Fatal("JWT_SECRET not set")
@@ -65,13 +67,16 @@ func init() {
 	if DB == "" {
 		log.Fatal("DB not set")
 	}
+	if ACHIEVEMENTS == "" {
+		log.Fatal("ACHIEVEMENTS not set")
+	}
 }
 
 func NewStore() (Storage, error) {
 	log.Printf("Using database [%s]", DB)
-	if DB == "POSTGRES" {
-		return NewPostgresStore()
-	}
+	// if DB == "POSTGRES" {
+	// 	return NewPostgresStore()
+	// }
 	if DB == "SQLITE" {
 		return NewSQLiteStore("store")
 	}

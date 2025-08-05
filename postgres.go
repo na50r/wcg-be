@@ -400,7 +400,7 @@ func (s *PostgresStore) GetPlayerForAccount(username string) (*Player, error) {
 	if err != nil {
 		return nil, err
 	}
-	return NewPlayer(username, "", acc.ImageName, false, true), nil
+	return NewPlayer(username, "", acc.ImageName, false, true, acc.NewWordCount, acc.WordCount), nil
 }
 
 func (s *PostgresStore) GetOwners() ([]*Player, error) {

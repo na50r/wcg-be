@@ -104,6 +104,26 @@ func readCSV(filePath string) ([][]string, error) {
 	return records[1:], nil
 }
 
+func setAchievements(store Storage) error {
+	records, err := readCSV(ACHIEVEMENTS)
+	if err != nil {
+		return err
+	}
+	log.Println("Number of achievements ", len(records))
+	for _, record := range records {
+		entry := new(AchievementEntry)
+		entry.Title = record[0]
+		entry.Type = Achievement(record[1])
+		entry.Value = record[2]
+		entry.Description = record[3]
+		entry.ImageName = record[4]
+		if err := store.AddAchievement(entry); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func setCombinations(store Storage) error {
 	records, err := readCSV(COMBINATIONS)
 	log.Println("Number of combinations ", len(records))
@@ -155,6 +175,10 @@ func seedDatabase(store Storage) {
 		log.Fatal(err)
 	}
 	log.Println("Words seeded")
+	if err := setAchievements(store); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Achievements seeded")
 }
 
 func getChannelID(r *http.Request) (int, error) {

@@ -3,6 +3,7 @@ package main
 type EventMesage string
 type GameMode string
 type Status string 
+type Achievement string
 
 const (
 	LOBBY_CREATED EventMesage = "LOBBY_CREATED"
@@ -31,4 +32,10 @@ const (
 
 const (
 	Unauthorized string = "You are not authorized to perform this action."
+)
+
+const (
+	NewWordCount Achievement = "New Word Count"
+	WordCount Achievement = "Word Count"
+	TargetWord Achievement = "Target Word"
 )

@@ -143,7 +143,7 @@ func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) erro
 		player.LobbyCode = req.LobbyCode
 	} else {
 		imageName := s.store.NewImageForUsername(req.PlayerName)
-		player = NewPlayer(req.PlayerName, req.LobbyCode, imageName, false, false)
+		player = NewPlayer(req.PlayerName, req.LobbyCode, imageName, false, false, 0, 0)
 	}
 	if err := s.store.AddPlayerToLobby(req.LobbyCode, player); err != nil {
 		return err
