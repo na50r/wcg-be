@@ -235,7 +235,7 @@ func (s *SQLiteStore) Init() error {
 }
 
 func (s *SQLiteStore) UnlockAchievement(username, achievementTitle string) (bool, error) {
-	res, err := s.db.Exec("insert into unlocked (username, achievement_title) values (?, ?)", username, achievementTitle)
+	res, err := s.db.Exec("insert or ignore into unlocked (username, achievement_title) values (?, ?)", username, achievementTitle)
 	if err != nil {
 		return false, err
 	}

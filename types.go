@@ -188,6 +188,7 @@ type AchievementDTO struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Image       []byte `json:"image"`
+	Unlocked    bool   `json:"unlocked"`
 }
 
 func NewGameModes() []GameMode {

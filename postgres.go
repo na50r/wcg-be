@@ -216,7 +216,7 @@ func (s *PostgresStore) Init() error {
 }
 
 func (s *PostgresStore) UnlockAchievement(username, achievementTitle string) (bool, error) {
-	res, err := s.db.Exec("insert into unlocked (username, achievement_title) values ($1, $2)", username, achievementTitle)
+	res, err := s.db.Exec("insert into unlocked (username, achievement_title) values ($1, $2) on conflict do nothing", username, achievementTitle)
 	if err != nil {
 		return false, err
 	}

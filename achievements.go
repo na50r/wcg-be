@@ -60,6 +60,7 @@ func UnlockAchievement(s *APIServer, username, achievementTitle string) error {
 		log.Printf("Achievement unlocked: %s", achievementTitle)
 		s.PublishToPlayer(username, Message{Data: AchievementEvent{AchievementTitle: achievementTitle}})
 	}
+	log.Printf("Achievement already unlocked: %s", achievementTitle)
 	return nil
 }
 
@@ -91,17 +92,22 @@ func GetAchievementsForUser(s *APIServer, username string) ([]*AchievementDTO, e
 	if err != nil {
 		return nil, err
 	}
-	achievements := []*AchievementDTO{}
+	unlockedAchievements := map[string]bool{}
 	for _, title := range achievementTitles {
-		entry, err := s.store.GetAchievementByTitle(title)
-		if err != nil {
-			return nil, err
-		}
+		unlockedAchievements[title] = true
+	}
+	allAchievements, err := s.store.GetAchievements()
+	if err != nil {
+		return nil, err
+	}
+	achievements := []*AchievementDTO{}
+	for _, entry := range allAchievements {
 		image, err := s.store.GetAchievementImage(entry.ImageName)
 		if err != nil {
 			return nil, err
 		}
-		achievements = append(achievements, &AchievementDTO{Title: entry.Title, Description: entry.Description, Image: image})
+		unlocked := unlockedAchievements[entry.Title]
+		achievements = append(achievements, &AchievementDTO{Title: entry.Title, Description: entry.Description, Image: image, Unlocked: unlocked})
 	}
 	return achievements, nil
 }
