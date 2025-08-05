@@ -79,9 +79,9 @@ func init() {
 
 func NewStore() (Storage, error) {
 	log.Printf("Using database [%s]", DB)
-	// if DB == "POSTGRES" {
-	// 	return NewPostgresStore()
-	// }
+	if DB == "POSTGRES" {
+		return NewPostgresStore()
+	}
 	if DB == "SQLITE" {
 		return NewSQLiteStore("store")
 	}
