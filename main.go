@@ -27,6 +27,7 @@ var COHERE_API_KEY string
 var POSTGRES_CONNECTION string
 var DB string
 var ACHIEVEMENTS string
+var ACHIEVEMENT_ICONS string
 
 func init() {
 	err := godotenv.Load()
@@ -42,6 +43,7 @@ func init() {
 	POSTGRES_CONNECTION = os.Getenv("POSTGRES_CONNECTION")
 	DB = os.Getenv("DB")
 	ACHIEVEMENTS = os.Getenv("ACHIEVEMENTS")
+	ACHIEVEMENT_ICONS = os.Getenv("ACHIEVEMENT_ICONS")
 
 	if JWT_SECRET == "" {
 		log.Fatal("JWT_SECRET not set")
@@ -69,6 +71,9 @@ func init() {
 	}
 	if ACHIEVEMENTS == "" {
 		log.Fatal("ACHIEVEMENTS not set")
+	}
+	if ACHIEVEMENT_ICONS == "" {
+		log.Fatal("ACHIEVEMENT_ICONS not set")
 	}
 }
 

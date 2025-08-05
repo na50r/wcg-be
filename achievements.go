@@ -2,7 +2,9 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"strconv"
+	"strings"
 )
 
 type AchievementMaps struct {
@@ -56,6 +58,7 @@ func UnlockAchievement(s *APIServer, username, achievementTitle string) error {
 	}
 	if newUnlock {
 		log.Printf("Achievement unlocked: %s", achievementTitle)
+		s.PublishToPlayer(username, Message{Data: AchievementEvent{AchievementTitle: achievementTitle}})
 	}
 	return nil
 }
@@ -74,11 +77,56 @@ func CheckAchievements(s *APIServer, username string, updatedWordCnt, updatedNew
 			return err
 		}
 	}
-	if title, ok := a.TargetWord[currentWord]; ok {
+	if title, ok := a.TargetWord[strings.ToLower(currentWord)]; ok {
 		err := UnlockAchievement(s, username, title)
 		if err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+func GetAchievementsForUser(s *APIServer, username string) ([]*AchievementDTO, error) {
+	achievementTitles, err := s.store.GetAchievementsForUser(username)
+	if err != nil {
+		return nil, err
+	}
+	achievements := []*AchievementDTO{}
+	for _, title := range achievementTitles {
+		entry, err := s.store.GetAchievementByTitle(title)
+		if err != nil {
+			return nil, err
+		}
+		image, err := s.store.GetAchievementImage(entry.ImageName)
+		if err != nil {
+			return nil, err
+		}
+		achievements = append(achievements, &AchievementDTO{Title: entry.Title, Description: entry.Description, Image: image})
+	}
+	return achievements, nil
+}
+
+// handleAchievements godoc
+// @Summary Get all achievements for a user
+// @Description Get all achievements for a user
+// @Tags account
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param username path string true "Username"
+// @Success 200 {array} AchievementDTO
+func (s *APIServer) handleAchievements(w http.ResponseWriter, r *http.Request) error {
+	if r.Method != http.MethodGet {
+		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		return err
+	}
+	username, err := getUsername(r)
+	if err != nil {
+		return err
+	}
+	achievements, err := GetAchievementsForUser(s, username)
+	if err != nil {
+		return err
+	}
+	return WriteJSON(w, http.StatusOK, achievements)
 }

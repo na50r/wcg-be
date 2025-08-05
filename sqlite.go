@@ -86,6 +86,15 @@ func (s *SQLiteStore) createImageTable() error {
 	return err
 }
 
+func (s *SQLiteStore) createAchievementImageTable() error {
+	query := `create table if not exists achievement_image (
+		name text primary key,
+		data blob
+		)`
+	_, err := s.db.Exec(query)
+	return err
+}
+
 func (s *SQLiteStore) createPlayerTable() error {
 	query := `create table if not exists player (
 		name text,
@@ -217,6 +226,9 @@ func (s *SQLiteStore) Init() error {
 		return err
 	}
 	if err := s.createUnlockedTable(); err != nil {
+		return err
+	}
+	if err := s.createAchievementImageTable(); err != nil {
 		return err
 	}
 	return nil
@@ -967,3 +979,66 @@ func (s *SQLiteStore) UpdatePlayerWordCount(playerName, lobbyCode string, newWor
 	_, err := s.db.Exec("update player set new_word_count = ?, word_count = ? where name = ? and lobby_code = ?", newWordCount, wordCount, playerName, lobbyCode)
 	return err
 }
+
+func (s *SQLiteStore) AddAchievementImage(data []byte, name string) error {
+	_, err := s.db.Exec(
+		"insert or replace into achievement_image (name, data) values (?, ?)",
+		name,
+		data,
+	)
+	return err
+}
+
+func (s *SQLiteStore) GetAchievementImage(name string) ([]byte, error) {
+	rows, err := s.db.Query("select * from achievement_image where name = ?", name)
+	if err != nil {
+		return nil, err
+	}
+	images := []*Image{}
+	defer rows.Close()
+	for rows.Next() {
+		img, err := scanIntoImage(rows)
+		if err != nil {
+			return nil, err
+		}
+		images = append(images, img)
+	}
+	if len(images) > 1 {
+		return nil, fmt.Errorf("Multiple images for name %s", name)
+	}
+	if len(images) == 0 {
+		return nil, fmt.Errorf("Image for name %s not found", name)
+	}
+	return images[0].Data, nil
+}
+
+func (s *SQLiteStore) GetAchievementByTitle(title string) (*AchievementEntry, error) {
+	rows, err := s.db.Query("select * from achievement where title = ?", title)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		defer rows.Close()
+		return scanIntoAchievementEntry(rows)
+	}
+	return nil, fmt.Errorf("Achievement %s not found", title)
+}
+
+func (s *SQLiteStore) GetAchievementsForUser(username string) ([]string, error) {
+	rows, err := s.db.Query("select achievement_title from unlocked where username = ?", username)
+	if err != nil {
+		return nil, err
+	}
+	achievements := []string{}
+	defer rows.Close()
+	for rows.Next() {
+		var title string
+		err := rows.Scan(&title)
+		if err != nil {
+			return nil, err
+		}
+		achievements = append(achievements, title)
+	}
+	return achievements, nil
+}
+

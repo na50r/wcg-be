@@ -1,19 +1,20 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"net/http"
-	"strconv"
-	"unicode"
-	"github.com/gorilla/mux"
 	"bytes"
 	"encoding/csv"
 	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
+	"unicode"
+
+	"github.com/gorilla/mux"
 )
 
 func getImageFromFilePath(filePath string) (*Image, error) {
@@ -58,8 +59,8 @@ func getFilePathsInDir(dir string) ([]string, error) {
 	return paths, nil
 }
 
-func readImages() ([]*Image, error) {
-	paths, err := getFilePathsInDir(ICONS)
+func readImages(path string) ([]*Image, error) {
+	paths, err := getFilePathsInDir(path)
 	if err != nil {
 		return nil, err
 	}
@@ -76,9 +77,22 @@ func readImages() ([]*Image, error) {
 	}
 	return images, nil
 }
+func setAchievementImages(store Storage) error {
+	images, err := readImages(ACHIEVEMENT_ICONS)
+	if err != nil {
+		return err
+	}
+	for _, image := range images {
+		if err := store.AddAchievementImage(image.Data, image.Name); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 
 func setImages(store Storage) error {
-	images, err := readImages()
+	images, err := readImages(ICONS)
 	if err != nil {
 		return err
 	}
@@ -114,7 +128,7 @@ func setAchievements(store Storage) error {
 		entry := new(AchievementEntry)
 		entry.Title = record[0]
 		entry.Type = Achievement(record[1])
-		entry.Value = record[2]
+		entry.Value = strings.ToLower(record[2])
 		entry.Description = record[3]
 		entry.ImageName = record[4]
 		if err := store.AddAchievement(entry); err != nil {
@@ -179,6 +193,10 @@ func seedDatabase(store Storage) {
 		log.Fatal(err)
 	}
 	log.Println("Achievements seeded")
+	if err := setAchievementImages(store); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Achievement images seeded")
 }
 
 func getChannelID(r *http.Request) (int, error) {

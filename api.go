@@ -78,6 +78,7 @@ func (s *APIServer) RegisterRoutes() error {
 	router.HandleFunc("/account/{username}", withAccountAuth(makeHTTPHandleFunc(s.handleAccount)))
 	router.HandleFunc("/account/{username}/images", withAccountAuth(makeHTTPHandleFunc(s.handleGetImages)))
 	router.HandleFunc("/account/{username}/leaderboard", withAccountAuth(makeHTTPHandleFunc(s.handleLeaderboard)))
+	router.HandleFunc("/account/{username}/achievements", withAccountAuth(makeHTTPHandleFunc(s.handleAchievements)))
 
 	// Lobby Endpoints
 	router.HandleFunc("/lobbies", makeHTTPHandleFunc(s.handleLobbies))

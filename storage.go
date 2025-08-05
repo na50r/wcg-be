@@ -59,6 +59,10 @@ type Storage interface {
 	UpdatePlayerWordCount(playerName, lobbyCode string, newWordCount, wordCount int) error
 	AddAchievement(entry *AchievementEntry) error
 	UnlockAchievement(username, achievementTitle string) (bool, error)
+	AddAchievementImage(data []byte, name string) error
+	GetAchievementImage(name string) ([]byte, error)
+	GetAchievementsForUser(username string) ([]string, error)
+	GetAchievementByTitle(title string) (*AchievementEntry, error)
 }
 
 
