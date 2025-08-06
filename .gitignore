@@ -7,3 +7,7 @@ bin/
 *.sh
 *.txt
 *.yml
+
+# Seeded data
+icons/
+achievement_icons/
