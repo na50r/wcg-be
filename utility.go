@@ -17,6 +17,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+
 func getImageFromFilePath(filePath string) (*Image, error) {
 	f, err := os.Open(filePath)
 	if err != nil {
@@ -24,7 +25,9 @@ func getImageFromFilePath(filePath string) (*Image, error) {
 	}
 	absPath, _ := filepath.Abs(filePath)
 	name := filepath.Base(absPath)
-	if !strings.HasSuffix(name, ".png") {
+
+	imageExtRegex := regexp.MustCompile(`\.(png|jpe?g)$`)
+	if !imageExtRegex.MatchString(name){
 		return nil, nil
 	}
 	defer f.Close()
