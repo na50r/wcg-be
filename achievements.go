@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"github.com/na50r/wombo-combo-go-be/sse"
 )
 
 type AchievementMaps struct {
@@ -58,7 +59,8 @@ func UnlockAchievement(s *APIServer, username, achievementTitle string) error {
 	}
 	if newUnlock {
 		log.Printf("Achievement unlocked: %s", achievementTitle)
-		s.PublishToPlayer(username, Message{Data: AchievementEvent{AchievementTitle: achievementTitle}})
+		cli := s.broker.playerClient[username]
+		s.broker.Broker.PublishToClient(cli, sse.Message{Data: AchievementEvent{AchievementTitle: achievementTitle}})
 	}
 	log.Printf("Achievement already unlocked: %s", achievementTitle)
 	return nil

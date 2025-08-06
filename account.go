@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"sort"
-
+	"github.com/na50r/wombo-combo-go-be/sse"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -285,10 +285,11 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		if err != nil {
 			return err
 		}
-		delete(s.lobbyClients, lobbyCode)
+		delete(s.broker.lobbyClients, lobbyCode)
 		delete(s.games, lobbyCode)
-		s.PublishToLobby(lobbyCode, Message{Data: GAME_DELETED})
-		s.Publish(Message{Data: LOBBY_DELETED})
+		group := s.broker.lobbyClients[lobbyCode]
+		s.broker.Broker.PublishToGroup(group, sse.Message{Data: GAME_DELETED})
+		s.broker.Broker.Publish(sse.Message{Data: LOBBY_DELETED})
 	}
 	log.Printf("User %s logged out\n", accountClaims.Username)
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Logout successful"})

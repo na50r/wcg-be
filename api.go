@@ -30,9 +30,7 @@ type APIServer struct {
 	router        *mux.Router
 	listenAddr    string
 	store         Storage
-	broker        *Broker
-	lobbyClients  map[string]map[int]bool // Maps a lobby code to a SET of clients
-	playerClient  map[string]int          // Maps each player to a client
+	broker *GameBroker
 	games         map[string]*Game
 	achievements  AchievementMaps
 }
@@ -42,12 +40,9 @@ func NewAPIServer(listenAddr string, store Storage) *APIServer {
 		router:        mux.NewRouter(),
 		listenAddr:    listenAddr,
 		store:         store,
-		broker:        NewBroker(),
-		lobbyClients:  make(map[string]map[int]bool),
-		playerClient:  make(map[string]int),
+		broker:        NewGameBroker(),
 		games:         make(map[string]*Game),
 	}
-	go s.listen()
 	s.SetupAchievements()
 	return &s
 }
@@ -91,11 +86,7 @@ func (s *APIServer) RegisterRoutes() error {
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/end", withPlayerAuth(makeHTTPHandleFunc(s.handleManualGameEnd)))
 
 	// Events
-	router.HandleFunc("/events", s.SSEHandler)
-	router.HandleFunc("/broadcast", s.Broadcast)
-
-	// Test
-	router.HandleFunc("/test-ch/{channelID}", s.PublishToChannel)
+	router.HandleFunc("/events", s.broker.Broker.SSEHandler)
 
 	// Swagger
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)

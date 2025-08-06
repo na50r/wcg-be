@@ -3,10 +3,10 @@ package sse
 // Base SSE template
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"encoding/json"
 )
 
 type Message struct {
@@ -15,26 +15,46 @@ type Message struct {
 
 type Broker struct {
 	cnt            int
-	newClients     chan Subscription
-	goneClients    chan Subscription
+	newClients     chan Sub
+	goneClients    chan Sub
 	ClientChannels map[int]chan []byte
+
+	OnNewClient      func(sub Sub)
+	OnRemoveClient   func(sub Sub)
+	MakeSubscription func(r *http.Request, id int, channel chan []byte) Sub
 }
 
+type Sub interface {
+	GetChannelID() int
+	GetChannel() chan []byte
+}
+
+// Base subscription
 type Subscription struct {
-	ChannelID  int         `json:"channelId"`
-	Channel    chan []byte `json:"channel"`
+	ChannelID int         `json:"channelId"`
+	Channel   chan []byte `json:"channel"`
 }
 
-func NewSubscription(id int, channel chan[]byte) Subscription {
+func (s Subscription) GetChannelID() int     { return s.ChannelID }
+func (s Subscription) GetChannel() chan []byte { return s.Channel }
+
+func NewSubscription(id int, channel chan []byte) Subscription {
 	return Subscription{ChannelID: id, Channel: channel}
 }
 
-func NewBroker() *Broker {
+func NewBroker(
+	onNew func(sub Sub),
+	onRemove func(sub Sub),
+	makeSub func(r *http.Request, id int, ch chan []byte) Sub,
+) *Broker {
 	b := Broker{
 		ClientChannels: make(map[int]chan []byte),
-		newClients:     make(chan Subscription),
-		goneClients:    make(chan Subscription),
+		newClients:     make(chan Sub),
+		goneClients:    make(chan Sub),
 		cnt:            0,
+		OnNewClient: onNew,
+		OnRemoveClient: onRemove,
+		MakeSubscription: makeSub,
 	}
 	go b.listen()
 	return &b
@@ -50,12 +70,18 @@ func (b *Broker) listen() {
 	for {
 		select {
 		case sub := <-b.newClients:
-			log.Printf("client connected (ch=%04b), total clients: %d\n", sub.ChannelID, len(b.ClientChannels))
+			log.Printf("client connected (ch=%04b), total clients: %d\n", sub.GetChannelID(), len(b.ClientChannels))
+			if b.OnNewClient != nil {
+				b.OnNewClient(sub)
+			}
 		case unsub := <-b.goneClients:
-			channel := b.ClientChannels[unsub.ChannelID]
-			delete(b.ClientChannels, unsub.ChannelID)
+			channel := b.ClientChannels[unsub.GetChannelID()]
+			delete(b.ClientChannels, unsub.GetChannelID())
 			close(channel)
-			log.Printf("client %04b disconnected, total clients: %d\n", unsub.ChannelID, len(b.ClientChannels))
+			if b.OnRemoveClient != nil {
+				b.OnRemoveClient(unsub)
+			}
+			log.Printf("client %04b disconnected, total clients: %d\n", unsub.GetChannelID(), len(b.ClientChannels))
 		}
 	}
 }
@@ -67,7 +93,12 @@ func (b *Broker) SSEHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	channelID, channel := b.CreateChannel()
-	sub := NewSubscription(channelID, channel)
+	var sub Sub
+	if b.MakeSubscription != nil {
+		sub = b.MakeSubscription(r, channelID, channel)
+	} else {
+		sub = NewSubscription(channelID, channel)
+	}
 
 	b.newClients <- sub
 	clientGone := r.Context().Done()
@@ -94,7 +125,6 @@ func (b *Broker) SSEHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 func (b *Broker) Publish(msg Message) {
 	data, err := json.Marshal(msg.Data)
 	if err != nil {
@@ -106,7 +136,7 @@ func (b *Broker) Publish(msg Message) {
 	}
 }
 
-func (b *Broker) PublishToGroup(group []int, msg Message){
+func (b *Broker) PublishToGroup(group map[int]bool, msg Message) {
 	data, err := json.Marshal(msg.Data)
 	if err != nil {
 		log.Printf("unable to marshal: %s", err.Error())
@@ -117,7 +147,7 @@ func (b *Broker) PublishToGroup(group []int, msg Message){
 	}
 }
 
-func (b *Broker) PublishToClient(client int, msg Message){
+func (b *Broker) PublishToClient(client int, msg Message) {
 	data, err := json.Marshal(msg.Data)
 	if err != nil {
 		log.Printf("unable to marshal: %s", err.Error())
@@ -125,4 +155,3 @@ func (b *Broker) PublishToClient(client int, msg Message){
 	}
 	b.ClientChannels[client] <- data
 }
-
