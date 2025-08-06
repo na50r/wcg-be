@@ -10,6 +10,9 @@ seed:
 run: build
 	@./bin/wc
 
+docker-build:
+	@docker build -t wc-be .
+
 docker-run-ext:
 	@docker run --rm -p 3030:3030 -e CLIENT="http://localhost:5173" -e JWT_SECRET="secret" -e COHERE_API_KEY="$(API_KEY)" -e POSTGRES_CONNECTION="$(CONN_STR)" wc-be
 
