@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"github.com/google/uuid"
-	"github.com/na50r/wombo-combo-go-be/sse"
 )
 
 // handleGetLobby godoc
@@ -94,7 +93,7 @@ func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) err
 		if err := s.store.SetIsOwner(playerName, false); err != nil {
 			return err
 		}
-		s.broker.Broker.Publish(sse.Message{Data: LOBBY_DELETED})
+		s.broker.Publish(Message{Data: LOBBY_DELETED})
 		return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Lobby deleted"})
 	}
 	if err := s.store.DeletePlayer(playerName, lobbyCode); err != nil {
@@ -107,7 +106,7 @@ func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) err
 		return err
 	}
 	delete(s.broker.lobbyClients[lobbyCode], s.broker.playerClient[playerName])
-	s.broker.Broker.Publish(sse.Message{Data: PLAYER_LEFT})
+	s.broker.Publish(Message{Data: PLAYER_LEFT})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Left Lobby"})
 }
 
@@ -158,7 +157,7 @@ func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) erro
 		return err
 	}
 	lobbyDTO := NewLobbyDTO(lobby, player.Name, []*PlayerDTO{})
-	s.broker.Broker.Publish(sse.Message{Data: PLAYER_JOINED})
+	s.broker.Publish(Message{Data: PLAYER_JOINED})
 	return WriteJSON(w, http.StatusOK, JoinLobbyRespone{Token: playerToken, LobbyDTO: *lobbyDTO})
 }
 
@@ -233,7 +232,7 @@ func (s *APIServer) handleCreateLobby(w http.ResponseWriter, r *http.Request) er
 		return err
 	}
 	resp := CreateLobbyResponse{Token: lobbyToken, LobbyDTO: *lobbyDTO}
-	s.broker.Broker.Publish(sse.Message{Data: LOBBY_CREATED})
+	s.broker.Publish(Message{Data: LOBBY_CREATED})
 	return WriteJSON(w, http.StatusOK, resp)
 }
 
@@ -303,7 +302,6 @@ func (s *APIServer) handleEditGameMode(w http.ResponseWriter, r *http.Request) e
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
-	group := s.broker.lobbyClients[lobbyCode]
-	s.broker.Broker.PublishToGroup(group, sse.Message{Data: GameEditEvent{GameMode: req.GameMode, Duration: req.Duration}})
+	s.broker.PublishToLobby(lobbyCode, Message{Data: GameEditEvent{GameMode: req.GameMode, Duration: req.Duration}})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game mode changed"})
 }

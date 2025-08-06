@@ -6,6 +6,16 @@ import (
 	"net/http"
 )
 
+type Message struct {
+	Data interface{} `json:"data"`
+}
+
+func (m *Message) toSSE() sse.Message {
+	return sse.Message{
+		Data: m.Data,
+	}
+}
+
 type GameBroker struct {
 	Broker       sse.Broker
 	lobbyClients map[string]map[int]bool
@@ -84,4 +94,18 @@ func (gb *GameBroker) OnRemovePlayerSub(unsub sse.Sub) {
 	delete(gb.lobbyClients[ps.LobbyCode], unsub.GetChannelID())
 	delete(gb.playerClient, ps.PlayerName)
 	log.Printf("player %s (ch=%04b) disconnected from lobby %s", ps.PlayerName, ps.ChannelID, ps.LobbyCode)
+}
+
+func (gb *GameBroker) PublishToLobby(lobbyCode string, msg Message) {
+	group := gb.lobbyClients[lobbyCode]
+	gb.Broker.PublishToGroup(group, msg.toSSE())
+}
+
+func (gb *GameBroker) PublishToPlayer(playername string, msg Message) {
+	cli := gb.playerClient[playername]
+	gb.Broker.PublishToClient(cli, msg.toSSE())
+}
+
+func (gb *GameBroker) Publish(msg Message) {
+	gb.Broker.Publish(msg.toSSE())
 }

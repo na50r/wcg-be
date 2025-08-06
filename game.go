@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/na50r/wombo-combo-go-be/sse"
 	"log"
 	"math/rand"
 	"net/http"
@@ -55,8 +54,7 @@ func (s *APIServer) handleDeleteGame(w http.ResponseWriter, r *http.Request) err
 		log.Printf("Error deleting player words before returning to lobby: %v", err)
 		return err
 	}
-	group := s.broker.lobbyClients[lobbyCode]
-	s.broker.Broker.PublishToGroup(group, sse.Message{Data: GAME_DELETED})
+	s.broker.PublishToLobby(lobbyCode, Message{Data: GAME_DELETED})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game deleted"})
 }
 
@@ -152,8 +150,7 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 	log.Printf("Game mode: %s", game.GameMode)
 	log.Printf("Timer: %v", game.WithTimer)
 	log.Println("Target words: ", game.TargetWords)
-	group := s.broker.lobbyClients[lobbyCode]
-	s.broker.Broker.PublishToGroup(group, sse.Message{Data: GAME_STARTED})
+	s.broker.PublishToLobby(lobbyCode, Message{Data: GAME_STARTED})
 	game.StartTimer(s)
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game started"})
 }
@@ -294,11 +291,10 @@ func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) 
 	if err := s.store.UpdateAccountWinsAndLosses(lobbyCode, winner); err != nil {
 		return err
 	}
-	group := s.broker.lobbyClients[lobbyCode]
-	s.broker.Broker.PublishToGroup(group, sse.Message{Data: ACCOUNT_UPDATE})
+	s.broker.PublishToLobby(lobbyCode, Message{Data: ACCOUNT_UPDATE})
 	game.Winner = winner
 	game.ManualEnd = true
-	s.broker.Broker.PublishToGroup(group, sse.Message{Data: GAME_OVER})
+	s.broker.PublishToLobby(lobbyCode, Message{Data: GAME_OVER})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game ended"})
 }
 
@@ -322,7 +318,6 @@ func (g *Game) SetTarget() (string, error) {
 }
 
 func ProcessMove(server *APIServer, game *Game, player *Player, result string, isNew bool) error {
-	group := server.broker.lobbyClients[game.LobbyCode]
 	if game.GameMode == FUSION_FRENZY && player.TargetWord == result {
 		game.StopTimer()
 		game.Winner = player.Name
@@ -332,8 +327,8 @@ func ProcessMove(server *APIServer, game *Game, player *Player, result string, i
 		if err := server.store.UpdateAccountWordCount(player.Name, player.NewWordCount, player.WordCount); err != nil {
 			return err
 		}
-		server.broker.Broker.PublishToGroup(group, sse.Message{Data: GAME_OVER})
-		server.broker.Broker.PublishToGroup(group, sse.Message{Data: ACCOUNT_UPDATE})
+		server.broker.PublishToLobby(game.LobbyCode, Message{Data: GAME_OVER})
+		server.broker.PublishToLobby(game.LobbyCode, Message{Data: ACCOUNT_UPDATE})
 		return nil
 	}
 	if game.GameMode == WOMBO_COMBO && player.TargetWord == result {
@@ -355,7 +350,7 @@ func ProcessMove(server *APIServer, game *Game, player *Player, result string, i
 		if err := server.store.IncrementPlayerPoints(player.Name, game.LobbyCode, 10); err != nil {
 			return err
 		}
-			server.broker.Broker.PublishToGroup(group, sse.Message{Data: WOMBO_COMBO_EVENT})
+			server.broker.PublishToLobby(game.LobbyCode, Message{Data: WOMBO_COMBO_EVENT})
 	}
 	if game.GameMode == DAILY_CHALLENGE && player.TargetWord == result {
 		wordCounts, err := server.store.GetWordCountByLobbyCode(game.LobbyCode)
@@ -367,7 +362,7 @@ func ProcessMove(server *APIServer, game *Game, player *Player, result string, i
 		if err := server.store.AddDailyChallengeEntry(wordCount+1, player.Name); err != nil {
 			return err
 		}
-		server.broker.Broker.PublishToGroup(group, sse.Message{Data: GAME_OVER})
+		server.broker.PublishToLobby(game.LobbyCode, Message{Data: GAME_OVER})
 		return nil
 	}
 	if err := server.store.AddPlayerWord(player.Name, result, game.LobbyCode); err != nil {
