@@ -6,3 +6,9 @@ bin/
 *.csv
 *.sh
 *.txt
+*.yml
+DevDockerfile
+
+# Seeded data
+icons/
+achievement_icons/

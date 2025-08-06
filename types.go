@@ -1,10 +1,9 @@
 package main
 
-import(
+import (
 	"fmt"
 	"log"
 )
-
 
 type CohereResponse struct {
 	ID      string `json:"id"`
@@ -24,7 +23,6 @@ type APIError struct {
 type GenericResponse struct {
 	Message string `json:"message"`
 }
-
 
 type RegisterRequest struct {
 	Username string `json:"username"`
@@ -72,7 +70,7 @@ type PlayerDTO struct {
 type LobbyDTO struct {
 	LobbyCode string       `json:"lobbyCode"`
 	Name      string       `json:"name"`
-	GameMode  GameMode       `json:"gameMode"`
+	GameMode  GameMode     `json:"gameMode"`
 	Owner     string       `json:"owner"`
 	Players   []*PlayerDTO `json:"players"`
 	GameModes []GameMode   `json:"gameModes"`
@@ -89,7 +87,6 @@ type UpdateAccountRequest struct {
 	Password  string `json:"password"`
 	ImageName string `json:"imageName"`
 }
-
 
 type ImagesResponse struct {
 	Names []string `json:"names"`
@@ -114,16 +111,16 @@ type JoinLobbyRequest struct {
 
 type EditGameRequest struct {
 	GameMode GameMode `json:"gameMode"`
-	Duration int    `json:"duration"`
+	Duration int      `json:"duration"`
 }
 
 type GameEditEvent struct {
 	GameMode GameMode `json:"gameMode"`
-	Duration int    `json:"duration"`
+	Duration int      `json:"duration"`
 }
 
 type Game struct {
-	GameMode    GameMode   `json:"gameMode"`
+	GameMode    GameMode `json:"gameMode"`
 	LobbyCode   string   `json:"lobbyCode"`
 	TargetWord  string   `json:"targetWord"`
 	TargetWords []string `json:"targetWords"`
@@ -132,7 +129,6 @@ type Game struct {
 	Timer       *Timer   `json:"timer"`
 	ManualEnd   bool     `json:"manualEnd"`
 }
-
 
 type WordRequest struct {
 	A string `json:"a"`
@@ -151,10 +147,9 @@ type Words struct {
 
 type StartGameRequest struct {
 	GameMode  GameMode `json:"gameMode"`
-	WithTimer bool   `json:"withTimer"`
-	Duration  int    `json:"duration"`
+	WithTimer bool     `json:"withTimer"`
+	Duration  int      `json:"duration"`
 }
-
 
 type PlayerWordCount struct {
 	PlayerName string `json:"playerName"`
@@ -169,7 +164,7 @@ type PlayerResultDTO struct {
 }
 
 type GameEndResponse struct {
-	GameMode    GameMode             `json:"gameMode"`
+	GameMode    GameMode           `json:"gameMode"`
 	Winner      string             `json:"winner"`
 	PlayerWords []*PlayerResultDTO `json:"playerResults"`
 	ManualEnd   bool               `json:"manualEnd"`
@@ -179,11 +174,21 @@ type TimeEvent struct {
 	SecondsLeft int `json:"secondsLeft"`
 }
 
+type AchievementEvent struct {
+	AchievementTitle string `json:"achievementTitle"`
+}
 
 type ChallengeEntryDTO struct {
-	WordCount int `json:"wordCount"`
-	Username string `json:"username"`
-	Image []byte `json:"image"`
+	WordCount int    `json:"wordCount"`
+	Username  string `json:"username"`
+	Image     []byte `json:"image"`
+}
+
+type AchievementDTO struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Image       []byte `json:"image"`
+	Unlocked    bool   `json:"unlocked"`
 }
 
 func NewGameModes() []GameMode {
@@ -200,7 +205,6 @@ func NewLobbyDTO(lobby *Lobby, owner string, players []*PlayerDTO) *LobbyDTO {
 		GameModes: NewGameModes(),
 	}
 }
-
 
 func NewGame(s Storage, lobbyCode string, gameMode GameMode, withTimer bool, duration int) (*Game, error) {
 	game := new(Game)
@@ -219,7 +223,7 @@ func NewGame(s Storage, lobbyCode string, gameMode GameMode, withTimer bool, dur
 	}
 	// Reachability is between 0 and 1
 	// Reachability is computed with: 1 / (2 ^ depth)
-	// Reachability is updated with: 
+	// Reachability is updated with:
 	// 0.75 * newReachability + 0.25 * oldReachability if newDepth < oldDepth
 	// 0.25 * newReachability + 0.75 * oldReachability if newDepth >= oldDepth
 	// The less deep and the more paths are available, the more reachable a word is

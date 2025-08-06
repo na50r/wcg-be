@@ -176,6 +176,7 @@ func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error
 	acc.ImageName = imageName
 
 	if err := s.store.CreateAccount(acc); err != nil {
+		log.Println(err)
 		return WriteJSON(w, http.StatusConflict, APIError{Error: "Username taken, choose another one"})
 	}
 	return WriteJSON(w, http.StatusCreated, GenericResponse{Message: "Account created"})

@@ -37,6 +37,29 @@ func NewSQLiteStore(name string) (*SQLiteStore, error) {
 	return &SQLiteStore{db: db}, nil
 }
 
+func (s *SQLiteStore) createUnlockedTable() error {
+	query := `create table if not exists unlocked (
+		username text,
+		achievement_title text,
+		primary key (username, achievement_title)
+		)`
+	_, err := s.db.Exec(query)
+	return err
+}
+
+func (s *SQLiteStore) createAchievementTable() error {
+	query := `create table if not exists achievement (
+		id integer primary key,
+		title text,
+		type text,
+		value text,
+		description text,
+		image_name text
+		)`
+	_, err := s.db.Exec(query)
+	return err
+}
+
 func (s *SQLiteStore) createAccountTable() error {
 	query := `create table if not exists account (
 		username text primary key,
@@ -46,7 +69,9 @@ func (s *SQLiteStore) createAccountTable() error {
 		losses integer,
 		created_at datetime,
 		status text,
-		is_owner boolean
+		is_owner boolean,
+		new_word_count integer,
+		word_count integer
 		)`
 	_, err := s.db.Exec(query)
 	return err
@@ -54,6 +79,15 @@ func (s *SQLiteStore) createAccountTable() error {
 
 func (s *SQLiteStore) createImageTable() error {
 	query := `create table if not exists image (
+		name text primary key,
+		data blob
+		)`
+	_, err := s.db.Exec(query)
+	return err
+}
+
+func (s *SQLiteStore) createAchievementImageTable() error {
+	query := `create table if not exists achievement_image (
 		name text primary key,
 		data blob
 		)`
@@ -70,6 +104,8 @@ func (s *SQLiteStore) createPlayerTable() error {
 		has_account boolean,
 		target_word text,
 		points integer,
+		word_count integer,
+		new_word_count integer,
 		primary key (name, lobby_code)
 		)`
 	_, err := s.db.Exec(query)
@@ -186,7 +222,40 @@ func (s *SQLiteStore) Init() error {
 	if err := s.createSessionTable(); err != nil {
 		return err
 	}
+	if err := s.createAchievementTable(); err != nil {
+		return err
+	}
+	if err := s.createUnlockedTable(); err != nil {
+		return err
+	}
+	if err := s.createAchievementImageTable(); err != nil {
+		return err
+	}
 	return nil
+}
+
+func (s *SQLiteStore) UnlockAchievement(username, achievementTitle string) (bool, error) {
+	res, err := s.db.Exec("insert or ignore into unlocked (username, achievement_title) values (?, ?)", username, achievementTitle)
+	if err != nil {
+		return false, err
+	}
+	affected, err := res.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+	return affected > 0, nil
+}
+
+func (s *SQLiteStore) AddAchievement(entry *AchievementEntry) error {
+	_, err := s.db.Exec(
+		"insert into achievement (type, title, value, description, image_name) values (?, ?, ?, ?, ?)",
+		entry.Type,
+		entry.Title,
+		entry.Value,
+		entry.Description,
+		entry.ImageName,
+	)
+	return err
 }
 
 func (s *SQLiteStore) AddDailyChallengeEntry(wordCount int, username string) error {
@@ -228,8 +297,8 @@ func (s *SQLiteStore) CreateOrGetDailyWord(minReachability, maxReachability floa
 
 func (s *SQLiteStore) CreateAccount(acc *Account) error {
 	query := `insert into account 
-	(username, image_name, password, wins, losses, created_at, status, is_owner)
-	values (?, ?, ?, ?, ?, ?, ?, ?)`
+	(username, image_name, password, wins, losses, created_at, status, is_owner, new_word_count, word_count)
+	values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 	_, err := s.db.Exec(
 		query,
 		acc.Username,
@@ -240,6 +309,8 @@ func (s *SQLiteStore) CreateAccount(acc *Account) error {
 		acc.CreatedAt,
 		acc.Status,
 		acc.IsOwner,
+		acc.NewWordCount,
+		acc.WordCount,
 	)
 	if err != nil {
 		return err
@@ -249,8 +320,8 @@ func (s *SQLiteStore) CreateAccount(acc *Account) error {
 
 func (s *SQLiteStore) CreatePlayer(player *Player) error {
 	query := `insert into player 
-	(name, lobby_code, image_name, is_owner, has_account, target_word, points)
-	values (?, ?, ?, ?, ?, ?, ?)`
+	(name, lobby_code, image_name, is_owner, has_account, target_word, points, word_count, new_word_count)
+	values (?, ?, ?, ?, ?, ?, ?, ?, ?)`
 	_, err := s.db.Exec(
 		query,
 		player.Name,
@@ -260,6 +331,8 @@ func (s *SQLiteStore) CreatePlayer(player *Player) error {
 		player.HasAccount,
 		player.TargetWord,
 		player.Points,
+		player.WordCount,
+		player.NewWordCount,
 	)
 	if err != nil {
 		return err
@@ -339,7 +412,9 @@ func (s *SQLiteStore) UpdateAccount(acc *Account) error {
 	password = ?,
 	wins = ?,
 	losses = ?,
-	status = ?
+	status = ?,
+	new_word_count = ?,
+	word_count = ?
 	where username = ?`
 	_, err := s.db.Exec(
 		query,
@@ -349,6 +424,8 @@ func (s *SQLiteStore) UpdateAccount(acc *Account) error {
 		acc.Wins,
 		acc.Losses,
 		acc.Status,
+		acc.NewWordCount,
+		acc.WordCount,
 		acc.Username,
 	)
 	return err
@@ -419,7 +496,7 @@ func (s *SQLiteStore) GetPlayerForAccount(username string) (*Player, error) {
 	if err != nil {
 		return nil, err
 	}
-	return NewPlayer(username, "", acc.ImageName, false, true), nil
+	return NewPlayer(username, "", acc.ImageName, false, true, acc.NewWordCount, acc.WordCount), nil
 }
 
 func (s *SQLiteStore) GetOwners() ([]*Player, error) {
@@ -874,3 +951,94 @@ func (s *SQLiteStore) RevokeSession(id string) error {
 	_, err := s.db.Exec("update session set is_revoked = ? where id = ?", true, id)
 	return err
 }
+
+func (s *SQLiteStore) GetAchievements() ([]*AchievementEntry, error) {
+	rows, err := s.db.Query("select * from achievement")
+	if err != nil {
+		return nil, err
+	}
+	entries := []*AchievementEntry{}
+	defer rows.Close()
+	for rows.Next() {
+		entry, err := scanIntoAchievementEntry(rows)
+		if err != nil {
+			return nil, err
+		}
+		entries = append(entries, entry)
+	}
+	return entries, nil
+}
+
+
+func (s *SQLiteStore) UpdateAccountWordCount(username string, newWordCount, wordCount int) error {
+	_, err := s.db.Exec("update account set new_word_count = ?, word_count = ? where username = ?", newWordCount, wordCount, username)
+	return err
+}
+
+func (s *SQLiteStore) UpdatePlayerWordCount(playerName, lobbyCode string, newWordCount, wordCount int) error {
+	_, err := s.db.Exec("update player set new_word_count = ?, word_count = ? where name = ? and lobby_code = ?", newWordCount, wordCount, playerName, lobbyCode)
+	return err
+}
+
+func (s *SQLiteStore) AddAchievementImage(data []byte, name string) error {
+	_, err := s.db.Exec(
+		"insert or replace into achievement_image (name, data) values (?, ?)",
+		name,
+		data,
+	)
+	return err
+}
+
+func (s *SQLiteStore) GetAchievementImage(name string) ([]byte, error) {
+	rows, err := s.db.Query("select * from achievement_image where name = ?", name)
+	if err != nil {
+		return nil, err
+	}
+	images := []*Image{}
+	defer rows.Close()
+	for rows.Next() {
+		img, err := scanIntoImage(rows)
+		if err != nil {
+			return nil, err
+		}
+		images = append(images, img)
+	}
+	if len(images) > 1 {
+		return nil, fmt.Errorf("Multiple images for name %s", name)
+	}
+	if len(images) == 0 {
+		return nil, fmt.Errorf("Image for name %s not found", name)
+	}
+	return images[0].Data, nil
+}
+
+func (s *SQLiteStore) GetAchievementByTitle(title string) (*AchievementEntry, error) {
+	rows, err := s.db.Query("select * from achievement where title = ?", title)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		defer rows.Close()
+		return scanIntoAchievementEntry(rows)
+	}
+	return nil, fmt.Errorf("Achievement %s not found", title)
+}
+
+func (s *SQLiteStore) GetAchievementsForUser(username string) ([]string, error) {
+	rows, err := s.db.Query("select achievement_title from unlocked where username = ?", username)
+	if err != nil {
+		return nil, err
+	}
+	achievements := []string{}
+	defer rows.Close()
+	for rows.Next() {
+		var title string
+		err := rows.Scan(&title)
+		if err != nil {
+			return nil, err
+		}
+		achievements = append(achievements, title)
+	}
+	return achievements, nil
+}
+

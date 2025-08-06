@@ -199,7 +199,7 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 		return err
 	}
 	log.Printf("Player %s played %s + %s = %s", playerName, req.A, req.B, result)
-	err = ProcessMove(s, game, player, result)
+	err = ProcessMove(s, game, player, result, isNew)
 	if err != nil {
 		return err
 	}
@@ -317,11 +317,14 @@ func (g *Game) SetTarget() (string, error) {
 	return "", fmt.Errorf("Game mode %s not found", g.GameMode)
 }
 
-func ProcessMove(server *APIServer, game *Game, player *Player, result string) error {
+func ProcessMove(server *APIServer, game *Game, player *Player, result string, isNew bool) error {
 	if game.GameMode == FUSION_FRENZY && player.TargetWord == result {
 		game.StopTimer()
 		game.Winner = player.Name
 		if err := server.store.UpdateAccountWinsAndLosses(game.LobbyCode, player.Name); err != nil {
+			return err
+		}
+		if err := server.store.UpdateAccountWordCount(player.Name, player.NewWordCount, player.WordCount); err != nil {
 			return err
 		}
 		server.PublishToLobby(game.LobbyCode, Message{Data: GAME_OVER})
@@ -363,6 +366,17 @@ func ProcessMove(server *APIServer, game *Game, player *Player, result string) e
 		return nil
 	}
 	if err := server.store.AddPlayerWord(player.Name, result, game.LobbyCode); err != nil {
+		return err
+	}
+	updatedWordCnt := player.WordCount + 1
+	updatedNewWordCnt := player.NewWordCount
+	if isNew {
+		updatedNewWordCnt = player.NewWordCount + 1
+	}
+	if err := server.store.UpdatePlayerWordCount(player.Name, game.LobbyCode, updatedNewWordCnt, updatedWordCnt); err != nil {
+		return err
+	}
+	if err := CheckAchievements(server, player.Name, updatedWordCnt, updatedNewWordCnt, result); err != nil {
 		return err
 	}
 	return nil

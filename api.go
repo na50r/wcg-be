@@ -35,6 +35,7 @@ type APIServer struct {
 	playerClient  map[string]int          // Maps each player to a client
 	accountClient map[string]int
 	games         map[string]*Game
+	achievements  AchievementMaps
 }
 
 func NewAPIServer(listenAddr string, store Storage) *APIServer {
@@ -49,6 +50,7 @@ func NewAPIServer(listenAddr string, store Storage) *APIServer {
 		games:         make(map[string]*Game),
 	}
 	go s.listen()
+	s.SetupAchievements()
 	return &s
 }
 
@@ -76,6 +78,7 @@ func (s *APIServer) RegisterRoutes() error {
 	router.HandleFunc("/account/{username}", withAccountAuth(makeHTTPHandleFunc(s.handleAccount)))
 	router.HandleFunc("/account/{username}/images", withAccountAuth(makeHTTPHandleFunc(s.handleGetImages)))
 	router.HandleFunc("/account/{username}/leaderboard", withAccountAuth(makeHTTPHandleFunc(s.handleLeaderboard)))
+	router.HandleFunc("/account/{username}/achievements", withAccountAuth(makeHTTPHandleFunc(s.handleAchievements)))
 
 	// Lobby Endpoints
 	router.HandleFunc("/lobbies", makeHTTPHandleFunc(s.handleLobbies))
