@@ -33,7 +33,6 @@ type APIServer struct {
 	broker        *Broker
 	lobbyClients  map[string]map[int]bool // Maps a lobby code to a SET of clients
 	playerClient  map[string]int          // Maps each player to a client
-	accountClient map[string]int
 	games         map[string]*Game
 	achievements  AchievementMaps
 }
@@ -46,7 +45,6 @@ func NewAPIServer(listenAddr string, store Storage) *APIServer {
 		broker:        NewBroker(),
 		lobbyClients:  make(map[string]map[int]bool),
 		playerClient:  make(map[string]int),
-		accountClient: make(map[string]int),
 		games:         make(map[string]*Game),
 	}
 	go s.listen()

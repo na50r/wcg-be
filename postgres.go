@@ -239,7 +239,6 @@ func (s *PostgresStore) AddAchievement(entry *AchievementEntry) error {
 	return err
 }
 
-
 func (s *PostgresStore) AddDailyChallengeEntry(wordCount int, username string) error {
 	today := time.Now().Format("2006-01-02")
 	var oldCount int
@@ -596,7 +595,7 @@ func (s *PostgresStore) EditGameMode(lobbyCode string, gameMode GameMode) error 
 }
 
 func (s *PostgresStore) GetCombination(a, b string) (*string, bool, error) {
-	a, b = sortAB(a, b)
+	a, b = SortAB(a, b)
 	var result string
 	err := s.db.QueryRow("select result from combination where a = $1 AND b = $2", a, b).Scan(&result)
 	if err == sql.ErrNoRows {
@@ -608,7 +607,7 @@ func (s *PostgresStore) GetCombination(a, b string) (*string, bool, error) {
 }
 
 func (s *PostgresStore) AddCombination(combi *Combination) error {
-	a, b := sortAB(combi.A, combi.B)
+	a, b := SortAB(combi.A, combi.B)
 	_, err := s.db.Exec(
 		"insert into combination (a, b, result, depth) values ($1, $2, $3, $4) on conflict do nothing",
 		a,
@@ -620,7 +619,7 @@ func (s *PostgresStore) AddCombination(combi *Combination) error {
 }
 
 func (s *PostgresStore) AddNewCombination(a, b, result string) error {
-	a, b = sortAB(a, b)
+	a, b = SortAB(a, b)
 	aDepth := 0
 	bDepth := 0
 	err := s.db.QueryRow("select depth from word where word = $1", a).Scan(&aDepth)
@@ -976,7 +975,6 @@ func (s *PostgresStore) GetAchievementImage(name string) ([]byte, error) {
 	return images[0].Data, nil
 }
 
-
 func (s *PostgresStore) GetAchievementByTitle(title string) (*AchievementEntry, error) {
 	rows, err := s.db.Query("select * from achievement where title = $1", title)
 	if err != nil {
@@ -1006,4 +1004,3 @@ func (s *PostgresStore) GetAchievementsForUser(username string) ([]string, error
 	}
 	return achievements, nil
 }
-

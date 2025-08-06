@@ -173,7 +173,7 @@ func (s *APIServer) PublishToPlayer(playerName string, msg Message) {
 
 func (s *APIServer) PublishToChannel(w http.ResponseWriter, r *http.Request) {
 	b := s.broker
-	channelID, err := getChannelID(r)
+	channelID, err := GetChannelID(r)
 	if err != nil {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return

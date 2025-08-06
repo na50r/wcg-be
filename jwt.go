@@ -7,9 +7,10 @@ import (
 	"strings"
 	"time"
 
+	"context"
+
 	jwt "github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
-	"context"
 )
 
 func getToken(r *http.Request) (string, bool) {
@@ -20,7 +21,7 @@ func getToken(r *http.Request) (string, bool) {
 	}
 
 	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
-	tokenString = strings.TrimSpace(tokenString) 
+	tokenString = strings.TrimSpace(tokenString)
 
 	if tokenString == "" {
 		return "", false
@@ -145,7 +146,7 @@ func withAccountAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 			log.Println("Unauthorized (Invalid Token)", err)
 			return
 		}
-		username, err := getUsername(r)
+		username, err := GetUsername(r)
 		if err != nil {
 			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
 			log.Println("Unauthorized (No Username)", err)
@@ -177,13 +178,13 @@ func withPlayerAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 			log.Println("Unauthorized (Invalid Token)", err)
 			return
 		}
-		lobbyCode, err := getLobbyCode(r)
+		lobbyCode, err := GetLobbyCode(r)
 		if err != nil {
 			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
 			log.Println("Unauthorized (No Lobby Code)", err)
 			return
 		}
-		playerName, err := getPlayername(r)
+		playerName, err := GetPlayername(r)
 		if err != nil {
 			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
 			log.Println("Unauthorized (No Player Name)", err)
@@ -199,6 +200,5 @@ func withPlayerAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 		handlerFunc(w, r)
 	}
 }
-
 
 // Refresh Tokens

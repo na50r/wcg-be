@@ -23,7 +23,7 @@ import (
 // @Failure 405 {object} APIError
 // @Router /account/{username} [get]
 func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) error {
-	username, err := getUsername(r)
+	username, err := GetUsername(r)
 	if err != nil {
 		return err
 	}
@@ -106,7 +106,7 @@ func (s *APIServer) handleEditAccount(w http.ResponseWriter, r *http.Request) er
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
-	username, err := getUsername(r)
+	username, err := GetUsername(r)
 	if err != nil {
 		return err
 	}
@@ -119,7 +119,7 @@ func (s *APIServer) handleEditAccount(w http.ResponseWriter, r *http.Request) er
 		if err := bcrypt.CompareHashAndPassword([]byte(acc.Password), []byte(req.OldPassword)); err != nil {
 			return fmt.Errorf("Incorrect password, please try again")
 		}
-		if err := passwordValid(req.NewPassword); err != nil {
+		if err := PasswordValid(req.NewPassword); err != nil {
 			return err
 		}
 		encpw, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
@@ -164,7 +164,7 @@ func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error
 		return err
 	}
 
-	if err := passwordValid(req.Password); err != nil {
+	if err := PasswordValid(req.Password); err != nil {
 		return err
 	}
 

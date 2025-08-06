@@ -3,9 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
-	"net/http"
 	"log"
+	"net/http"
+
+	"github.com/google/uuid"
 )
 
 // handleGetLobby godoc
@@ -22,7 +23,7 @@ import (
 // @Failure 405 {object} APIError
 // @Router /lobbies/{lobbyCode}/{playerName} [get]
 func (s *APIServer) handleGetLobby(w http.ResponseWriter, r *http.Request) error {
-	lobbyCode, err := getLobbyCode(r)
+	lobbyCode, err := GetLobbyCode(r)
 	if err != nil {
 		return err
 	}
@@ -64,11 +65,11 @@ func (s *APIServer) handleGetLobby(w http.ResponseWriter, r *http.Request) error
 // @Failure 405 {object} APIError
 // @Router /lobbies/{lobbyCode}/{playerName}/leave [post]
 func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) error {
-	lobbyCode, err := getLobbyCode(r)
+	lobbyCode, err := GetLobbyCode(r)
 	if err != nil {
 		return err
 	}
-	playerName, err := getPlayername(r)
+	playerName, err := GetPlayername(r)
 	if err != nil {
 		return err
 	}
@@ -294,7 +295,7 @@ func (s *APIServer) handleEditGameMode(w http.ResponseWriter, r *http.Request) e
 		return fmt.Errorf("unauthorized")
 	}
 
-	lobbyCode, err := getLobbyCode(r)
+	lobbyCode, err := GetLobbyCode(r)
 	if err != nil {
 		return err
 	}

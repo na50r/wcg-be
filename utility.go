@@ -17,7 +17,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-
 func getImageFromFilePath(filePath string) (*Image, error) {
 	f, err := os.Open(filePath)
 	if err != nil {
@@ -27,7 +26,7 @@ func getImageFromFilePath(filePath string) (*Image, error) {
 	name := filepath.Base(absPath)
 
 	imageExtRegex := regexp.MustCompile(`\.(png|jpe?g)$`)
-	if !imageExtRegex.MatchString(name){
+	if !imageExtRegex.MatchString(name) {
 		return nil, nil
 	}
 	defer f.Close()
@@ -92,7 +91,6 @@ func setAchievementImages(store Storage) error {
 	}
 	return nil
 }
-
 
 func setImages(store Storage) error {
 	images, err := readImages(ICONS)
@@ -178,7 +176,7 @@ func setWords(store Storage) error {
 	return nil
 }
 
-func seedDatabase(store Storage) {
+func SeedDB(store Storage) {
 	log.Println("Seeding database...")
 	if err := setImages(store); err != nil {
 		log.Fatal(err)
@@ -202,27 +200,27 @@ func seedDatabase(store Storage) {
 	log.Println("Achievement images seeded")
 }
 
-func getChannelID(r *http.Request) (int, error) {
+func GetChannelID(r *http.Request) (int, error) {
 	channelID := mux.Vars(r)["channelID"]
 	return strconv.Atoi(channelID)
 }
 
-func getUsername(r *http.Request) (string, error) {
+func GetUsername(r *http.Request) (string, error) {
 	username := mux.Vars(r)["username"]
 	return username, nil
 }
 
-func getLobbyCode(r *http.Request) (string, error) {
+func GetLobbyCode(r *http.Request) (string, error) {
 	lobbyCode := mux.Vars(r)["lobbyCode"]
 	return lobbyCode, nil
 }
 
-func getPlayername(r *http.Request) (string, error) {
+func GetPlayername(r *http.Request) (string, error) {
 	playerName := mux.Vars(r)["playerName"]
 	return playerName, nil
 }
 
-func passwordValid(password string) error {
+func PasswordValid(password string) error {
 	if len(password) < 2 {
 		return fmt.Errorf("password must be at least 8 characters")
 	}
@@ -253,7 +251,6 @@ func RadixHash(s string, size int) int {
 	hash := resultInt % size
 	return hash
 }
-
 
 func GetCombination(store Storage, a, b string) (string, bool, error) {
 	result, inDB, err := store.GetCombination(a, b)
@@ -342,7 +339,7 @@ func formatWord(word string) string {
 	return word
 }
 
-func sortAB(a, b string) (string, string) {
+func SortAB(a, b string) (string, string) {
 	a = strings.ToLower(a)
 	b = strings.ToLower(b)
 	sorted := a < b

@@ -613,7 +613,7 @@ func (s *SQLiteStore) EditGameMode(lobbyCode string, gameMode GameMode) error {
 }
 
 func (s *SQLiteStore) GetCombination(a, b string) (*string, bool, error) {
-	a, b = sortAB(a, b)
+	a, b = SortAB(a, b)
 	var result string
 	err := s.db.QueryRow("SELECT result FROM combination WHERE a = ? AND b = ?", a, b).Scan(&result)
 	if err == sql.ErrNoRows {
@@ -625,7 +625,7 @@ func (s *SQLiteStore) GetCombination(a, b string) (*string, bool, error) {
 }
 
 func (s *SQLiteStore) AddCombination(combi *Combination) error {
-	a, b := sortAB(combi.A, combi.B)
+	a, b := SortAB(combi.A, combi.B)
 	_, err := s.db.Exec(
 		"insert or ignore into combination (a, b, result, depth) values (?, ?, ?, ?)",
 		a,
@@ -637,7 +637,7 @@ func (s *SQLiteStore) AddCombination(combi *Combination) error {
 }
 
 func (s *SQLiteStore) AddNewCombination(a, b, result string) error {
-	a, b = sortAB(a, b)
+	a, b = SortAB(a, b)
 	aDepth := 0
 	bDepth := 0
 	err := s.db.QueryRow("select depth from word where word = ?", a).Scan(&aDepth)
@@ -971,7 +971,6 @@ func (s *SQLiteStore) GetAchievements() ([]*AchievementEntry, error) {
 	return entries, nil
 }
 
-
 func (s *SQLiteStore) UpdateAccountWordCount(username string, newWordCount, wordCount int) error {
 	_, err := s.db.Exec("update account set new_word_count = ?, word_count = ? where username = ?", newWordCount, wordCount, username)
 	return err
@@ -1043,4 +1042,3 @@ func (s *SQLiteStore) GetAchievementsForUser(username string) ([]string, error) 
 	}
 	return achievements, nil
 }
-

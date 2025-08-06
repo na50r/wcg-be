@@ -42,7 +42,7 @@ func (s *APIServer) handleDeleteGame(w http.ResponseWriter, r *http.Request) err
 		return fmt.Errorf("unauthorized")
 	}
 
-	lobbyCode, err := getLobbyCode(r)
+	lobbyCode, err := GetLobbyCode(r)
 	if err != nil {
 		return err
 	}
@@ -71,11 +71,11 @@ func (s *APIServer) handleDeleteGame(w http.ResponseWriter, r *http.Request) err
 // @Failure 405 {object} APIError
 // @Router /games/{lobbyCode}/{playerName}/words [get]
 func (s *APIServer) handleGetWords(w http.ResponseWriter, r *http.Request) error {
-	lobbyCode, err := getLobbyCode(r)
+	lobbyCode, err := GetLobbyCode(r)
 	if err != nil {
 		return err
 	}
-	playerName, err := getPlayername(r)
+	playerName, err := GetPlayername(r)
 	if err != nil {
 		return err
 	}
@@ -111,7 +111,7 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 		return fmt.Errorf(Unauthorized)
 	}
 
-	lobbyCode, err := getLobbyCode(r)
+	lobbyCode, err := GetLobbyCode(r)
 	if err != nil {
 		return err
 	}
@@ -174,7 +174,7 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
 		return err
 	}
-	lobbyCode, err := getLobbyCode(r)
+	lobbyCode, err := GetLobbyCode(r)
 	if err != nil {
 		return err
 	}
@@ -190,7 +190,7 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 	if err != nil {
 		return err
 	}
-	playerName, err := getPlayername(r)
+	playerName, err := GetPlayername(r)
 	if err != nil {
 		return err
 	}
@@ -220,7 +220,7 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 // @Failure 405 {object} APIError
 // @Router /games/{lobbyCode}/{playerName}/game [get]
 func (s *APIServer) handleGetGameStats(w http.ResponseWriter, r *http.Request) error {
-	lobbyCode, err := getLobbyCode(r)
+	lobbyCode, err := GetLobbyCode(r)
 	if err != nil {
 		return err
 	}
@@ -275,7 +275,7 @@ func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) 
 	if !playerClaims.IsOwner {
 		return fmt.Errorf(Unauthorized)
 	}
-	lobbyCode, err := getLobbyCode(r)
+	lobbyCode, err := GetLobbyCode(r)
 	if err != nil {
 		return err
 	}

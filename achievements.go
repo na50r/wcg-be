@@ -126,7 +126,7 @@ func (s *APIServer) handleAchievements(w http.ResponseWriter, r *http.Request) e
 		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
 		return err
 	}
-	username, err := getUsername(r)
+	username, err := GetUsername(r)
 	if err != nil {
 		return err
 	}

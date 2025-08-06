@@ -11,11 +11,12 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
+
 	"github.com/joho/godotenv"
 	_ "github.com/na50r/wombo-combo-go-be/docs"
-	"fmt"
 )
 
 var JWT_SECRET string
@@ -104,7 +105,7 @@ func main() {
 
 	//./bin/wc --seed
 	if *seed {
-		seedDatabase(store)
+		SeedDB(store)
 	}
 
 	//Accounts for ports provided by hosting services
