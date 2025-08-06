@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/na50r/wombo-combo-go-be/sse"
 	"log"
 	"net/http"
+	"encoding/json"
+	"github.com/na50r/wombo-combo-go-be/sse"
 )
 
 type Message struct {
@@ -23,7 +24,7 @@ type GameBroker struct {
 }
 
 type PlayerSubscription struct {
-	sse.Subscription
+	sse.BaseSubscription
 	LobbyCode  string
 	PlayerName string
 	IsPlayer   bool
@@ -46,11 +47,11 @@ func NewGameBroker() *GameBroker {
 func (ps PlayerSubscription) GetChannelID() int       { return ps.ChannelID }
 func (ps PlayerSubscription) GetChannel() chan []byte { return ps.Channel }
 
-func MakePlayerSubscription(r *http.Request, id int, channel chan []byte) sse.Sub {
+func MakePlayerSubscription(r *http.Request, id int, channel chan []byte) sse.Subscription {
 	token, tokenExists := getToken(r)
 	ps := PlayerSubscription{
-		Subscription: sse.NewSubscription(id, channel),
-		IsPlayer:     false,
+		BaseSubscription: sse.NewSubscription(id, channel),
+		IsPlayer:         false,
 	}
 	if !tokenExists {
 		return ps
@@ -66,7 +67,7 @@ func MakePlayerSubscription(r *http.Request, id int, channel chan []byte) sse.Su
 	return ps
 }
 
-func (gb *GameBroker) OnNewPlayerSub(sub sse.Sub) {
+func (gb *GameBroker) OnNewPlayerSub(sub sse.Subscription) {
 	ps, ok := sub.(PlayerSubscription)
 	if !ok {
 		log.Println("Type conversion failed")
@@ -82,7 +83,7 @@ func (gb *GameBroker) OnNewPlayerSub(sub sse.Sub) {
 	gb.playerClient[ps.PlayerName] = ps.ChannelID
 }
 
-func (gb *GameBroker) OnRemovePlayerSub(unsub sse.Sub) {
+func (gb *GameBroker) OnRemovePlayerSub(unsub sse.Subscription) {
 	ps, ok := unsub.(PlayerSubscription)
 	if !ok {
 		log.Println("Type conversion failed")
@@ -108,4 +109,34 @@ func (gb *GameBroker) PublishToPlayer(playername string, msg Message) {
 
 func (gb *GameBroker) Publish(msg Message) {
 	gb.Broker.Publish(msg.toSSE())
+}
+
+// SSEHandler godoc
+// @Summary Server-Sent Events
+// @Description Server-Sent Events
+// @Tags events
+// @Accept json
+// @Produce json
+// @Success 200 {object} Message
+// @Failure 400 {object} APIError
+// @Failure 405 {object} APIError
+// @Router /events [get]
+func (gb *GameBroker) SSEHandler(w http.ResponseWriter, r *http.Request) {
+	gb.Broker.SSEHandler(w, r)
+}
+
+//$ curl -X POST -H "Content-Type: application/json" -d '{"data": "Hello World"}' http://localhost:<port>/broadcast
+func (gb *GameBroker) Broadcast(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	var m Message
+	err := json.NewDecoder(r.Body).Decode(&m)
+	if err != nil {
+		http.Error(w, "bad request", http.StatusBadRequest)
+		return
+	}
+	gb.Broker.Publish(m.toSSE())
+	w.Write([]byte("Msg sent\n"))
 }

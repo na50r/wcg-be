@@ -15,45 +15,45 @@ type Message struct {
 
 type Broker struct {
 	cnt            int
-	newClients     chan Sub
-	goneClients    chan Sub
+	newClients     chan Subscription
+	goneClients    chan Subscription
 	ClientChannels map[int]chan []byte
 
-	OnNewClient      func(sub Sub)
-	OnRemoveClient   func(sub Sub)
-	MakeSubscription func(r *http.Request, id int, channel chan []byte) Sub
+	OnNewClient      func(sub Subscription)
+	OnRemoveClient   func(sub Subscription)
+	MakeSubscription func(r *http.Request, id int, channel chan []byte) Subscription
 }
 
-type Sub interface {
+type Subscription interface {
 	GetChannelID() int
 	GetChannel() chan []byte
 }
 
 // Base subscription
-type Subscription struct {
+type BaseSubscription struct {
 	ChannelID int         `json:"channelId"`
 	Channel   chan []byte `json:"channel"`
 }
 
-func (s Subscription) GetChannelID() int     { return s.ChannelID }
-func (s Subscription) GetChannel() chan []byte { return s.Channel }
+func (s BaseSubscription) GetChannelID() int       { return s.ChannelID }
+func (s BaseSubscription) GetChannel() chan []byte { return s.Channel }
 
-func NewSubscription(id int, channel chan []byte) Subscription {
-	return Subscription{ChannelID: id, Channel: channel}
+func NewSubscription(id int, channel chan []byte) BaseSubscription {
+	return BaseSubscription{ChannelID: id, Channel: channel}
 }
 
 func NewBroker(
-	onNew func(sub Sub),
-	onRemove func(sub Sub),
-	makeSub func(r *http.Request, id int, ch chan []byte) Sub,
+	onNew func(sub Subscription),
+	onRemove func(sub Subscription),
+	makeSub func(r *http.Request, id int, ch chan []byte) Subscription,
 ) *Broker {
 	b := Broker{
-		ClientChannels: make(map[int]chan []byte),
-		newClients:     make(chan Sub),
-		goneClients:    make(chan Sub),
-		cnt:            0,
-		OnNewClient: onNew,
-		OnRemoveClient: onRemove,
+		ClientChannels:   make(map[int]chan []byte),
+		newClients:       make(chan Subscription),
+		goneClients:      make(chan Subscription),
+		cnt:              0,
+		OnNewClient:      onNew,
+		OnRemoveClient:   onRemove,
 		MakeSubscription: makeSub,
 	}
 	go b.listen()
@@ -93,7 +93,7 @@ func (b *Broker) SSEHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	channelID, channel := b.CreateChannel()
-	var sub Sub
+	var sub Subscription
 	if b.MakeSubscription != nil {
 		sub = b.MakeSubscription(r, channelID, channel)
 	} else {

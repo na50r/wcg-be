@@ -1083,6 +1083,26 @@
                 }
             }
         },
+        "main.AchievementDTO": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "unlocked": {
+                    "type": "boolean"
+                }
+            }
+        },
         "main.ChallengeEntryDTO": {
             "type": "object",
             "properties": {
@@ -1155,6 +1175,9 @@
             "properties": {
                 "gameMode": {
                     "$ref": "#/definitions/main.GameMode"
+                },
+                "manualEnd": {
+                    "type": "boolean"
                 },
                 "playerResults": {
                     "type": "array",

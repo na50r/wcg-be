@@ -1089,6 +1089,26 @@ const docTemplate = `{
                 }
             }
         },
+        "main.AchievementDTO": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "unlocked": {
+                    "type": "boolean"
+                }
+            }
+        },
         "main.ChallengeEntryDTO": {
             "type": "object",
             "properties": {
@@ -1161,6 +1181,9 @@ const docTemplate = `{
             "properties": {
                 "gameMode": {
                     "$ref": "#/definitions/main.GameMode"
+                },
+                "manualEnd": {
+                    "type": "boolean"
                 },
                 "playerResults": {
                     "type": "array",

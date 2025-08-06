@@ -86,7 +86,8 @@ func (s *APIServer) RegisterRoutes() error {
 	router.HandleFunc("/games/{lobbyCode}/{playerName}/end", withPlayerAuth(makeHTTPHandleFunc(s.handleManualGameEnd)))
 
 	// Events
-	router.HandleFunc("/events", s.broker.Broker.SSEHandler)
+	router.HandleFunc("/events", s.broker.SSEHandler)
+	router.HandleFunc("/broadcast", s.broker.Broadcast)
 
 	// Swagger
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)

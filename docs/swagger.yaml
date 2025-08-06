@@ -32,6 +32,19 @@ definitions:
         description: Number of wins
         type: integer
     type: object
+  main.AchievementDTO:
+    properties:
+      description:
+        type: string
+      image:
+        items:
+          type: integer
+        type: array
+      title:
+        type: string
+      unlocked:
+        type: boolean
+    type: object
   main.ChallengeEntryDTO:
     properties:
       image:
@@ -79,6 +92,8 @@ definitions:
     properties:
       gameMode:
         $ref: '#/definitions/main.GameMode'
+      manualEnd:
+        type: boolean
       playerResults:
         items:
           $ref: '#/definitions/main.PlayerResultDTO'
