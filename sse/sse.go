@@ -19,8 +19,13 @@ type Broker struct {
 	goneClients    chan Subscription
 	ClientChannels map[int]chan []byte
 
+	//Specify further action when new client is detected
 	OnNewClient      func(sub Subscription)
+
+	//Specifiy further action when client is removed
 	OnRemoveClient   func(sub Subscription)
+
+	//Should create the subscription not only based on id and channel but also http request
 	MakeSubscription func(r *http.Request, id int, channel chan []byte) Subscription
 }
 
@@ -29,7 +34,6 @@ type Subscription interface {
 	GetChannel() chan []byte
 }
 
-// Base subscription
 type BaseSubscription struct {
 	ChannelID int         `json:"channelId"`
 	Channel   chan []byte `json:"channel"`
@@ -56,11 +60,12 @@ func NewBroker(
 		OnRemoveClient:   onRemove,
 		MakeSubscription: makeSub,
 	}
+	//handle new clients and gone clients in separate goroutine
 	go b.listen()
 	return &b
 }
 
-func (b *Broker) CreateChannel() (int, chan []byte) {
+func (b *Broker) createChannel() (int, chan []byte) {
 	b.cnt++
 	b.ClientChannels[b.cnt] = make(chan []byte)
 	return b.cnt, b.ClientChannels[b.cnt]
@@ -70,7 +75,7 @@ func (b *Broker) listen() {
 	for {
 		select {
 		case sub := <-b.newClients:
-			log.Printf("client connected (ch=%04b), total clients: %d\n", sub.GetChannelID(), len(b.ClientChannels))
+			log.Printf("client connected (ch=%d), total clients: %d\n", sub.GetChannelID(), len(b.ClientChannels))
 			if b.OnNewClient != nil {
 				b.OnNewClient(sub)
 			}
@@ -81,7 +86,7 @@ func (b *Broker) listen() {
 			if b.OnRemoveClient != nil {
 				b.OnRemoveClient(unsub)
 			}
-			log.Printf("client %04b disconnected, total clients: %d\n", unsub.GetChannelID(), len(b.ClientChannels))
+			log.Printf("client disconnected (ch=%d), total clients: %d\n", unsub.GetChannelID(), len(b.ClientChannels))
 		}
 	}
 }
@@ -92,7 +97,7 @@ func (b *Broker) SSEHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Connection", "keep-alive")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	channelID, channel := b.CreateChannel()
+	channelID, channel := b.createChannel()
 	var sub Subscription
 	if b.MakeSubscription != nil {
 		sub = b.MakeSubscription(r, channelID, channel)

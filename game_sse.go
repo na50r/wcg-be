@@ -92,9 +92,9 @@ func (gb *GameBroker) OnRemovePlayerSub(unsub sse.Subscription) {
 	if !ps.IsPlayer {
 		return
 	}
-	delete(gb.lobbyClients[ps.LobbyCode], unsub.GetChannelID())
+	delete(gb.lobbyClients[ps.LobbyCode], ps.ChannelID)
 	delete(gb.playerClient, ps.PlayerName)
-	log.Printf("player %s (ch=%04b) disconnected from lobby %s", ps.PlayerName, ps.ChannelID, ps.LobbyCode)
+	log.Printf("player %s (ch=%d) disconnected from lobby %s", ps.PlayerName, ps.ChannelID, ps.LobbyCode)
 }
 
 func (gb *GameBroker) PublishToLobby(lobbyCode string, msg Message) {
