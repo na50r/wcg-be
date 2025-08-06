@@ -532,7 +532,7 @@ func (s *PostgresStore) DeletePlayersForLobby(lobbyCode string) error {
 
 func (s *PostgresStore) AddPlayerToLobby(lobbyCode string, player *Player) error {
 	_, err := s.db.Exec(
-		"insert into player (name, lobby_code, image_name, is_owner, has_account, target_word, points) values ($1, $2, $3, $4, $5, $6, $7)",
+		"insert into player (name, lobby_code, image_name, is_owner, has_account, target_word, points, new_word_count, word_count) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
 		player.Name,
 		lobbyCode,
 		player.ImageName,
@@ -540,6 +540,8 @@ func (s *PostgresStore) AddPlayerToLobby(lobbyCode string, player *Player) error
 		player.HasAccount,
 		player.TargetWord,
 		player.Points,
+		player.NewWordCount,
+		player.WordCount,
 	)
 	log.Printf("insert error: %v", err)
 	if err != nil {
