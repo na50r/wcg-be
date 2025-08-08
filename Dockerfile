@@ -8,12 +8,9 @@ RUN go build -o bin/wombo-combo-go-be
 
 FROM alpine
 COPY --from=builder /build/bin/wombo-combo-go-be /app/
-# COPY icons /app/icons
-# COPY Combinations.csv /app/Combinations.csv
-# COPY Words.csv /app/Words.csv
-# COPY Achivements.csv /app/Achivements.csv
-# COPY achievement_icons /app/achievement_icons
 WORKDIR /app
+
+# Prodive env variables but no files, seed locally
 ENV WORDS=/app/Words.csv
 ENV COMBINATIONS=/app/Combinations.csv
 ENV ICONS=/app/icons

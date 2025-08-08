@@ -106,6 +106,8 @@ func main() {
 	//./bin/wc --seed
 	if *seed {
 		SeedDB(store)
+		log.Println("Seeding completed, closing server...")
+		os.Exit(0)
 	}
 
 	//Accounts for ports provided by hosting services
