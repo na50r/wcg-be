@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"time"
-	"github.com/na50r/wombo-combo-go-be/sse"
 )
 
 type Timer struct {
@@ -33,16 +32,15 @@ func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
 	three_quarter := half + one_quarter
 	now := time.Now()
 	triggers := map[int]bool{three_quarter: false, half: false, one_quarter: false}
-	group := s.broker.lobbyClients[lobbyCode]
 	publishTimeEvent := func(secondsLeft int) {
-		s.broker.Broker.PublishToGroup(group, sse.Message{Data: TimeEvent{SecondsLeft: secondsLeft}})
+		s.broker.PublishToLobby(lobbyCode, Message{Data: TimeEvent{SecondsLeft: secondsLeft}})
 	}
 	go func() {
 		defer ticker.Stop()
 		for {
 			select {
 			case <-ctx.Done():
-				s.broker.Broker.PublishToGroup(group, sse.Message{Data: TIMER_STOPPED})
+				s.broker.PublishToLobby(lobbyCode, Message{Data: TIMER_STOPPED})
 				log.Printf("Timer %s stopped\n", lobbyCode)
 				return
 			case t := <-ticker.C:
@@ -67,7 +65,7 @@ func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
 					if err != nil {
 						log.Printf("Error selecting winner: %v", err)
 					}
-					s.broker.Broker.PublishToGroup(group, sse.Message{Data: GAME_OVER})
+					s.broker.PublishToLobby(lobbyCode, Message{Data: GAME_OVER})
 					return
 				}
 			}
