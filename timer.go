@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"time"
+	c "github.com/na50r/wombo-combo-go-be/constants"
 )
 
 type Timer struct {
@@ -40,7 +41,7 @@ func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
 		for {
 			select {
 			case <-ctx.Done():
-				s.broker.PublishToLobby(lobbyCode, Message{Data: TIMER_STOPPED})
+				s.broker.PublishToLobby(lobbyCode, Message{Data: c.TIMER_STOPPED})
 				log.Printf("Timer %s stopped\n", lobbyCode)
 				return
 			case t := <-ticker.C:
@@ -65,7 +66,7 @@ func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
 					if err != nil {
 						log.Printf("Error selecting winner: %v", err)
 					}
-					s.broker.PublishToLobby(lobbyCode, Message{Data: GAME_OVER})
+					s.broker.PublishToLobby(lobbyCode, Message{Data: c.GAME_OVER})
 					return
 				}
 			}

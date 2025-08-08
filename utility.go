@@ -13,11 +13,11 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
-
+	c "github.com/na50r/wombo-combo-go-be/constants"
 	"github.com/gorilla/mux"
 )
 
-func getImageFromFilePath(filePath string) (*Image, error) {
+func GetImageFromFilePath(filePath string) (*Image, error) {
 	f, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func getImageFromFilePath(filePath string) (*Image, error) {
 	return image, nil
 }
 
-func getFilePathsInDir(dir string) ([]string, error) {
+func GetFilePathsInDir(dir string) ([]string, error) {
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, err
@@ -61,14 +61,14 @@ func getFilePathsInDir(dir string) ([]string, error) {
 	return paths, nil
 }
 
-func readImages(path string) ([]*Image, error) {
-	paths, err := getFilePathsInDir(path)
+func ReadImages(path string) ([]*Image, error) {
+	paths, err := GetFilePathsInDir(path)
 	if err != nil {
 		return nil, err
 	}
 	images := []*Image{}
 	for _, path := range paths {
-		image, err := getImageFromFilePath(path)
+		image, err := GetImageFromFilePath(path)
 		if err != nil {
 			return nil, err
 		}
@@ -79,8 +79,8 @@ func readImages(path string) ([]*Image, error) {
 	}
 	return images, nil
 }
-func setAchievementImages(store Storage) error {
-	images, err := readImages(ACHIEVEMENT_ICONS)
+func SetAchievementImages(store Storage) error {
+	images, err := ReadImages(ACHIEVEMENT_ICONS)
 	if err != nil {
 		return err
 	}
@@ -92,8 +92,8 @@ func setAchievementImages(store Storage) error {
 	return nil
 }
 
-func setImages(store Storage) error {
-	images, err := readImages(ICONS)
+func SetImages(store Storage) error {
+	images, err := ReadImages(ICONS)
 	if err != nil {
 		return err
 	}
@@ -105,7 +105,7 @@ func setImages(store Storage) error {
 	return nil
 }
 
-func readCSV(filePath string) ([][]string, error) {
+func ReadCSV(filePath string) ([][]string, error) {
 	f, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
@@ -119,8 +119,8 @@ func readCSV(filePath string) ([][]string, error) {
 	return records[1:], nil
 }
 
-func setAchievements(store Storage) error {
-	records, err := readCSV(ACHIEVEMENTS)
+func SetAchievements(store Storage) error {
+	records, err := ReadCSV(ACHIEVEMENTS)
 	if err != nil {
 		return err
 	}
@@ -128,7 +128,7 @@ func setAchievements(store Storage) error {
 	for _, record := range records {
 		entry := new(AchievementEntry)
 		entry.Title = record[0]
-		entry.Type = Achievement(record[1])
+		entry.Type = c.Achievement(record[1])
 		entry.Value = strings.ToLower(record[2])
 		entry.Description = record[3]
 		entry.ImageName = record[4]
@@ -139,8 +139,8 @@ func setAchievements(store Storage) error {
 	return nil
 }
 
-func setCombinations(store Storage) error {
-	records, err := readCSV(COMBINATIONS)
+func SetCombinations(store Storage) error {
+	records, err := ReadCSV(COMBINATIONS)
 	log.Println("Number of combinations ", len(records))
 	if err != nil {
 		return err
@@ -158,8 +158,8 @@ func setCombinations(store Storage) error {
 	return nil
 }
 
-func setWords(store Storage) error {
-	records, err := readCSV(WORDS)
+func SetWords(store Storage) error {
+	records, err := ReadCSV(WORDS)
 	if err != nil {
 		return err
 	}
@@ -178,23 +178,23 @@ func setWords(store Storage) error {
 
 func SeedDB(store Storage) {
 	log.Println("Seeding database...")
-	if err := setImages(store); err != nil {
+	if err := SetImages(store); err != nil {
 		log.Fatal(err)
 	}
 	log.Println("Images seeded")
-	if err := setCombinations(store); err != nil {
+	if err := SetCombinations(store); err != nil {
 		log.Fatal(err)
 	}
 	log.Println("Combinations seeded")
-	if err := setWords(store); err != nil {
+	if err := SetWords(store); err != nil {
 		log.Fatal(err)
 	}
 	log.Println("Words seeded")
-	if err := setAchievements(store); err != nil {
+	if err := SetAchievements(store); err != nil {
 		log.Fatal(err)
 	}
 	log.Println("Achievements seeded")
-	if err := setAchievementImages(store); err != nil {
+	if err := SetAchievementImages(store); err != nil {
 		log.Fatal(err)
 	}
 	log.Println("Achievement images seeded")
@@ -327,11 +327,11 @@ func CallCohereAPI(a, b string) (string, error) {
 	if err := json.NewDecoder(resp.Body).Decode(&apiResponse); err != nil {
 		return "", err
 	}
-	newWord := formatWord(apiResponse.Message.Content[0].Text)
+	newWord := FormatWord(apiResponse.Message.Content[0].Text)
 	return newWord, nil
 }
 
-func formatWord(word string) string {
+func FormatWord(word string) string {
 	word = strings.ToLower(word)
 	// Match all non-alphabetic characters
 	re := regexp.MustCompile(`[^a-z]+`)

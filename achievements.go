@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	c "github.com/na50r/wombo-combo-go-be/constants"
 )
 
 type AchievementMaps struct {
@@ -26,19 +27,19 @@ func (server *APIServer) SetupAchievements() error {
 	}
 	for _, entry := range achievementEntries {
 		switch entry.Type {
-		case NewWordCount:
+		case c.NewWordCount:
 			val, err := strconv.Atoi(entry.Value)
 			if err != nil {
 				return err
 			}
 			newWordCnt[val] = entry.Title
-		case WordCount:
+		case c.WordCount:
 			val, err := strconv.Atoi(entry.Value)
 			if err != nil {
 				return err
 			}
 			wordCnt[val] = entry.Title
-		case TargetWord:
+		case c.TargetWord:
 			targetWord[entry.Value] = entry.Title
 		}
 	}

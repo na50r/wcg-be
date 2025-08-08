@@ -10,7 +10,8 @@ import (
 	"context"
 
 	jwt "github.com/golang-jwt/jwt"
-	"github.com/google/uuid"
+	"github.com/google/uuid"	
+	c "github.com/na50r/wombo-combo-go-be/constants"
 )
 
 func getToken(r *http.Request) (string, bool) {
@@ -136,24 +137,24 @@ func withAccountAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		token, tokenExists := getToken(r)
 		if !tokenExists {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (No Token)")
 			return
 		}
 		accountClaims, err := verifyAccountJWT(token)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (Invalid Token)", err)
 			return
 		}
 		username, err := GetUsername(r)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (No Username)", err)
 			return
 		}
 		if accountClaims.Username != username {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (Invalid Username)", err)
 			return
 		}
@@ -168,30 +169,30 @@ func withPlayerAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		token, tokenExists := getToken(r)
 		if !tokenExists {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (No Token)")
 			return
 		}
 		playerClaims, err := verifyPlayerJWT(token)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (Invalid Token)", err)
 			return
 		}
 		lobbyCode, err := GetLobbyCode(r)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (No Lobby Code)", err)
 			return
 		}
 		playerName, err := GetPlayername(r)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (No Player Name)", err)
 			return
 		}
 		if lobbyCode != playerClaims.LobbyCode || playerName != playerClaims.PlayerName {
-			WriteJSON(w, http.StatusUnauthorized, APIError{Error: Unauthorized})
+			WriteJSON(w, http.StatusUnauthorized, APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (Invalid Lobby Code or Player Name)", err)
 			return
 		}

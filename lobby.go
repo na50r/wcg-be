@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"github.com/google/uuid"
+	c "github.com/na50r/wombo-combo-go-be/constants"
 )
 
 // handleGetLobby godoc
@@ -93,7 +94,7 @@ func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) err
 		if err := s.store.SetIsOwner(playerName, false); err != nil {
 			return err
 		}
-		s.broker.Publish(Message{Data: LOBBY_DELETED})
+		s.broker.Publish(Message{Data: c.LOBBY_DELETED})
 		return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Lobby deleted"})
 	}
 	if err := s.store.DeletePlayer(playerName, lobbyCode); err != nil {
@@ -106,7 +107,7 @@ func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) err
 		return err
 	}
 	delete(s.broker.lobbyClients[lobbyCode], s.broker.playerClient[playerName])
-	s.broker.Publish(Message{Data: PLAYER_LEFT})
+	s.broker.Publish(Message{Data: c.PLAYER_LEFT})
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Left Lobby"})
 }
 
@@ -157,7 +158,7 @@ func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) erro
 		return err
 	}
 	lobbyDTO := NewLobbyDTO(lobby, player.Name, []*PlayerDTO{})
-	s.broker.Publish(Message{Data: PLAYER_JOINED})
+	s.broker.Publish(Message{Data: c.PLAYER_JOINED})
 	return WriteJSON(w, http.StatusOK, JoinLobbyRespone{Token: playerToken, LobbyDTO: *lobbyDTO})
 }
 
@@ -232,7 +233,7 @@ func (s *APIServer) handleCreateLobby(w http.ResponseWriter, r *http.Request) er
 		return err
 	}
 	resp := CreateLobbyResponse{Token: lobbyToken, LobbyDTO: *lobbyDTO}
-	s.broker.Publish(Message{Data: LOBBY_CREATED})
+	s.broker.Publish(Message{Data: c.LOBBY_CREATED})
 	return WriteJSON(w, http.StatusOK, resp)
 }
 

@@ -10,6 +10,8 @@ import (
 	"time"
 
 	_ "github.com/lib/pq"
+	c "github.com/na50r/wombo-combo-go-be/constants"
+
 )
 
 type PostgresStore struct {
@@ -589,7 +591,7 @@ func (s *PostgresStore) GetLobbyByCode(lobbyCode string) (*Lobby, error) {
 	return nil, fmt.Errorf("lobby %s not found", lobbyCode)
 }
 
-func (s *PostgresStore) EditGameMode(lobbyCode string, gameMode GameMode) error {
+func (s *PostgresStore) EditGameMode(lobbyCode string, gameMode c.GameMode) error {
 	_, err := s.db.Exec("update lobby set game_mode = $1 where lobby_code = $2", gameMode, lobbyCode)
 	return err
 }

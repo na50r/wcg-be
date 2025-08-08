@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"sort"
 	"golang.org/x/crypto/bcrypt"
+	c "github.com/na50r/wombo-combo-go-be/constants"
 )
 
 // handleGetAccount godoc
@@ -215,7 +216,7 @@ func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	acc.Status = ONLINE
+	acc.Status = c.ONLINE
 	if err := s.store.UpdateAccount(acc); err != nil {
 		return err
 	}
@@ -242,7 +243,7 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 	}
 	token, tokenExists := getToken(r)
 	if !tokenExists {
-		return fmt.Errorf(Unauthorized)
+		return fmt.Errorf(c.Unauthorized)
 	}
 
 	accountClaims, err := verifyAccountJWT(token)
@@ -253,10 +254,10 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	if acc.Status == OFFLINE {
+	if acc.Status == c.OFFLINE {
 		return WriteJSON(w, http.StatusBadRequest, APIError{Error: "Already logged out"})
 	}
-	acc.Status = OFFLINE
+	acc.Status = c.OFFLINE
 	if err := s.store.UpdateAccount(acc); err != nil {
 		return err
 	}
@@ -286,8 +287,8 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		}
 		delete(s.broker.lobbyClients, lobbyCode)
 		delete(s.games, lobbyCode)
-		s.broker.PublishToLobby(lobbyCode,Message{Data: GAME_DELETED})
-		s.broker.Publish(Message{Data: LOBBY_DELETED})
+		s.broker.PublishToLobby(lobbyCode,Message{Data: c.GAME_DELETED})
+		s.broker.Publish(Message{Data: c.LOBBY_DELETED})
 	}
 	log.Printf("User %s logged out\n", accountClaims.Username)
 	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Logout successful"})

@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"time"
-
+	c "github.com/na50r/wombo-combo-go-be/constants"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -29,7 +29,7 @@ type Storage interface {
 	DeleteLobby(lobbyCode string) error
 	GetLobbies() ([]*Lobby, error)
 	GetLobbyByCode(lobbyCode string) (*Lobby, error)
-	EditGameMode(lobbyCode string, gameMode GameMode) error
+	EditGameMode(lobbyCode string, gameMode c.GameMode) error
 	AddCombination(element *Combination) error
 	GetCombination(a, b string) (*string, bool, error)
 	AddWord(word *Word) error
@@ -74,7 +74,7 @@ type Account struct {
 	Losses    int    `db:"losses"`
 	ImageName string `db:"image_name"`
 	CreatedAt string `db:"created_at"`
-	Status    Status `db:"status"`
+	Status    c.Status `db:"status"`
 	IsOwner   bool   `db:"is_owner"`
 	NewWordCount int `db:"new_word_count"`
 	WordCount int `db:"word_count"`
@@ -96,7 +96,7 @@ type Lobby struct {
 	Name        string   `db:"name"`
 	ImageName   string   `db:"image_name"`
 	LobbyCode   string   `db:"lobby_code"`
-	GameMode    GameMode `db:"game_mode"`
+	GameMode    c.GameMode `db:"game_mode"`
 	PlayerCount int      `db:"player_count"`
 }
 
@@ -143,7 +143,7 @@ type Session struct {
 type AchievementEntry struct {
 	ID int `db:"id"`
 	Title string `db:"title"`
-	Type Achievement `db:"type"`
+	Type c.Achievement `db:"type"`
 	Value string `db:"value"`
 	Description string `db:"description"`
 	ImageName string `db:"image_name"`
@@ -168,7 +168,7 @@ func NewAccount(username, password string) (*Account, error) {
 		Losses:    0,
 		ImageName: imageName,
 		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
-		Status:    OFFLINE,
+		Status:    c.OFFLINE,
 		IsOwner:   false,
 		NewWordCount: 0,
 		WordCount: 0,
@@ -194,7 +194,7 @@ func NewLobby(name, lobbyCode, imageName string) *Lobby {
 		Name:        name,
 		ImageName:   imageName,
 		LobbyCode:   lobbyCode,
-		GameMode:    VANILLA,
+		GameMode:    c.VANILLA,
 		PlayerCount: 1,
 	}
 }

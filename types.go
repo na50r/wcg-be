@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	c "github.com/na50r/wombo-combo-go-be/constants"
 )
 
 type CohereResponse struct {
@@ -45,7 +46,7 @@ type AccountDTO struct {
 	ImageName string `json:"imageName"` // Name of the user's profile image
 	Image     []byte `json:"image"`     // Base64-encoded image
 	CreatedAt string `json:"createdAt"` // ISO8601 creation timestamp
-	Status    Status `json:"status"`    // ONLINE or OFFLINE
+	Status    c.Status `json:"status"`    // ONLINE or OFFLINE
 }
 
 type CreateLobbyRequest struct {
@@ -70,10 +71,10 @@ type PlayerDTO struct {
 type LobbyDTO struct {
 	LobbyCode string       `json:"lobbyCode"`
 	Name      string       `json:"name"`
-	GameMode  GameMode     `json:"gameMode"`
+	GameMode  c.GameMode     `json:"gameMode"`
 	Owner     string       `json:"owner"`
 	Players   []*PlayerDTO `json:"players"`
-	GameModes []GameMode   `json:"gameModes"`
+	GameModes []c.GameMode   `json:"gameModes"`
 }
 
 type LobbiesDTO struct {
@@ -110,17 +111,17 @@ type JoinLobbyRequest struct {
 }
 
 type EditGameRequest struct {
-	GameMode GameMode `json:"gameMode"`
+	GameMode c.GameMode `json:"gameMode"`
 	Duration int      `json:"duration"`
 }
 
 type GameEditEvent struct {
-	GameMode GameMode `json:"gameMode"`
+	GameMode c.GameMode `json:"gameMode"`
 	Duration int      `json:"duration"`
 }
 
 type Game struct {
-	GameMode    GameMode `json:"gameMode"`
+	GameMode    c.GameMode `json:"gameMode"`
 	LobbyCode   string   `json:"lobbyCode"`
 	TargetWord  string   `json:"targetWord"`
 	TargetWords []string `json:"targetWords"`
@@ -146,7 +147,7 @@ type Words struct {
 }
 
 type StartGameRequest struct {
-	GameMode  GameMode `json:"gameMode"`
+	GameMode  c.GameMode `json:"gameMode"`
 	WithTimer bool     `json:"withTimer"`
 	Duration  int      `json:"duration"`
 }
@@ -164,7 +165,7 @@ type PlayerResultDTO struct {
 }
 
 type GameEndResponse struct {
-	GameMode    GameMode           `json:"gameMode"`
+	GameMode    c.GameMode           `json:"gameMode"`
 	Winner      string             `json:"winner"`
 	PlayerWords []*PlayerResultDTO `json:"playerResults"`
 	ManualEnd   bool               `json:"manualEnd"`
@@ -191,8 +192,8 @@ type AchievementDTO struct {
 	Unlocked    bool   `json:"unlocked"`
 }
 
-func NewGameModes() []GameMode {
-	return []GameMode{VANILLA, WOMBO_COMBO, FUSION_FRENZY, DAILY_CHALLENGE}
+func NewGameModes() []c.GameMode {
+	return []c.GameMode{c.VANILLA, c.WOMBO_COMBO, c.FUSION_FRENZY, c.DAILY_CHALLENGE}
 }
 
 func NewLobbyDTO(lobby *Lobby, owner string, players []*PlayerDTO) *LobbyDTO {
@@ -206,7 +207,7 @@ func NewLobbyDTO(lobby *Lobby, owner string, players []*PlayerDTO) *LobbyDTO {
 	}
 }
 
-func NewGame(s Storage, lobbyCode string, gameMode GameMode, withTimer bool, duration int) (*Game, error) {
+func NewGame(s Storage, lobbyCode string, gameMode c.GameMode, withTimer bool, duration int) (*Game, error) {
 	game := new(Game)
 	game.LobbyCode = lobbyCode
 	game.GameMode = gameMode
@@ -218,7 +219,7 @@ func NewGame(s Storage, lobbyCode string, gameMode GameMode, withTimer bool, dur
 	}
 
 	err := fmt.Errorf("Game mode %s not found", gameMode)
-	if gameMode == VANILLA {
+	if gameMode == c.VANILLA {
 		return game, nil
 	}
 	// Reachability is between 0 and 1
@@ -227,21 +228,21 @@ func NewGame(s Storage, lobbyCode string, gameMode GameMode, withTimer bool, dur
 	// 0.75 * newReachability + 0.25 * oldReachability if newDepth < oldDepth
 	// 0.25 * newReachability + 0.75 * oldReachability if newDepth >= oldDepth
 	// The less deep and the more paths are available, the more reachable a word is
-	if gameMode == FUSION_FRENZY {
+	if gameMode == c.FUSION_FRENZY {
 		game.TargetWord, err = s.GetTargetWord(0.0375, 0.2, 10)
 		if err != nil {
 			return nil, err
 		}
 		return game, nil
 	}
-	if gameMode == WOMBO_COMBO {
+	if gameMode == c.WOMBO_COMBO {
 		game.TargetWords, err = s.GetTargetWords(0.0375, 0.2, 10)
 		if err != nil {
 			return nil, err
 		}
 		return game, nil
 	}
-	if gameMode == DAILY_CHALLENGE {
+	if gameMode == c.DAILY_CHALLENGE {
 		game.TargetWord, err = s.CreateOrGetDailyWord(0.0375, 0.2, 8)
 		if err != nil {
 			log.Printf("Error creating or getting daily word: %v", err)

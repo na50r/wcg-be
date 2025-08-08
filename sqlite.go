@@ -9,6 +9,7 @@ import (
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
+	c "github.com/na50r/wombo-combo-go-be/constants"
 )
 
 type SQLiteStore struct {
@@ -607,7 +608,7 @@ func (s *SQLiteStore) GetLobbyByCode(lobbyCode string) (*Lobby, error) {
 	return nil, fmt.Errorf("lobby %s not found", lobbyCode)
 }
 
-func (s *SQLiteStore) EditGameMode(lobbyCode string, gameMode GameMode) error {
+func (s *SQLiteStore) EditGameMode(lobbyCode string, gameMode c.GameMode) error {
 	_, err := s.db.Exec("update lobby set game_mode = ? where lobby_code = ?", gameMode, lobbyCode)
 	return err
 }
