@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"sort"
 	c "github.com/na50r/wombo-combo-go-be/constants"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
 )
 
 func (s *APIServer) handleGame(w http.ResponseWriter, r *http.Request) error {
@@ -19,7 +20,7 @@ func (s *APIServer) handleGame(w http.ResponseWriter, r *http.Request) error {
 	case http.MethodDelete:
 		return s.handleDeleteGame(w, r)
 	default:
-		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
 }
@@ -34,8 +35,8 @@ func (s *APIServer) handleGame(w http.ResponseWriter, r *http.Request) error {
 // @Param lobbyCode path string true "Lobby code"
 // @Param playerName path string true "Player name"
 // @Success 200 {object} GenericResponse
-// @Failure 400 {object} APIError
-// @Failure 405 {object} APIError
+// @Failure 400 {object} dto.APIError
+// @Failure 405 {object} dto.APIError
 // @Router /games/{lobbyCode}/{playerName}/game [delete]
 func (s *APIServer) handleDeleteGame(w http.ResponseWriter, r *http.Request) error {
 	playerClaims := r.Context().Value(authKey{}).(*PlayerClaims)
@@ -56,7 +57,7 @@ func (s *APIServer) handleDeleteGame(w http.ResponseWriter, r *http.Request) err
 		return err
 	}
 	s.broker.PublishToLobby(lobbyCode, Message{Data: c.GAME_DELETED})
-	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game deleted"})
+	return WriteJSON(w, http.StatusOK, dto.GenericResponse{Message: "Game deleted"})
 }
 
 // handleGetWords godoc
@@ -68,8 +69,8 @@ func (s *APIServer) handleDeleteGame(w http.ResponseWriter, r *http.Request) err
 // @Security BearerAuth
 // @Param lobbyCode path string true "Lobby code"
 // @Success 200 {object} Words
-// @Failure 400 {object} APIError
-// @Failure 405 {object} APIError
+// @Failure 400 {object} dto.APIError
+// @Failure 405 {object} dto.APIError
 // @Router /games/{lobbyCode}/{playerName}/words [get]
 func (s *APIServer) handleGetWords(w http.ResponseWriter, r *http.Request) error {
 	lobbyCode, err := GetLobbyCode(r)
@@ -88,7 +89,7 @@ func (s *APIServer) handleGetWords(w http.ResponseWriter, r *http.Request) error
 	if err != nil {
 		return err
 	}
-	wordsDTO := Words{Words: words, TargetWord: targetWord}
+	wordsDTO := dto.Words{Words: words, TargetWord: targetWord}
 	return WriteJSON(w, http.StatusOK, wordsDTO)
 }
 
@@ -103,8 +104,8 @@ func (s *APIServer) handleGetWords(w http.ResponseWriter, r *http.Request) error
 // @Param lobbyCode path string true "Lobby code"
 // @Param playerName path string true "Player name"
 // @Success 200 {object} GenericResponse
-// @Failure 400 {object} APIError
-// @Failure 405 {object} APIError
+// @Failure 400 {object} dto.APIError
+// @Failure 405 {object} dto.APIError
 // @Router /games/{lobbyCode}/{playerName}/game [post]
 func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) error {
 	playerClaims := r.Context().Value(authKey{}).(*PlayerClaims)
@@ -116,7 +117,7 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 	if err != nil {
 		return err
 	}
-	req := new(StartGameRequest)
+	req := new(dto.StartGameRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
@@ -153,7 +154,7 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 	log.Println("Target words: ", game.TargetWords)
 	s.broker.PublishToLobby(lobbyCode, Message{Data: c.GAME_STARTED})
 	game.StartTimer(s)
-	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game started"})
+	return WriteJSON(w, http.StatusOK, dto.GenericResponse{Message: "Game started"})
 }
 
 // handleCombination godoc
@@ -167,12 +168,12 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 // @Param lobbyCode path string true "Lobby code"
 // @Param playerName path string true "Player name"
 // @Success 200 {object} WordResponse
-// @Failure 400 {object} APIError
-// @Failure 405 {object} APIError
+// @Failure 400 {object} dto.APIError
+// @Failure 405 {object} dto.APIError
 // @Router /games/{lobbyCode}/{playerName}/combinations [post]
 func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
-		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
 	lobbyCode, err := GetLobbyCode(r)
@@ -183,7 +184,7 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 	if game == nil {
 		return fmt.Errorf("Game not found")
 	}
-	req := new(WordRequest)
+	req := new(dto.WordRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
@@ -204,7 +205,7 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 	if err != nil {
 		return err
 	}
-	return WriteJSON(w, http.StatusOK, WordResponse{Result: result, IsNew: isNew})
+	return WriteJSON(w, http.StatusOK, dto.WordResponse{Result: result, IsNew: isNew})
 }
 
 // handleGetGameStats godoc
@@ -217,8 +218,8 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 // @Param lobbyCode path string true "Lobby code"
 // @Param playerName path string true "Player name"
 // @Success 200 {object} GameEndResponse
-// @Failure 400 {object} APIError
-// @Failure 405 {object} APIError
+// @Failure 400 {object} dto.APIError
+// @Failure 405 {object} dto.APIError
 // @Router /games/{lobbyCode}/{playerName}/game [get]
 func (s *APIServer) handleGetGameStats(w http.ResponseWriter, r *http.Request) error {
 	lobbyCode, err := GetLobbyCode(r)
@@ -230,7 +231,7 @@ func (s *APIServer) handleGetGameStats(w http.ResponseWriter, r *http.Request) e
 	if err != nil {
 		return err
 	}
-	playerWordsDTO := []*PlayerResultDTO{}
+	playerWordsDTO := []*dto.PlayerResultDTO{}
 	for _, playerWordCount := range playerWordCounts {
 		player, err := s.store.GetPlayerByLobbyCodeAndName(playerWordCount.PlayerName, lobbyCode)
 		if err != nil {
@@ -240,7 +241,7 @@ func (s *APIServer) handleGetGameStats(w http.ResponseWriter, r *http.Request) e
 		if err != nil {
 			return err
 		}
-		playerWordsDTO = append(playerWordsDTO, &PlayerResultDTO{PlayerName: player.Name, Image: img, WordCount: playerWordCount.WordCount, Points: player.Points + playerWordCount.WordCount})
+		playerWordsDTO = append(playerWordsDTO, &dto.PlayerResultDTO{PlayerName: player.Name, Image: img, WordCount: playerWordCount.WordCount, Points: player.Points + playerWordCount.WordCount})
 	}
 	sort.Slice(playerWordsDTO, func(i, j int) bool {
 		if playerWordsDTO[i].PlayerName == winner {
@@ -251,7 +252,7 @@ func (s *APIServer) handleGetGameStats(w http.ResponseWriter, r *http.Request) e
 		}
 		return playerWordsDTO[i].Points > playerWordsDTO[j].Points
 	})
-	return WriteJSON(w, http.StatusOK, GameEndResponse{Winner: winner, PlayerWords: playerWordsDTO, GameMode: s.games[lobbyCode].GameMode, ManualEnd: s.games[lobbyCode].ManualEnd})
+	return WriteJSON(w, http.StatusOK, dto.GameEndResponse{Winner: winner, PlayerWords: playerWordsDTO, GameMode: s.games[lobbyCode].GameMode, ManualEnd: s.games[lobbyCode].ManualEnd})
 }
 
 // handleManualGameEnd godoc
@@ -264,12 +265,12 @@ func (s *APIServer) handleGetGameStats(w http.ResponseWriter, r *http.Request) e
 // @Param lobbyCode path string true "Lobby code"
 // @Param playerName path string true "Player name"
 // @Success 200 {object} GenericResponse
-// @Failure 400 {object} APIError
-// @Failure 405 {object} APIError
+// @Failure 400 {object} dto.APIError
+// @Failure 405 {object} dto.APIError
 // @Router /games/{lobbyCode}/{playerName}/end [post]
 func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
-		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
 	playerClaims := r.Context().Value(authKey{}).(*PlayerClaims)
@@ -296,7 +297,7 @@ func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) 
 	game.Winner = winner
 	game.ManualEnd = true
 	s.broker.PublishToLobby(lobbyCode, Message{Data: c.GAME_OVER})
-	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game ended"})
+	return WriteJSON(w, http.StatusOK, dto.GenericResponse{Message: "Game ended"})
 }
 
 // Game Logic

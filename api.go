@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
 )
 
 func WriteJSON(w http.ResponseWriter, status int, v any) error {
@@ -21,7 +22,7 @@ type APIFunc func(http.ResponseWriter, *http.Request) error
 func makeHTTPHandleFunc(f APIFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := f(w, r); err != nil {
-			WriteJSON(w, http.StatusBadRequest, APIError{Error: err.Error()})
+			WriteJSON(w, http.StatusBadRequest, dto.APIError{Error: err.Error()})
 		}
 	}
 }

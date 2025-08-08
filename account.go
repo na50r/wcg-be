@@ -8,6 +8,7 @@ import (
 	"sort"
 	"golang.org/x/crypto/bcrypt"
 	c "github.com/na50r/wombo-combo-go-be/constants"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
 )
 
 // handleGetAccount godoc
@@ -36,7 +37,7 @@ func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) err
 		return err
 	}
 
-	resp := new(AccountDTO)
+	resp := new(dto.AccountDTO)
 	resp.Username = acc.Username
 	resp.Image = img
 	resp.ImageName = acc.ImageName
@@ -68,7 +69,7 @@ func (s *APIServer) handleGetImages(w http.ResponseWriter, r *http.Request) erro
 	for _, image := range images {
 		names = append(names, image.Name)
 	}
-	resp := ImagesResponse{Names: names}
+	resp := dto.ImagesResponse{Names: names}
 	return WriteJSON(w, http.StatusOK, resp)
 }
 
@@ -79,7 +80,7 @@ func (s *APIServer) handleAccount(w http.ResponseWriter, r *http.Request) error 
 	case http.MethodPut:
 		return s.handleEditAccount(w, r)
 	default:
-		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
 }
@@ -99,10 +100,10 @@ func (s *APIServer) handleAccount(w http.ResponseWriter, r *http.Request) error 
 // @Router /account/{username} [put]
 func (s *APIServer) handleEditAccount(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPut {
-		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
-	req := new(EditAccountRequest)
+	req := new(dto.EditAccountRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
@@ -140,7 +141,7 @@ func (s *APIServer) handleEditAccount(w http.ResponseWriter, r *http.Request) er
 	if err := s.store.UpdateAccount(acc); err != nil {
 		return err
 	}
-	return WriteJSON(w, http.StatusOK, GenericResponse{Message: msg})
+	return WriteJSON(w, http.StatusOK, dto.GenericResponse{Message: msg})
 }
 
 // handleRegister godoc
@@ -156,10 +157,10 @@ func (s *APIServer) handleEditAccount(w http.ResponseWriter, r *http.Request) er
 // @Router /accounts [post]
 func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
-		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
-	req := new(RegisterRequest)
+	req := new(dto.RegisterRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
@@ -177,9 +178,9 @@ func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error
 
 	if err := s.store.CreateAccount(acc); err != nil {
 		log.Println(err)
-		return WriteJSON(w, http.StatusConflict, APIError{Error: "Username taken, choose another one"})
+		return WriteJSON(w, http.StatusConflict, dto.APIError{Error: "Username taken, choose another one"})
 	}
-	return WriteJSON(w, http.StatusCreated, GenericResponse{Message: "Account created"})
+	return WriteJSON(w, http.StatusCreated, dto.GenericResponse{Message: "Account created"})
 }
 
 // handleLogin godoc
@@ -195,10 +196,10 @@ func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error
 // @Router /login [post]
 func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
-		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
-	req := new(LoginRequest)
+	req := new(dto.LoginRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
@@ -220,7 +221,7 @@ func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
 	if err := s.store.UpdateAccount(acc); err != nil {
 		return err
 	}
-	resp := LoginResponse{Token: tokenString}
+	resp := dto.LoginResponse{Token: tokenString}
 	log.Printf("User %s logged in\n", acc.Username)
 	return WriteJSON(w, http.StatusOK, resp)
 }
@@ -238,7 +239,7 @@ func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
 // @Router /logout [post]
 func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
-		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
 	token, tokenExists := getToken(r)
@@ -255,7 +256,7 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 	if acc.Status == c.OFFLINE {
-		return WriteJSON(w, http.StatusBadRequest, APIError{Error: "Already logged out"})
+		return WriteJSON(w, http.StatusBadRequest, dto.APIError{Error: "Already logged out"})
 	}
 	acc.Status = c.OFFLINE
 	if err := s.store.UpdateAccount(acc); err != nil {
@@ -291,7 +292,7 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 		s.broker.Publish(Message{Data: c.LOBBY_DELETED})
 	}
 	log.Printf("User %s logged out\n", accountClaims.Username)
-	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Logout successful"})
+	return WriteJSON(w, http.StatusOK, dto.GenericResponse{Message: "Logout successful"})
 }
 
 // handleLeaderboard godoc
@@ -308,20 +309,20 @@ func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
 // @Router /account/{username}/leaderboard [get]
 func (s *APIServer) handleLeaderboard(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodGet {
-		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
 	entries, err := s.store.GetChallengeEntries()
 	if err != nil {
 		return err
 	}
-	entriesDTO := []*ChallengeEntryDTO{}
+	entriesDTO := []*dto.ChallengeEntryDTO{}
 	for _, entry := range entries {
 		image, err := s.store.GetImageByUsername(entry.Username)
 		if err != nil {
 			return err
 		}
-		entriesDTO = append(entriesDTO, &ChallengeEntryDTO{WordCount: entry.WordCount, Username: entry.Username, Image: image})
+		entriesDTO = append(entriesDTO, &dto.ChallengeEntryDTO{WordCount: entry.WordCount, Username: entry.Username, Image: image})
 	}
 	sort.Slice(entriesDTO, func(i, j int) bool {
 		return entriesDTO[i].WordCount < entriesDTO[j].WordCount

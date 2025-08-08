@@ -17,6 +17,9 @@ import (
 
 	"github.com/joho/godotenv"
 	_ "github.com/na50r/wombo-combo-go-be/docs"
+	c "github.com/na50r/wombo-combo-go-be/constants"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
+
 )
 
 var JWT_SECRET string
@@ -119,4 +122,27 @@ func main() {
 	server := NewAPIServer(":"+PORT, store)
 	log.Printf("Starting server on port %s", PORT)
 	server.Run()
+}
+
+
+type Game struct {
+	GameMode    c.GameMode `json:"gameMode"`
+	LobbyCode   string   `json:"lobbyCode"`
+	TargetWord  string   `json:"targetWord"`
+	TargetWords []string `json:"targetWords"`
+	Winner      string   `json:"winner"`
+	WithTimer   bool     `json:"withTimer"`
+	Timer       *Timer   `json:"timer"`
+	ManualEnd   bool     `json:"manualEnd"`
+}
+
+func NewLobbyDTO(lobby *Lobby, owner string, players []*dto.PlayerDTO) *dto.LobbyDTO {
+	return &dto.LobbyDTO{
+		LobbyCode: lobby.LobbyCode,
+		Name:      lobby.Name,
+		GameMode:  lobby.GameMode,
+		Owner:     owner,
+		Players:   players,
+		GameModes: dto.NewGameModes(),
+	}
 }

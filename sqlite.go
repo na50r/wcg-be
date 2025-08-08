@@ -10,6 +10,7 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 	c "github.com/na50r/wombo-combo-go-be/constants"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
 )
 
 type SQLiteStore struct {
@@ -774,7 +775,7 @@ func (s *SQLiteStore) DeletePlayerWordsByPlayerAndLobbyCode(playerName, lobbyCod
 	return err
 }
 
-func (s *SQLiteStore) GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCount, error) {
+func (s *SQLiteStore) GetWordCountByLobbyCode(lobbyCode string) ([]*dto.PlayerWordCount, error) {
 	query := `
 	select player_name, COUNT(*) as word_count
 	from player_word
@@ -786,7 +787,7 @@ func (s *SQLiteStore) GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCo
 	if err != nil {
 		return nil, err
 	}
-	wordCounts := []*PlayerWordCount{}
+	wordCounts := []*dto.PlayerWordCount{}
 	defer rows.Close()
 	for rows.Next() {
 		wordCount, err := scanIntoPlayerWordCount(rows)

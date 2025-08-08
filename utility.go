@@ -13,8 +13,8 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
-	c "github.com/na50r/wombo-combo-go-be/constants"
 	"github.com/gorilla/mux"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
 )
 
 func GetImageFromFilePath(filePath string) (*Image, error) {
@@ -79,31 +79,7 @@ func ReadImages(path string) ([]*Image, error) {
 	}
 	return images, nil
 }
-func SetAchievementImages(store Storage) error {
-	images, err := ReadImages(ACHIEVEMENT_ICONS)
-	if err != nil {
-		return err
-	}
-	for _, image := range images {
-		if err := store.AddAchievementImage(image.Data, image.Name); err != nil {
-			return err
-		}
-	}
-	return nil
-}
 
-func SetImages(store Storage) error {
-	images, err := ReadImages(ICONS)
-	if err != nil {
-		return err
-	}
-	for _, image := range images {
-		if err := store.AddImage(image.Data, image.Name); err != nil {
-			return err
-		}
-	}
-	return nil
-}
 
 func ReadCSV(filePath string) ([][]string, error) {
 	f, err := os.Open(filePath)
@@ -117,87 +93,6 @@ func ReadCSV(filePath string) ([][]string, error) {
 		return nil, err
 	}
 	return records[1:], nil
-}
-
-func SetAchievements(store Storage) error {
-	records, err := ReadCSV(ACHIEVEMENTS)
-	if err != nil {
-		return err
-	}
-	log.Println("Number of achievements ", len(records))
-	for _, record := range records {
-		entry := new(AchievementEntry)
-		entry.Title = record[0]
-		entry.Type = c.Achievement(record[1])
-		entry.Value = strings.ToLower(record[2])
-		entry.Description = record[3]
-		entry.ImageName = record[4]
-		if err := store.AddAchievement(entry); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func SetCombinations(store Storage) error {
-	records, err := ReadCSV(COMBINATIONS)
-	log.Println("Number of combinations ", len(records))
-	if err != nil {
-		return err
-	}
-	for _, record := range records {
-		combi := new(Combination)
-		combi.A = strings.ToLower(record[1])
-		combi.B = strings.ToLower(record[2])
-		combi.Result = strings.ToLower(record[3])
-		combi.Depth, _ = strconv.Atoi(record[0])
-		if err := store.AddCombination(combi); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func SetWords(store Storage) error {
-	records, err := ReadCSV(WORDS)
-	if err != nil {
-		return err
-	}
-	log.Println("Number of words ", len(records))
-	for _, record := range records {
-		word := new(Word)
-		word.Word = strings.ToLower(record[0])
-		word.Depth, _ = strconv.Atoi(record[1])
-		word.Reachability, _ = strconv.ParseFloat(record[2], 64)
-		if err := store.AddWord(word); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func SeedDB(store Storage) {
-	log.Println("Seeding database...")
-	if err := SetImages(store); err != nil {
-		log.Fatal(err)
-	}
-	log.Println("Images seeded")
-	if err := SetCombinations(store); err != nil {
-		log.Fatal(err)
-	}
-	log.Println("Combinations seeded")
-	if err := SetWords(store); err != nil {
-		log.Fatal(err)
-	}
-	log.Println("Words seeded")
-	if err := SetAchievements(store); err != nil {
-		log.Fatal(err)
-	}
-	log.Println("Achievements seeded")
-	if err := SetAchievementImages(store); err != nil {
-		log.Fatal(err)
-	}
-	log.Println("Achievement images seeded")
 }
 
 func GetChannelID(r *http.Request) (int, error) {
@@ -252,27 +147,6 @@ func RadixHash(s string, size int) int {
 	return hash
 }
 
-func GetCombination(store Storage, a, b string) (string, bool, error) {
-	result, inDB, err := store.GetCombination(a, b)
-	if err != nil {
-		return "", false, err
-	}
-	if !inDB {
-		newWord, err := CallCohereAPI(a, b)
-		if err != nil {
-			log.Printf("Error calling Cohere API: %v", err)
-			return "star", false, nil
-		}
-		log.Printf("Adding new combination %s + %s = %s", a, b, newWord)
-		err = store.AddNewCombination(a, b, newWord)
-		if err != nil {
-			log.Printf("Error adding new combination: %v", err)
-			return "star", false, nil
-		}
-		return newWord, true, nil
-	}
-	return *result, false, nil
-}
 
 func CallRandomWordAPI() (string, error) {
 	log.Println("Calling random word API")
@@ -323,7 +197,7 @@ func CallCohereAPI(a, b string) (string, error) {
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
-	var apiResponse CohereResponse
+	var apiResponse dto.CohereResponse
 	if err := json.NewDecoder(resp.Body).Decode(&apiResponse); err != nil {
 		return "", err
 	}

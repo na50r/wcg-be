@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 	c "github.com/na50r/wombo-combo-go-be/constants"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
 )
 
 type Timer struct {
@@ -34,7 +35,7 @@ func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
 	now := time.Now()
 	triggers := map[int]bool{three_quarter: false, half: false, one_quarter: false}
 	publishTimeEvent := func(secondsLeft int) {
-		s.broker.PublishToLobby(lobbyCode, Message{Data: TimeEvent{SecondsLeft: secondsLeft}})
+		s.broker.PublishToLobby(lobbyCode, Message{Data: dto.TimeEvent{SecondsLeft: secondsLeft}})
 	}
 	go func() {
 		defer ticker.Stop()

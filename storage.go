@@ -5,6 +5,11 @@ import (
 	"time"
 	c "github.com/na50r/wombo-combo-go-be/constants"
 	"golang.org/x/crypto/bcrypt"
+	"log"
+	"strconv"
+	"strings"
+	"fmt"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
 )
 
 type Storage interface {
@@ -37,7 +42,7 @@ type Storage interface {
 	GetPlayerWords(playerName, lobbyCode string) ([]string, error)
 	DeletePlayerWordsByLobbyCode(lobbyCode string) error
 	DeletePlayerWordsByPlayerAndLobbyCode(playerName, lobbyCode string) error
-	GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCount, error)
+	GetWordCountByLobbyCode(lobbyCode string) ([]*dto.PlayerWordCount, error)
 	UpdateAccountWinsAndLosses(lobbyCode, winner string) error
 	SetPlayerTargetWord(playerName, targetWord, lobbyCode string) error
 	GetPlayerTargetWord(playerName, lobbyCode string) (string, error)
@@ -275,8 +280,8 @@ func scanIntoPlayerWord(rows *sql.Rows) (*PlayerWord, error) {
 	return playerWord, err
 }
 
-func scanIntoPlayerWordCount(rows *sql.Rows) (*PlayerWordCount, error) {
-	wordCount := new(PlayerWordCount)
+func scanIntoPlayerWordCount(rows *sql.Rows) (*dto.PlayerWordCount, error) {
+	wordCount := new(dto.PlayerWordCount)
 	err := rows.Scan(
 		&wordCount.PlayerName,
 		&wordCount.WordCount,
@@ -327,4 +332,182 @@ func scanIntoUnlocked(rows *sql.Rows) (*Unlocked, error) {
 		&unlocked.AchievmentTitle,
 	)
 	return unlocked, err
+}
+
+func SetAchievementImages(store Storage) error {
+	images, err := ReadImages(ACHIEVEMENT_ICONS)
+	if err != nil {
+		return err
+	}
+	for _, image := range images {
+		if err := store.AddAchievementImage(image.Data, image.Name); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func SetImages(store Storage) error {
+	images, err := ReadImages(ICONS)
+	if err != nil {
+		return err
+	}
+	for _, image := range images {
+		if err := store.AddImage(image.Data, image.Name); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+
+func SetAchievements(store Storage) error {
+	records, err := ReadCSV(ACHIEVEMENTS)
+	if err != nil {
+		return err
+	}
+	log.Println("Number of achievements ", len(records))
+	for _, record := range records {
+		entry := new(AchievementEntry)
+		entry.Title = record[0]
+		entry.Type = c.Achievement(record[1])
+		entry.Value = strings.ToLower(record[2])
+		entry.Description = record[3]
+		entry.ImageName = record[4]
+		if err := store.AddAchievement(entry); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func SetCombinations(store Storage) error {
+	records, err := ReadCSV(COMBINATIONS)
+	log.Println("Number of combinations ", len(records))
+	if err != nil {
+		return err
+	}
+	for _, record := range records {
+		combi := new(Combination)
+		combi.A = strings.ToLower(record[1])
+		combi.B = strings.ToLower(record[2])
+		combi.Result = strings.ToLower(record[3])
+		combi.Depth, _ = strconv.Atoi(record[0])
+		if err := store.AddCombination(combi); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func SetWords(store Storage) error {
+	records, err := ReadCSV(WORDS)
+	if err != nil {
+		return err
+	}
+	log.Println("Number of words ", len(records))
+	for _, record := range records {
+		word := new(Word)
+		word.Word = strings.ToLower(record[0])
+		word.Depth, _ = strconv.Atoi(record[1])
+		word.Reachability, _ = strconv.ParseFloat(record[2], 64)
+		if err := store.AddWord(word); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func SeedDB(store Storage) {
+	log.Println("Seeding database...")
+	if err := SetImages(store); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Images seeded")
+	if err := SetCombinations(store); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Combinations seeded")
+	if err := SetWords(store); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Words seeded")
+	if err := SetAchievements(store); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Achievements seeded")
+	if err := SetAchievementImages(store); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Achievement images seeded")
+}
+
+
+func GetCombination(store Storage, a, b string) (string, bool, error) {
+	result, inDB, err := store.GetCombination(a, b)
+	if err != nil {
+		return "", false, err
+	}
+	if !inDB {
+		newWord, err := CallCohereAPI(a, b)
+		if err != nil {
+			log.Printf("Error calling Cohere API: %v", err)
+			return "star", false, nil
+		}
+		log.Printf("Adding new combination %s + %s = %s", a, b, newWord)
+		err = store.AddNewCombination(a, b, newWord)
+		if err != nil {
+			log.Printf("Error adding new combination: %v", err)
+			return "star", false, nil
+		}
+		return newWord, true, nil
+	}
+	return *result, false, nil
+}
+
+
+func NewGame(s Storage, lobbyCode string, gameMode c.GameMode, withTimer bool, duration int) (*Game, error) {
+	game := new(Game)
+	game.LobbyCode = lobbyCode
+	game.GameMode = gameMode
+	game.WithTimer = withTimer
+	game.ManualEnd = false
+
+	if withTimer {
+		game.Timer = NewTimer(duration)
+	}
+
+	err := fmt.Errorf("Game mode %s not found", gameMode)
+	if gameMode == c.VANILLA {
+		return game, nil
+	}
+	// Reachability is between 0 and 1
+	// Reachability is computed with: 1 / (2 ^ depth)
+	// Reachability is updated with:
+	// 0.75 * newReachability + 0.25 * oldReachability if newDepth < oldDepth
+	// 0.25 * newReachability + 0.75 * oldReachability if newDepth >= oldDepth
+	// The less deep and the more paths are available, the more reachable a word is
+	if gameMode == c.FUSION_FRENZY {
+		game.TargetWord, err = s.GetTargetWord(0.0375, 0.2, 10)
+		if err != nil {
+			return nil, err
+		}
+		return game, nil
+	}
+	if gameMode == c.WOMBO_COMBO {
+		game.TargetWords, err = s.GetTargetWords(0.0375, 0.2, 10)
+		if err != nil {
+			return nil, err
+		}
+		return game, nil
+	}
+	if gameMode == c.DAILY_CHALLENGE {
+		game.TargetWord, err = s.CreateOrGetDailyWord(0.0375, 0.2, 8)
+		if err != nil {
+			log.Printf("Error creating or getting daily word: %v", err)
+			return nil, err
+		}
+		return game, nil
+	}
+	return nil, err
 }

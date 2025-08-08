@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	c "github.com/na50r/wombo-combo-go-be/constants"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
 )
 
 type AchievementMaps struct {
@@ -59,7 +60,7 @@ func UnlockAchievement(s *APIServer, username, achievementTitle string) error {
 	}
 	if newUnlock {
 		log.Printf("Achievement unlocked: %s", achievementTitle)
-		s.broker.PublishToPlayer(username, Message{Data: AchievementEvent{AchievementTitle: achievementTitle}})
+		s.broker.PublishToPlayer(username, Message{Data: dto.AchievementEvent{AchievementTitle: achievementTitle}})
 	}
 	log.Printf("Achievement already unlocked: %s", achievementTitle)
 	return nil
@@ -88,7 +89,7 @@ func CheckAchievements(s *APIServer, username string, updatedWordCnt, updatedNew
 	return nil
 }
 
-func GetAchievementsForUser(s *APIServer, username string) ([]*AchievementDTO, error) {
+func GetAchievementsForUser(s *APIServer, username string) ([]*dto.AchievementDTO, error) {
 	achievementTitles, err := s.store.GetAchievementsForUser(username)
 	if err != nil {
 		return nil, err
@@ -101,14 +102,14 @@ func GetAchievementsForUser(s *APIServer, username string) ([]*AchievementDTO, e
 	if err != nil {
 		return nil, err
 	}
-	achievements := []*AchievementDTO{}
+	achievements := []*dto.AchievementDTO{}
 	for _, entry := range allAchievements {
 		image, err := s.store.GetAchievementImage(entry.ImageName)
 		if err != nil {
 			return nil, err
 		}
 		unlocked := unlockedAchievements[entry.Title]
-		achievements = append(achievements, &AchievementDTO{Title: entry.Title, Description: entry.Description, Image: image, Unlocked: unlocked})
+		achievements = append(achievements, &dto.AchievementDTO{Title: entry.Title, Description: entry.Description, Image: image, Unlocked: unlocked})
 	}
 	return achievements, nil
 }
@@ -124,7 +125,7 @@ func GetAchievementsForUser(s *APIServer, username string) ([]*AchievementDTO, e
 // @Success 200 {array} AchievementDTO
 func (s *APIServer) handleAchievements(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodGet {
-		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
 	username, err := GetUsername(r)

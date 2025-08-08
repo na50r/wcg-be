@@ -1,8 +1,6 @@
-package main
+package dto
 
 import (
-	"fmt"
-	"log"
 	c "github.com/na50r/wombo-combo-go-be/constants"
 )
 
@@ -120,17 +118,6 @@ type GameEditEvent struct {
 	Duration int      `json:"duration"`
 }
 
-type Game struct {
-	GameMode    c.GameMode `json:"gameMode"`
-	LobbyCode   string   `json:"lobbyCode"`
-	TargetWord  string   `json:"targetWord"`
-	TargetWords []string `json:"targetWords"`
-	Winner      string   `json:"winner"`
-	WithTimer   bool     `json:"withTimer"`
-	Timer       *Timer   `json:"timer"`
-	ManualEnd   bool     `json:"manualEnd"`
-}
-
 type WordRequest struct {
 	A string `json:"a"`
 	B string `json:"b"`
@@ -196,59 +183,3 @@ func NewGameModes() []c.GameMode {
 	return []c.GameMode{c.VANILLA, c.WOMBO_COMBO, c.FUSION_FRENZY, c.DAILY_CHALLENGE}
 }
 
-func NewLobbyDTO(lobby *Lobby, owner string, players []*PlayerDTO) *LobbyDTO {
-	return &LobbyDTO{
-		LobbyCode: lobby.LobbyCode,
-		Name:      lobby.Name,
-		GameMode:  lobby.GameMode,
-		Owner:     owner,
-		Players:   players,
-		GameModes: NewGameModes(),
-	}
-}
-
-func NewGame(s Storage, lobbyCode string, gameMode c.GameMode, withTimer bool, duration int) (*Game, error) {
-	game := new(Game)
-	game.LobbyCode = lobbyCode
-	game.GameMode = gameMode
-	game.WithTimer = withTimer
-	game.ManualEnd = false
-
-	if withTimer {
-		game.Timer = NewTimer(duration)
-	}
-
-	err := fmt.Errorf("Game mode %s not found", gameMode)
-	if gameMode == c.VANILLA {
-		return game, nil
-	}
-	// Reachability is between 0 and 1
-	// Reachability is computed with: 1 / (2 ^ depth)
-	// Reachability is updated with:
-	// 0.75 * newReachability + 0.25 * oldReachability if newDepth < oldDepth
-	// 0.25 * newReachability + 0.75 * oldReachability if newDepth >= oldDepth
-	// The less deep and the more paths are available, the more reachable a word is
-	if gameMode == c.FUSION_FRENZY {
-		game.TargetWord, err = s.GetTargetWord(0.0375, 0.2, 10)
-		if err != nil {
-			return nil, err
-		}
-		return game, nil
-	}
-	if gameMode == c.WOMBO_COMBO {
-		game.TargetWords, err = s.GetTargetWords(0.0375, 0.2, 10)
-		if err != nil {
-			return nil, err
-		}
-		return game, nil
-	}
-	if gameMode == c.DAILY_CHALLENGE {
-		game.TargetWord, err = s.CreateOrGetDailyWord(0.0375, 0.2, 8)
-		if err != nil {
-			log.Printf("Error creating or getting daily word: %v", err)
-			return nil, err
-		}
-		return game, nil
-	}
-	return nil, err
-}

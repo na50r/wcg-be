@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"github.com/google/uuid"
 	c "github.com/na50r/wombo-combo-go-be/constants"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
 )
 
 // handleGetLobby godoc
@@ -36,7 +37,7 @@ func (s *APIServer) handleGetLobby(w http.ResponseWriter, r *http.Request) error
 		return err
 	}
 	var ownerName string
-	playersDTO := []*PlayerDTO{}
+	playersDTO := []*dto.PlayerDTO{}
 	for _, player := range players {
 		img, err := s.store.GetImage(player.ImageName)
 		if err != nil {
@@ -45,7 +46,7 @@ func (s *APIServer) handleGetLobby(w http.ResponseWriter, r *http.Request) error
 		if player.IsOwner {
 			ownerName = player.Name
 		}
-		playersDTO = append(playersDTO, &PlayerDTO{Name: player.Name, Image: img})
+		playersDTO = append(playersDTO, &dto.PlayerDTO{Name: player.Name, Image: img})
 	}
 	lobbyDTO := NewLobbyDTO(lobby, ownerName, playersDTO)
 	return WriteJSON(w, http.StatusOK, lobbyDTO)
@@ -95,7 +96,7 @@ func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) err
 			return err
 		}
 		s.broker.Publish(Message{Data: c.LOBBY_DELETED})
-		return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Lobby deleted"})
+		return WriteJSON(w, http.StatusOK, dto.GenericResponse{Message: "Lobby deleted"})
 	}
 	if err := s.store.DeletePlayer(playerName, lobbyCode); err != nil {
 		return err
@@ -108,7 +109,7 @@ func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) err
 	}
 	delete(s.broker.lobbyClients[lobbyCode], s.broker.playerClient[playerName])
 	s.broker.Publish(Message{Data: c.PLAYER_LEFT})
-	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Left Lobby"})
+	return WriteJSON(w, http.StatusOK, dto.GenericResponse{Message: "Left Lobby"})
 }
 
 // handleJoinLobby godoc
@@ -125,7 +126,7 @@ func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) err
 func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) error {
 	token, tokenExists := getToken(r)
 
-	req := new(JoinLobbyRequest)
+	req := new(dto.JoinLobbyRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
@@ -157,9 +158,9 @@ func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) erro
 	if err != nil {
 		return err
 	}
-	lobbyDTO := NewLobbyDTO(lobby, player.Name, []*PlayerDTO{})
+	lobbyDTO := NewLobbyDTO(lobby, player.Name, []*dto.PlayerDTO{})
 	s.broker.Publish(Message{Data: c.PLAYER_JOINED})
-	return WriteJSON(w, http.StatusOK, JoinLobbyRespone{Token: playerToken, LobbyDTO: *lobbyDTO})
+	return WriteJSON(w, http.StatusOK, dto.JoinLobbyRespone{Token: playerToken, LobbyDTO: *lobbyDTO})
 }
 
 func (s *APIServer) handleLobbies(w http.ResponseWriter, r *http.Request) error {
@@ -171,7 +172,7 @@ func (s *APIServer) handleLobbies(w http.ResponseWriter, r *http.Request) error 
 	case http.MethodPut:
 		return s.handleJoinLobby(w, r)
 	default:
-		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
 }
@@ -198,7 +199,7 @@ func (s *APIServer) handleCreateLobby(w http.ResponseWriter, r *http.Request) er
 		return err
 	}
 	username := accountClaims.Username
-	req := new(CreateLobbyRequest)
+	req := new(dto.CreateLobbyRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
@@ -225,14 +226,14 @@ func (s *APIServer) handleCreateLobby(w http.ResponseWriter, r *http.Request) er
 	if err != nil {
 		return err
 	}
-	ownerDTO := &PlayerDTO{Name: owner.Name, Image: img}
-	playersDTO := []*PlayerDTO{ownerDTO}
+	ownerDTO := &dto.PlayerDTO{Name: owner.Name, Image: img}
+	playersDTO := []*dto.PlayerDTO{ownerDTO}
 	lobbyDTO := NewLobbyDTO(lobby, owner.Name, playersDTO)
 	lobbyToken, err := createLobbyToken(owner)
 	if err != nil {
 		return err
 	}
-	resp := CreateLobbyResponse{Token: lobbyToken, LobbyDTO: *lobbyDTO}
+	resp := dto.CreateLobbyResponse{Token: lobbyToken, LobbyDTO: *lobbyDTO}
 	s.broker.Publish(Message{Data: c.LOBBY_CREATED})
 	return WriteJSON(w, http.StatusOK, resp)
 }
@@ -252,13 +253,13 @@ func (s *APIServer) handleGetLobbies(w http.ResponseWriter, r *http.Request) err
 	if err != nil {
 		return err
 	}
-	lobbiesDTO := []*LobbiesDTO{}
+	lobbiesDTO := []*dto.LobbiesDTO{}
 	for _, lobby := range lobbies {
 		img, err := s.store.GetImage(lobby.ImageName)
 		if err != nil {
 			return err
 		}
-		lobby := &LobbiesDTO{Image: img, PlayerCount: lobby.PlayerCount, LobbyCode: lobby.LobbyCode}
+		lobby := &dto.LobbiesDTO{Image: img, PlayerCount: lobby.PlayerCount, LobbyCode: lobby.LobbyCode}
 		lobbiesDTO = append(lobbiesDTO, lobby)
 	}
 	return WriteJSON(w, http.StatusOK, lobbiesDTO)
@@ -280,7 +281,7 @@ func (s *APIServer) handleGetLobbies(w http.ResponseWriter, r *http.Request) err
 // @Router /lobbies/{lobbyCode}/{playerName}/edit [put]
 func (s *APIServer) handleEditGameMode(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPut {
-		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
 	token, tokenExists := getToken(r)
@@ -299,10 +300,10 @@ func (s *APIServer) handleEditGameMode(w http.ResponseWriter, r *http.Request) e
 	if err != nil {
 		return err
 	}
-	req := new(EditGameRequest)
+	req := new(dto.EditGameRequest)
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
-	s.broker.PublishToLobby(lobbyCode, Message{Data: GameEditEvent{GameMode: req.GameMode, Duration: req.Duration}})
-	return WriteJSON(w, http.StatusOK, GenericResponse{Message: "Game mode changed"})
+	s.broker.PublishToLobby(lobbyCode, Message{Data: dto.GameEditEvent{GameMode: req.GameMode, Duration: req.Duration}})
+	return WriteJSON(w, http.StatusOK, dto.GenericResponse{Message: "Game mode changed"})
 }

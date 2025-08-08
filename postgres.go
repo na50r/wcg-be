@@ -11,6 +11,7 @@ import (
 
 	_ "github.com/lib/pq"
 	c "github.com/na50r/wombo-combo-go-be/constants"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
 
 )
 
@@ -773,7 +774,7 @@ func (s *PostgresStore) DeletePlayerWordsByPlayerAndLobbyCode(playerName, lobbyC
 	return err
 }
 
-func (s *PostgresStore) GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCount, error) {
+func (s *PostgresStore) GetWordCountByLobbyCode(lobbyCode string) ([]*dto.PlayerWordCount, error) {
 	query := `
 	select player_name, COUNT(*) as word_count
 	from player_word
@@ -785,7 +786,7 @@ func (s *PostgresStore) GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWord
 	if err != nil {
 		return nil, err
 	}
-	wordCounts := []*PlayerWordCount{}
+	wordCounts := []*dto.PlayerWordCount{}
 	defer rows.Close()
 	for rows.Next() {
 		wordCount, err := scanIntoPlayerWordCount(rows)
