@@ -14,7 +14,7 @@ import (
 	c "github.com/na50r/wombo-combo-go-be/constants"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
 	u "github.com/na50r/wombo-combo-go-be/utility"
-
+	st "github.com/na50r/wombo-combo-go-be/storage"
 )
 
 func getToken(r *http.Request) (string, bool) {
@@ -67,7 +67,7 @@ func verifyPlayerJWT(tokenString string) (*PlayerClaims, error) {
 	return claims, nil
 }
 
-func createJWT(account *Account) (string, error) {
+func createJWT(account *st.Account) (string, error) {
 	claims, err := NewAccountClaims(account.Username, time.Hour*4)
 	if err != nil {
 		return "", err
@@ -76,7 +76,7 @@ func createJWT(account *Account) (string, error) {
 	return token.SignedString([]byte(JWT_SECRET))
 }
 
-func createLobbyToken(player *Player) (string, error) {
+func createLobbyToken(player *st.Player) (string, error) {
 	claims, err := NewPlayerClaims(player, time.Hour*4)
 	if err != nil {
 		return "", err
@@ -114,7 +114,7 @@ type PlayerClaims struct {
 	jwt.StandardClaims
 }
 
-func NewPlayerClaims(player *Player, duration time.Duration) (*PlayerClaims, error) {
+func NewPlayerClaims(player *st.Player, duration time.Duration) (*PlayerClaims, error) {
 	tokenID, err := uuid.NewRandom()
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate token ID: %v", err)

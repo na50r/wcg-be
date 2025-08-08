@@ -19,6 +19,7 @@ import (
 	_ "github.com/na50r/wombo-combo-go-be/docs"
 	c "github.com/na50r/wombo-combo-go-be/constants"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
+    st "github.com/na50r/wombo-combo-go-be/storage"
 
 )
 
@@ -81,13 +82,13 @@ func init() {
 	}
 }
 
-func NewStore() (Storage, error) {
+func NewStore() (st.Storage, error) {
 	log.Printf("Using database [%s]", DB)
 	if DB == "POSTGRES" {
-		return NewPostgresStore()
+		return st.NewPostgresStore(POSTGRES_CONNECTION)
 	}
 	if DB == "SQLITE" {
-		return NewSQLiteStore("store")
+		return st.NewSQLiteStore("store")
 	}
 	return nil, fmt.Errorf("DB [%s] not found", DB)
 }
@@ -108,7 +109,7 @@ func main() {
 
 	//./bin/wc --seed
 	if *seed {
-		SeedDB(store)
+		st.SeedDB(store, WORDS, COMBINATIONS, ICONS, ACHIEVEMENT_ICONS, ACHIEVEMENTS)
 		log.Println("Seeding completed, closing server...")
 		os.Exit(0)
 	}
@@ -136,7 +137,7 @@ type Game struct {
 	ManualEnd   bool     `json:"manualEnd"`
 }
 
-func NewLobbyDTO(lobby *Lobby, owner string, players []*dto.PlayerDTO) *dto.LobbyDTO {
+func NewLobbyDTO(lobby *st.Lobby, owner string, players []*dto.PlayerDTO) *dto.LobbyDTO {
 	return &dto.LobbyDTO{
 		LobbyCode: lobby.LobbyCode,
 		Name:      lobby.Name,

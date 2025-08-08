@@ -10,6 +10,7 @@ import (
 	c "github.com/na50r/wombo-combo-go-be/constants"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
 	u "github.com/na50r/wombo-combo-go-be/utility"
+	st "github.com/na50r/wombo-combo-go-be/storage"
 )
 
 func (s *APIServer) handleGame(w http.ResponseWriter, r *http.Request) error {
@@ -189,7 +190,7 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
-	result, isNew, err := GetCombination(s.store, req.A, req.B, COHERE_API_KEY)
+	result, isNew, err := st.GetCombination(s.store, req.A, req.B, COHERE_API_KEY)
 	if err != nil {
 		return err
 	}
@@ -320,7 +321,7 @@ func (g *Game) SetTarget() (string, error) {
 	return "", fmt.Errorf("Game mode %s not found", g.GameMode)
 }
 
-func ProcessMove(server *APIServer, game *Game, player *Player, result string, isNew bool) error {
+func ProcessMove(server *APIServer, game *Game, player *st.Player, result string, isNew bool) error {
 	if game.GameMode == c.FUSION_FRENZY && player.TargetWord == result {
 		game.StopTimer()
 		game.Winner = player.Name
@@ -397,7 +398,7 @@ func (g *Game) StopTimer() {
 	}
 }
 
-func SeedPlayerWords(s Storage, lobbyCode string, game *Game) error {
+func SeedPlayerWords(s st.Storage, lobbyCode string, game *Game) error {
 	players, err := s.GetPlayersByLobbyCode(lobbyCode)
 	if err != nil {
 		return err
@@ -416,4 +417,50 @@ func SeedPlayerWords(s Storage, lobbyCode string, game *Game) error {
 		s.AddPlayerWord(player.Name, "wind", lobbyCode)
 	}
 	return nil
+}
+
+func NewGame(s st.Storage, lobbyCode string, gameMode c.GameMode, withTimer bool, duration int) (*Game, error) {
+	game := new(Game)
+	game.LobbyCode = lobbyCode
+	game.GameMode = gameMode
+	game.WithTimer = withTimer
+	game.ManualEnd = false
+
+	if withTimer {
+		game.Timer = NewTimer(duration)
+	}
+
+	err := fmt.Errorf("Game mode %s not found", gameMode)
+	if gameMode == c.VANILLA {
+		return game, nil
+	}
+	// Reachability is between 0 and 1
+	// Reachability is computed with: 1 / (2 ^ depth)
+	// Reachability is updated with:
+	// 0.75 * newReachability + 0.25 * oldReachability if newDepth < oldDepth
+	// 0.25 * newReachability + 0.75 * oldReachability if newDepth >= oldDepth
+	// The less deep and the more paths are available, the more reachable a word is
+	if gameMode == c.FUSION_FRENZY {
+		game.TargetWord, err = s.GetTargetWord(0.0375, 0.2, 10)
+		if err != nil {
+			return nil, err
+		}
+		return game, nil
+	}
+	if gameMode == c.WOMBO_COMBO {
+		game.TargetWords, err = s.GetTargetWords(0.0375, 0.2, 10)
+		if err != nil {
+			return nil, err
+		}
+		return game, nil
+	}
+	if gameMode == c.DAILY_CHALLENGE {
+		game.TargetWord, err = s.CreateOrGetDailyWord(0.0375, 0.2, 8)
+		if err != nil {
+			log.Printf("Error creating or getting daily word: %v", err)
+			return nil, err
+		}
+		return game, nil
+	}
+	return nil, err
 }

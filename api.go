@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
+	st "github.com/na50r/wombo-combo-go-be/storage"
 )
 
 func WriteJSON(w http.ResponseWriter, status int, v any) error {
@@ -30,13 +31,13 @@ func makeHTTPHandleFunc(f APIFunc) http.HandlerFunc {
 type APIServer struct {
 	router       *mux.Router
 	listenAddr   string
-	store        Storage
+	store        st.Storage
 	broker       *GameBroker
 	games        map[string]*Game
 	achievements AchievementMaps
 }
 
-func NewAPIServer(listenAddr string, store Storage) *APIServer {
+func NewAPIServer(listenAddr string, store st.Storage) *APIServer {
 	s := APIServer{
 		router:     mux.NewRouter(),
 		listenAddr: listenAddr,

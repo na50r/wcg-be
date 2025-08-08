@@ -1,4 +1,4 @@
-package main
+package storage
 
 import (
 	"database/sql"
@@ -8,7 +8,6 @@ import (
 	"log"
 	"strconv"
 	"strings"
-	"fmt"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
 	u "github.com/na50r/wombo-combo-go-be/utility"
 )
@@ -335,8 +334,8 @@ func scanIntoUnlocked(rows *sql.Rows) (*Unlocked, error) {
 	return unlocked, err
 }
 
-func SetAchievementImages(store Storage) error {
-	images, err := u.ReadImages(ACHIEVEMENT_ICONS)
+func SetAchievementImages(store Storage, aIconPath string) error {
+	images, err := u.ReadImages(aIconPath)
 	if err != nil {
 		return err
 	}
@@ -348,8 +347,8 @@ func SetAchievementImages(store Storage) error {
 	return nil
 }
 
-func SetImages(store Storage) error {
-	images, err := u.ReadImages(ICONS)
+func SetImages(store Storage, iconPath string) error {
+	images, err := u.ReadImages(iconPath)
 	if err != nil {
 		return err
 	}
@@ -362,8 +361,8 @@ func SetImages(store Storage) error {
 }
 
 
-func SetAchievements(store Storage) error {
-	records, err := u.ReadCSV(ACHIEVEMENTS)
+func SetAchievements(store Storage, aPath string) error {
+	records, err := u.ReadCSV(aPath)
 	if err != nil {
 		return err
 	}
@@ -382,8 +381,8 @@ func SetAchievements(store Storage) error {
 	return nil
 }
 
-func SetCombinations(store Storage) error {
-	records, err := u.ReadCSV(COMBINATIONS)
+func SetCombinations(store Storage, combiPath string) error {
+	records, err := u.ReadCSV(combiPath)
 	log.Println("Number of combinations ", len(records))
 	if err != nil {
 		return err
@@ -401,8 +400,8 @@ func SetCombinations(store Storage) error {
 	return nil
 }
 
-func SetWords(store Storage) error {
-	records, err := u.ReadCSV(WORDS)
+func SetWords(store Storage, wordPath string) error {
+	records, err := u.ReadCSV(wordPath)
 	if err != nil {
 		return err
 	}
@@ -419,25 +418,25 @@ func SetWords(store Storage) error {
 	return nil
 }
 
-func SeedDB(store Storage) {
+func SeedDB(store Storage, wordPath, combiPath, iconPath, aIconPath, aPath string) {
 	log.Println("Seeding database...")
-	if err := SetImages(store); err != nil {
+	if err := SetImages(store, iconPath); err != nil {
 		log.Fatal(err)
 	}
 	log.Println("Images seeded")
-	if err := SetCombinations(store); err != nil {
+	if err := SetCombinations(store, combiPath); err != nil {
 		log.Fatal(err)
 	}
 	log.Println("Combinations seeded")
-	if err := SetWords(store); err != nil {
+	if err := SetWords(store, wordPath); err != nil {
 		log.Fatal(err)
 	}
 	log.Println("Words seeded")
-	if err := SetAchievements(store); err != nil {
+	if err := SetAchievements(store, aPath); err != nil {
 		log.Fatal(err)
 	}
 	log.Println("Achievements seeded")
-	if err := SetAchievementImages(store); err != nil {
+	if err := SetAchievementImages(store, aIconPath); err != nil {
 		log.Fatal(err)
 	}
 	log.Println("Achievement images seeded")
@@ -464,51 +463,4 @@ func GetCombination(store Storage, a, b, apiKey string) (string, bool, error) {
 		return newWord, true, nil
 	}
 	return *result, false, nil
-}
-
-
-func NewGame(s Storage, lobbyCode string, gameMode c.GameMode, withTimer bool, duration int) (*Game, error) {
-	game := new(Game)
-	game.LobbyCode = lobbyCode
-	game.GameMode = gameMode
-	game.WithTimer = withTimer
-	game.ManualEnd = false
-
-	if withTimer {
-		game.Timer = NewTimer(duration)
-	}
-
-	err := fmt.Errorf("Game mode %s not found", gameMode)
-	if gameMode == c.VANILLA {
-		return game, nil
-	}
-	// Reachability is between 0 and 1
-	// Reachability is computed with: 1 / (2 ^ depth)
-	// Reachability is updated with:
-	// 0.75 * newReachability + 0.25 * oldReachability if newDepth < oldDepth
-	// 0.25 * newReachability + 0.75 * oldReachability if newDepth >= oldDepth
-	// The less deep and the more paths are available, the more reachable a word is
-	if gameMode == c.FUSION_FRENZY {
-		game.TargetWord, err = s.GetTargetWord(0.0375, 0.2, 10)
-		if err != nil {
-			return nil, err
-		}
-		return game, nil
-	}
-	if gameMode == c.WOMBO_COMBO {
-		game.TargetWords, err = s.GetTargetWords(0.0375, 0.2, 10)
-		if err != nil {
-			return nil, err
-		}
-		return game, nil
-	}
-	if gameMode == c.DAILY_CHALLENGE {
-		game.TargetWord, err = s.CreateOrGetDailyWord(0.0375, 0.2, 8)
-		if err != nil {
-			log.Printf("Error creating or getting daily word: %v", err)
-			return nil, err
-		}
-		return game, nil
-	}
-	return nil, err
 }

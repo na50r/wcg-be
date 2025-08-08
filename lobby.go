@@ -9,7 +9,7 @@ import (
 	c "github.com/na50r/wombo-combo-go-be/constants"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
 	u "github.com/na50r/wombo-combo-go-be/utility"
-
+	st "github.com/na50r/wombo-combo-go-be/storage"
 )
 
 // handleGetLobby godoc
@@ -132,7 +132,7 @@ func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) erro
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
-	var player *Player
+	var player *st.Player
 	if tokenExists {
 		// Verify only if a Token is used, otherwise ignore
 		log.Println("Token Exists, Verifying...")
@@ -147,7 +147,7 @@ func (s *APIServer) handleJoinLobby(w http.ResponseWriter, r *http.Request) erro
 		player.LobbyCode = req.LobbyCode
 	} else {
 		imageName := s.store.NewImageForUsername(req.PlayerName)
-		player = NewPlayer(req.PlayerName, req.LobbyCode, imageName, false, false, 0, 0)
+		player = st.NewPlayer(req.PlayerName, req.LobbyCode, imageName, false, false, 0, 0)
 	}
 	if err := s.store.AddPlayerToLobby(req.LobbyCode, player); err != nil {
 		return err
@@ -214,7 +214,7 @@ func (s *APIServer) handleCreateLobby(w http.ResponseWriter, r *http.Request) er
 	}
 	lobbyName := req.Name
 	lobbyCode := uuid.New().String()[:6]
-	lobby := NewLobby(lobbyName, lobbyCode, owner.ImageName)
+	lobby := st.NewLobby(lobbyName, lobbyCode, owner.ImageName)
 	if err := s.store.CreateLobby(lobby); err != nil {
 		return err
 	}

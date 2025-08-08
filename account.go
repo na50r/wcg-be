@@ -10,6 +10,7 @@ import (
 	c "github.com/na50r/wombo-combo-go-be/constants"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
 	u "github.com/na50r/wombo-combo-go-be/utility"
+	st "github.com/na50r/wombo-combo-go-be/storage"
 )
 
 // handleGetAccount godoc
@@ -170,7 +171,7 @@ func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error
 		return err
 	}
 
-	acc, err := NewAccount(req.Username, req.Password)
+	acc, err := st.NewAccount(req.Username, req.Password)
 	if err != nil {
 		return err
 	}
