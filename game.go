@@ -9,6 +9,7 @@ import (
 	"sort"
 	c "github.com/na50r/wombo-combo-go-be/constants"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
+	u "github.com/na50r/wombo-combo-go-be/utility"
 )
 
 func (s *APIServer) handleGame(w http.ResponseWriter, r *http.Request) error {
@@ -44,7 +45,7 @@ func (s *APIServer) handleDeleteGame(w http.ResponseWriter, r *http.Request) err
 		return fmt.Errorf("unauthorized")
 	}
 
-	lobbyCode, err := GetLobbyCode(r)
+	lobbyCode, err := u.GetLobbyCode(r)
 	if err != nil {
 		return err
 	}
@@ -73,11 +74,11 @@ func (s *APIServer) handleDeleteGame(w http.ResponseWriter, r *http.Request) err
 // @Failure 405 {object} dto.APIError
 // @Router /games/{lobbyCode}/{playerName}/words [get]
 func (s *APIServer) handleGetWords(w http.ResponseWriter, r *http.Request) error {
-	lobbyCode, err := GetLobbyCode(r)
+	lobbyCode, err := u.GetLobbyCode(r)
 	if err != nil {
 		return err
 	}
-	playerName, err := GetPlayername(r)
+	playerName, err := u.GetPlayername(r)
 	if err != nil {
 		return err
 	}
@@ -113,7 +114,7 @@ func (s *APIServer) handleCreateGame(w http.ResponseWriter, r *http.Request) err
 		return fmt.Errorf(c.Unauthorized)
 	}
 
-	lobbyCode, err := GetLobbyCode(r)
+	lobbyCode, err := u.GetLobbyCode(r)
 	if err != nil {
 		return err
 	}
@@ -176,7 +177,7 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
-	lobbyCode, err := GetLobbyCode(r)
+	lobbyCode, err := u.GetLobbyCode(r)
 	if err != nil {
 		return err
 	}
@@ -188,11 +189,11 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
-	result, isNew, err := GetCombination(s.store, req.A, req.B)
+	result, isNew, err := GetCombination(s.store, req.A, req.B, COHERE_API_KEY)
 	if err != nil {
 		return err
 	}
-	playerName, err := GetPlayername(r)
+	playerName, err := u.GetPlayername(r)
 	if err != nil {
 		return err
 	}
@@ -222,7 +223,7 @@ func (s *APIServer) handleCombination(w http.ResponseWriter, r *http.Request) er
 // @Failure 405 {object} dto.APIError
 // @Router /games/{lobbyCode}/{playerName}/game [get]
 func (s *APIServer) handleGetGameStats(w http.ResponseWriter, r *http.Request) error {
-	lobbyCode, err := GetLobbyCode(r)
+	lobbyCode, err := u.GetLobbyCode(r)
 	if err != nil {
 		return err
 	}
@@ -277,7 +278,7 @@ func (s *APIServer) handleManualGameEnd(w http.ResponseWriter, r *http.Request) 
 	if !playerClaims.IsOwner {
 		return fmt.Errorf(c.Unauthorized)
 	}
-	lobbyCode, err := GetLobbyCode(r)
+	lobbyCode, err := u.GetLobbyCode(r)
 	if err != nil {
 		return err
 	}

@@ -13,6 +13,8 @@ import (
 	"github.com/google/uuid"	
 	c "github.com/na50r/wombo-combo-go-be/constants"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
+	u "github.com/na50r/wombo-combo-go-be/utility"
+
 )
 
 func getToken(r *http.Request) (string, bool) {
@@ -148,7 +150,7 @@ func withAccountAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 			log.Println("Unauthorized (Invalid Token)", err)
 			return
 		}
-		username, err := GetUsername(r)
+		username, err := u.GetUsername(r)
 		if err != nil {
 			WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (No Username)", err)
@@ -180,13 +182,13 @@ func withPlayerAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 			log.Println("Unauthorized (Invalid Token)", err)
 			return
 		}
-		lobbyCode, err := GetLobbyCode(r)
+		lobbyCode, err := u.GetLobbyCode(r)
 		if err != nil {
 			WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (No Lobby Code)", err)
 			return
 		}
-		playerName, err := GetPlayername(r)
+		playerName, err := u.GetPlayername(r)
 		if err != nil {
 			WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (No Player Name)", err)

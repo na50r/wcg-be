@@ -7,6 +7,8 @@ import (
 	"strings"
 	c "github.com/na50r/wombo-combo-go-be/constants"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
+	u "github.com/na50r/wombo-combo-go-be/utility"
+
 )
 
 type AchievementMaps struct {
@@ -15,8 +17,6 @@ type AchievementMaps struct {
 	TargetWord   map[string]string // word string → achievement title
 }
 
-// TODO: Figure out a neat way to achievements
-// Requirement: Must be easily extensible
 func (server *APIServer) SetupAchievements() error {
 	s := server.store
 	newWordCnt := map[int]string{}
@@ -128,7 +128,7 @@ func (s *APIServer) handleAchievements(w http.ResponseWriter, r *http.Request) e
 		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
-	username, err := GetUsername(r)
+	username, err := u.GetUsername(r)
 	if err != nil {
 		return err
 	}

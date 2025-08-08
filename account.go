@@ -9,6 +9,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	c "github.com/na50r/wombo-combo-go-be/constants"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
+	u "github.com/na50r/wombo-combo-go-be/utility"
 )
 
 // handleGetAccount godoc
@@ -24,7 +25,7 @@ import (
 // @Failure 405 {object} APIError
 // @Router /account/{username} [get]
 func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) error {
-	username, err := GetUsername(r)
+	username, err := u.GetUsername(r)
 	if err != nil {
 		return err
 	}
@@ -107,7 +108,7 @@ func (s *APIServer) handleEditAccount(w http.ResponseWriter, r *http.Request) er
 	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 		return err
 	}
-	username, err := GetUsername(r)
+	username, err := u.GetUsername(r)
 	if err != nil {
 		return err
 	}
@@ -120,7 +121,7 @@ func (s *APIServer) handleEditAccount(w http.ResponseWriter, r *http.Request) er
 		if err := bcrypt.CompareHashAndPassword([]byte(acc.Password), []byte(req.OldPassword)); err != nil {
 			return fmt.Errorf("Incorrect password, please try again")
 		}
-		if err := PasswordValid(req.NewPassword); err != nil {
+		if err := u.PasswordValid(req.NewPassword); err != nil {
 			return err
 		}
 		encpw, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
@@ -165,7 +166,7 @@ func (s *APIServer) handleRegister(w http.ResponseWriter, r *http.Request) error
 		return err
 	}
 
-	if err := PasswordValid(req.Password); err != nil {
+	if err := u.PasswordValid(req.Password); err != nil {
 		return err
 	}
 

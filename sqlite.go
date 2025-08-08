@@ -11,6 +11,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	c "github.com/na50r/wombo-combo-go-be/constants"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
+	u "github.com/na50r/wombo-combo-go-be/utility"
 )
 
 type SQLiteStore struct {
@@ -488,7 +489,7 @@ func (s *SQLiteStore) NewImageForUsername(username string) string {
 		return err.Error()
 	}
 	size := len(images)
-	hash := RadixHash(username, size)
+	hash := u.RadixHash(username, size)
 	image := images[hash]
 	return image.Name
 }
@@ -615,7 +616,7 @@ func (s *SQLiteStore) EditGameMode(lobbyCode string, gameMode c.GameMode) error 
 }
 
 func (s *SQLiteStore) GetCombination(a, b string) (*string, bool, error) {
-	a, b = SortAB(a, b)
+	a, b = u.SortAB(a, b)
 	var result string
 	err := s.db.QueryRow("SELECT result FROM combination WHERE a = ? AND b = ?", a, b).Scan(&result)
 	if err == sql.ErrNoRows {
@@ -627,7 +628,7 @@ func (s *SQLiteStore) GetCombination(a, b string) (*string, bool, error) {
 }
 
 func (s *SQLiteStore) AddCombination(combi *Combination) error {
-	a, b := SortAB(combi.A, combi.B)
+	a, b := u.SortAB(combi.A, combi.B)
 	_, err := s.db.Exec(
 		"insert or ignore into combination (a, b, result, depth) values (?, ?, ?, ?)",
 		a,
@@ -639,7 +640,7 @@ func (s *SQLiteStore) AddCombination(combi *Combination) error {
 }
 
 func (s *SQLiteStore) AddNewCombination(a, b, result string) error {
-	a, b = SortAB(a, b)
+	a, b = u.SortAB(a, b)
 	aDepth := 0
 	bDepth := 0
 	err := s.db.QueryRow("select depth from word where word = ?", a).Scan(&aDepth)

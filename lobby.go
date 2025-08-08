@@ -8,6 +8,8 @@ import (
 	"github.com/google/uuid"
 	c "github.com/na50r/wombo-combo-go-be/constants"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
+	u "github.com/na50r/wombo-combo-go-be/utility"
+
 )
 
 // handleGetLobby godoc
@@ -24,7 +26,7 @@ import (
 // @Failure 405 {object} APIError
 // @Router /lobbies/{lobbyCode}/{playerName} [get]
 func (s *APIServer) handleGetLobby(w http.ResponseWriter, r *http.Request) error {
-	lobbyCode, err := GetLobbyCode(r)
+	lobbyCode, err := u.GetLobbyCode(r)
 	if err != nil {
 		return err
 	}
@@ -66,11 +68,11 @@ func (s *APIServer) handleGetLobby(w http.ResponseWriter, r *http.Request) error
 // @Failure 405 {object} APIError
 // @Router /lobbies/{lobbyCode}/{playerName}/leave [post]
 func (s *APIServer) handleLeaveLobby(w http.ResponseWriter, r *http.Request) error {
-	lobbyCode, err := GetLobbyCode(r)
+	lobbyCode, err := u.GetLobbyCode(r)
 	if err != nil {
 		return err
 	}
-	playerName, err := GetPlayername(r)
+	playerName, err := u.GetPlayername(r)
 	if err != nil {
 		return err
 	}
@@ -296,7 +298,7 @@ func (s *APIServer) handleEditGameMode(w http.ResponseWriter, r *http.Request) e
 		return fmt.Errorf("unauthorized")
 	}
 
-	lobbyCode, err := GetLobbyCode(r)
+	lobbyCode, err := u.GetLobbyCode(r)
 	if err != nil {
 		return err
 	}

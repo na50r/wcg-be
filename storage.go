@@ -10,6 +10,7 @@ import (
 	"strings"
 	"fmt"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
+	u "github.com/na50r/wombo-combo-go-be/utility"
 )
 
 type Storage interface {
@@ -335,12 +336,12 @@ func scanIntoUnlocked(rows *sql.Rows) (*Unlocked, error) {
 }
 
 func SetAchievementImages(store Storage) error {
-	images, err := ReadImages(ACHIEVEMENT_ICONS)
+	images, err := u.ReadImages(ACHIEVEMENT_ICONS)
 	if err != nil {
 		return err
 	}
-	for _, image := range images {
-		if err := store.AddAchievementImage(image.Data, image.Name); err != nil {
+	for name, image := range images {
+		if err := store.AddAchievementImage(image, name); err != nil {
 			return err
 		}
 	}
@@ -348,12 +349,12 @@ func SetAchievementImages(store Storage) error {
 }
 
 func SetImages(store Storage) error {
-	images, err := ReadImages(ICONS)
+	images, err := u.ReadImages(ICONS)
 	if err != nil {
 		return err
 	}
-	for _, image := range images {
-		if err := store.AddImage(image.Data, image.Name); err != nil {
+	for name, image := range images {
+		if err := store.AddImage(image, name); err != nil {
 			return err
 		}
 	}
@@ -362,7 +363,7 @@ func SetImages(store Storage) error {
 
 
 func SetAchievements(store Storage) error {
-	records, err := ReadCSV(ACHIEVEMENTS)
+	records, err := u.ReadCSV(ACHIEVEMENTS)
 	if err != nil {
 		return err
 	}
@@ -382,7 +383,7 @@ func SetAchievements(store Storage) error {
 }
 
 func SetCombinations(store Storage) error {
-	records, err := ReadCSV(COMBINATIONS)
+	records, err := u.ReadCSV(COMBINATIONS)
 	log.Println("Number of combinations ", len(records))
 	if err != nil {
 		return err
@@ -401,7 +402,7 @@ func SetCombinations(store Storage) error {
 }
 
 func SetWords(store Storage) error {
-	records, err := ReadCSV(WORDS)
+	records, err := u.ReadCSV(WORDS)
 	if err != nil {
 		return err
 	}
@@ -443,13 +444,13 @@ func SeedDB(store Storage) {
 }
 
 
-func GetCombination(store Storage, a, b string) (string, bool, error) {
+func GetCombination(store Storage, a, b, apiKey string) (string, bool, error) {
 	result, inDB, err := store.GetCombination(a, b)
 	if err != nil {
 		return "", false, err
 	}
 	if !inDB {
-		newWord, err := CallCohereAPI(a, b)
+		newWord, err := u.CallCohereAPI(a, b, apiKey)
 		if err != nil {
 			log.Printf("Error calling Cohere API: %v", err)
 			return "star", false, nil

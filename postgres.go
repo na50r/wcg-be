@@ -12,6 +12,7 @@ import (
 	_ "github.com/lib/pq"
 	c "github.com/na50r/wombo-combo-go-be/constants"
 	dto "github.com/na50r/wombo-combo-go-be/dto"
+	u "github.com/na50r/wombo-combo-go-be/utility"
 
 )
 
@@ -470,7 +471,7 @@ func (s *PostgresStore) NewImageForUsername(username string) string {
 		return err.Error()
 	}
 	size := len(images)
-	hash := RadixHash(username, size)
+	hash := u.RadixHash(username, size)
 	image := images[hash]
 	return image.Name
 }
@@ -598,7 +599,7 @@ func (s *PostgresStore) EditGameMode(lobbyCode string, gameMode c.GameMode) erro
 }
 
 func (s *PostgresStore) GetCombination(a, b string) (*string, bool, error) {
-	a, b = SortAB(a, b)
+	a, b = u.SortAB(a, b)
 	var result string
 	err := s.db.QueryRow("select result from combination where a = $1 AND b = $2", a, b).Scan(&result)
 	if err == sql.ErrNoRows {
@@ -610,7 +611,7 @@ func (s *PostgresStore) GetCombination(a, b string) (*string, bool, error) {
 }
 
 func (s *PostgresStore) AddCombination(combi *Combination) error {
-	a, b := SortAB(combi.A, combi.B)
+	a, b := u.SortAB(combi.A, combi.B)
 	_, err := s.db.Exec(
 		"insert into combination (a, b, result, depth) values ($1, $2, $3, $4) on conflict do nothing",
 		a,
@@ -622,7 +623,7 @@ func (s *PostgresStore) AddCombination(combi *Combination) error {
 }
 
 func (s *PostgresStore) AddNewCombination(a, b, result string) error {
-	a, b = SortAB(a, b)
+	a, b = u.SortAB(a, b)
 	aDepth := 0
 	bDepth := 0
 	err := s.db.QueryRow("select depth from word where word = $1", a).Scan(&aDepth)

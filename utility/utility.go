@@ -1,4 +1,4 @@
-package main
+package utility
 
 import (
 	"bytes"
@@ -17,32 +17,36 @@ import (
 	dto "github.com/na50r/wombo-combo-go-be/dto"
 )
 
-func GetImageFromFilePath(filePath string) (*Image, error) {
-	f, err := os.Open(filePath)
+func GetImageFromFilePath(filePath string) (string, []byte, error) {
+	absPath, err := filepath.Abs(filePath)
 	if err != nil {
-		return nil, err
+		return "", nil, fmt.Errorf("failed to get absolute path: %w", err)
 	}
-	absPath, _ := filepath.Abs(filePath)
 	name := filepath.Base(absPath)
 
-	imageExtRegex := regexp.MustCompile(`\.(png|jpe?g)$`)
+	imageExtRegex := regexp.MustCompile(`(?i)\.(png|jpe?g)$`)
 	if !imageExtRegex.MatchString(name) {
-		return nil, nil
+		return "", nil, fmt.Errorf("unsupported image format: %s", name)
+	}
+
+	f, err := os.Open(filePath)
+	if err != nil {
+		return "", nil, fmt.Errorf("failed to open file: %w", err)
 	}
 	defer f.Close()
+
 	info, err := f.Stat()
 	if err != nil {
-		return nil, err
+		return "", nil, fmt.Errorf("failed to stat file: %w", err)
 	}
+
 	img := make([]byte, info.Size())
 	_, err = f.Read(img)
 	if err != nil {
-		return nil, err
+		return "", nil, fmt.Errorf("failed to read file: %w", err)
 	}
-	image := new(Image)
-	image.Data = img
-	image.Name = name
-	return image, nil
+
+	return name, img, nil
 }
 
 func GetFilePathsInDir(dir string) ([]string, error) {
@@ -61,21 +65,22 @@ func GetFilePathsInDir(dir string) ([]string, error) {
 	return paths, nil
 }
 
-func ReadImages(path string) ([]*Image, error) {
-	paths, err := GetFilePathsInDir(path)
+func ReadImages(dirPath string) (map[string][]byte, error) {
+	paths, err := GetFilePathsInDir(dirPath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get files in directory: %w", err)
 	}
-	images := []*Image{}
-	for _, path := range paths {
-		image, err := GetImageFromFilePath(path)
+	images := make(map[string][]byte)
+	for _, filePath := range paths {
+		name, imageData, err := GetImageFromFilePath(filePath)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to read image %s: %w", filePath, err)
 		}
-		if image == nil {
-			continue
+		if imageData == nil {
+			log.Printf("Skipping image %s", name)
+			continue 
 		}
-		images = append(images, image)
+		images[name] = imageData
 	}
 	return images, nil
 }
@@ -168,9 +173,8 @@ func CallRandomWordAPI() (string, error) {
 	return wordList[0], nil
 }
 
-func CallCohereAPI(a, b string) (string, error) {
+func CallCohereAPI(a, b, apiKey string) (string, error) {
 	log.Println("Calling Cohere API")
-	apiKey := COHERE_API_KEY
 	url := "https://api.cohere.ai/v2/chat"
 
 	body := map[string]interface{}{
