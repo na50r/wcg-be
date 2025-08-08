@@ -27,21 +27,21 @@ func makeHTTPHandleFunc(f APIFunc) http.HandlerFunc {
 }
 
 type APIServer struct {
-	router        *mux.Router
-	listenAddr    string
-	store         Storage
-	broker *GameBroker
-	games         map[string]*Game
-	achievements  AchievementMaps
+	router       *mux.Router
+	listenAddr   string
+	store        Storage
+	broker       *GameBroker
+	games        map[string]*Game
+	achievements AchievementMaps
 }
 
 func NewAPIServer(listenAddr string, store Storage) *APIServer {
 	s := APIServer{
-		router:        mux.NewRouter(),
-		listenAddr:    listenAddr,
-		store:         store,
-		broker:        NewGameBroker(),
-		games:         make(map[string]*Game),
+		router:     mux.NewRouter(),
+		listenAddr: listenAddr,
+		store:      store,
+		broker:     NewGameBroker(),
+		games:      make(map[string]*Game),
 	}
 	s.SetupAchievements()
 	return &s
@@ -91,6 +91,12 @@ func (s *APIServer) RegisterRoutes() error {
 
 	// Swagger
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
+
+	// Health
+	router.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("pong\n"))
+	})
 	return nil
 }
 
