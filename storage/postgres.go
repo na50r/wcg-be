@@ -1,5 +1,7 @@
 package storage
 
+// Postgres implementation of the storage interface
+
 import (
 	"database/sql"
 	"fmt"

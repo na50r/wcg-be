@@ -1,5 +1,6 @@
 package game
 
+// Implement SSE for game events
 
 import (
 	"log"

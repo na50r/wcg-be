@@ -556,3 +556,6 @@ func (s *GameService) HandleLeaderboard(w http.ResponseWriter, r *http.Request) 
 	})
 	return u.WriteJSON(w, http.StatusOK, entriesDTO)
 }
+
+// TODO: Add Finite-Fusion game mode
+// Only n attempts of using word a/b for combination

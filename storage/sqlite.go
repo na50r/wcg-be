@@ -1,5 +1,7 @@
 package storage
 
+// SQLite implementation of the storage interface
+
 import (
 	"database/sql"
 	"fmt"
