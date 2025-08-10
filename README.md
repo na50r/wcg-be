@@ -12,12 +12,6 @@ make run #Builds and runs the server
 make seed #Seeds the database with images, words and combinations
 ```
 
-## Docker
-```
-make docker-build
-API_KEY=<COHERE_API_KEY> make docker-seed
-```
-
 ## API
 The API is documented using Swagger. It can be accessed at `http://localhost:<port>/swagger/index.html` after executing `swag init` and then running the server.
 
@@ -25,14 +19,34 @@ The API is documented using Swagger. It can be accessed at `http://localhost:<po
 The database is seeded with some initial data, namely:
 * Icons for profile pictures
 * Combinations based on on Infinite Craft
+* Words based on on Infinite Craft
+* Achievements (Extendible)
+* Achievement icons (Extendible)
 
 The icons were taken from @wayou's [anonymous-animals](https://github.com/wayou/anonymous-animals)
 
 The combinations are from @napstaa967's [infinite-craft-database](https://github.com/napstaa967/infinite-craft-database/blob/main/items.json), JSON was converted and filtered to the appropriate CSV using a Python script. 
 ```sh
-cd add
+cd extra
 curl -O https://raw.githubusercontent.com/napstaa967/infinite-craft-database/main/items.json
-python3 generateData1.py
-mv Combinations.csv ../
-mv Words.csv ../
+python3 generate_data.py
+mv Combinations.csv ../data/Combinations.csv
+mv Words.csv ../data/Words.csv
+```
+Create `data/Achievements.csv` and `data/achievement_icons/` with the appropriate data.
+The format for `data/Achievements.csv` is:
+```csv
+Title,Type,Value,Description,ImageName
+Explorer,New Word Count,10,Found 10 new words,moon.jpg
+Hard Worker,Word Count,20,Found 50 new words,smile.png
+Muddy,Target Word,Mud,Found Mud,sad_bear.jpg
+```
+Make sure to place the image files corresponding to the achievement icons in `data/achievement_icons/`.
+
+
+### Seeding Procedure
+Define a connection string in `data/.env` and run:
+```sh
+make docker-build
+API_KEY=<COHERE_API_KEY> CONN_STR=<POSTGRES_CONNECTION> make docker-seed-ext
 ```

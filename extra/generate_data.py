@@ -1,5 +1,7 @@
 import json
 
+# Generates Combinations.csv and Words.csv from items.json
+
 def generate_combinations(path):
     data = json.load(open(path))
     element_depth = {k: v['depth']
