@@ -33,7 +33,7 @@ var ACHIEVEMENT_ICONS string
 func init() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("No .env file found, continuing...")
+		log.Println("No .env file found, continuing... (main.go)")
 	}
 	CLIENT = os.Getenv("CLIENT")
 	ICONS = os.Getenv("ICONS")

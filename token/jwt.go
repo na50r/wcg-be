@@ -25,7 +25,7 @@ var JWT_SECRET string
 func init() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("No .env file found, continuing...")
+		log.Println("No .env file found, continuing...(token/jwt.go)")
 	}
 	JWT_SECRET = os.Getenv("JWT_SECRET")
 	if JWT_SECRET == "" {
