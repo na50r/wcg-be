@@ -1,4 +1,4 @@
-package main
+package storage
 
 import (
 	"database/sql"
@@ -10,19 +10,23 @@ import (
 	"time"
 
 	_ "github.com/lib/pq"
+	c "github.com/na50r/wombo-combo-go-be/constants"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
+	u "github.com/na50r/wombo-combo-go-be/utility"
+
 )
 
 type PostgresStore struct {
 	db *sql.DB
 }
 
-func NewPostgresStore() (*PostgresStore, error) {
+func NewPostgresStore(connString string) (*PostgresStore, error) {
 	//To avoid conflicts with dockerized postgres, make sure to create it with:
 	//Local
 	//docker run --name wc-postgres -e POSTGRES_PASSWORD=wc-local -p 5433:5432 -d postgres
 	//Map port 5432 of the container to 5433 of the host
 	//Adjust accordingly for deployment
-	db, err := sql.Open("postgres", POSTGRES_CONNECTION)
+	db, err := sql.Open("postgres", connString)
 	if err != nil {
 		return nil, err
 	}
@@ -238,7 +242,6 @@ func (s *PostgresStore) AddAchievement(entry *AchievementEntry) error {
 	)
 	return err
 }
-
 
 func (s *PostgresStore) AddDailyChallengeEntry(wordCount int, username string) error {
 	today := time.Now().Format("2006-01-02")
@@ -468,7 +471,7 @@ func (s *PostgresStore) NewImageForUsername(username string) string {
 		return err.Error()
 	}
 	size := len(images)
-	hash := RadixHash(username, size)
+	hash := u.RadixHash(username, size)
 	image := images[hash]
 	return image.Name
 }
@@ -590,13 +593,13 @@ func (s *PostgresStore) GetLobbyByCode(lobbyCode string) (*Lobby, error) {
 	return nil, fmt.Errorf("lobby %s not found", lobbyCode)
 }
 
-func (s *PostgresStore) EditGameMode(lobbyCode string, gameMode GameMode) error {
+func (s *PostgresStore) EditGameMode(lobbyCode string, gameMode c.GameMode) error {
 	_, err := s.db.Exec("update lobby set game_mode = $1 where lobby_code = $2", gameMode, lobbyCode)
 	return err
 }
 
 func (s *PostgresStore) GetCombination(a, b string) (*string, bool, error) {
-	a, b = sortAB(a, b)
+	a, b = u.SortAB(a, b)
 	var result string
 	err := s.db.QueryRow("select result from combination where a = $1 AND b = $2", a, b).Scan(&result)
 	if err == sql.ErrNoRows {
@@ -608,7 +611,7 @@ func (s *PostgresStore) GetCombination(a, b string) (*string, bool, error) {
 }
 
 func (s *PostgresStore) AddCombination(combi *Combination) error {
-	a, b := sortAB(combi.A, combi.B)
+	a, b := u.SortAB(combi.A, combi.B)
 	_, err := s.db.Exec(
 		"insert into combination (a, b, result, depth) values ($1, $2, $3, $4) on conflict do nothing",
 		a,
@@ -620,7 +623,7 @@ func (s *PostgresStore) AddCombination(combi *Combination) error {
 }
 
 func (s *PostgresStore) AddNewCombination(a, b, result string) error {
-	a, b = sortAB(a, b)
+	a, b = u.SortAB(a, b)
 	aDepth := 0
 	bDepth := 0
 	err := s.db.QueryRow("select depth from word where word = $1", a).Scan(&aDepth)
@@ -772,7 +775,7 @@ func (s *PostgresStore) DeletePlayerWordsByPlayerAndLobbyCode(playerName, lobbyC
 	return err
 }
 
-func (s *PostgresStore) GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCount, error) {
+func (s *PostgresStore) GetWordCountByLobbyCode(lobbyCode string) ([]*dto.PlayerWordCount, error) {
 	query := `
 	select player_name, COUNT(*) as word_count
 	from player_word
@@ -784,7 +787,7 @@ func (s *PostgresStore) GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWord
 	if err != nil {
 		return nil, err
 	}
-	wordCounts := []*PlayerWordCount{}
+	wordCounts := []*dto.PlayerWordCount{}
 	defer rows.Close()
 	for rows.Next() {
 		wordCount, err := scanIntoPlayerWordCount(rows)
@@ -976,7 +979,6 @@ func (s *PostgresStore) GetAchievementImage(name string) ([]byte, error) {
 	return images[0].Data, nil
 }
 
-
 func (s *PostgresStore) GetAchievementByTitle(title string) (*AchievementEntry, error) {
 	rows, err := s.db.Query("select * from achievement where title = $1", title)
 	if err != nil {
@@ -1006,4 +1008,3 @@ func (s *PostgresStore) GetAchievementsForUser(username string) ([]string, error
 	}
 	return achievements, nil
 }
-

@@ -1,4 +1,5 @@
 .env
+.env.local
 *.db
 *.db*
 api_test.go

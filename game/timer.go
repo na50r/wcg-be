@@ -1,10 +1,12 @@
-package main
+package game
 
 import (
 	"context"
 	"fmt"
 	"log"
 	"time"
+	c "github.com/na50r/wombo-combo-go-be/constants"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
 )
 
 type Timer struct {
@@ -16,7 +18,7 @@ func NewTimer(durationMinutes int) *Timer {
 	return &Timer{durationMinutes: durationMinutes}
 }
 
-func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
+func (mt *Timer) Start(s *GameService, lobbyCode string, game *Game) error {
 	if mt.durationMinutes < 1 {
 		return fmt.Errorf("duration must be at least 1 minute")
 	}
@@ -33,14 +35,14 @@ func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
 	now := time.Now()
 	triggers := map[int]bool{three_quarter: false, half: false, one_quarter: false}
 	publishTimeEvent := func(secondsLeft int) {
-		s.PublishToLobby(lobbyCode, Message{Data: TimeEvent{SecondsLeft: secondsLeft}})
+		s.broker.PublishToLobby(lobbyCode, Message{Data: dto.TimeEvent{SecondsLeft: secondsLeft}})
 	}
 	go func() {
 		defer ticker.Stop()
 		for {
 			select {
 			case <-ctx.Done():
-				s.PublishToLobby(lobbyCode, Message{Data: TIMER_STOPPED})
+				s.broker.PublishToLobby(lobbyCode, Message{Data: c.TIMER_STOPPED})
 				log.Printf("Timer %s stopped\n", lobbyCode)
 				return
 			case t := <-ticker.C:
@@ -65,7 +67,7 @@ func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
 					if err != nil {
 						log.Printf("Error selecting winner: %v", err)
 					}
-					s.PublishToLobby(lobbyCode, Message{Data: GAME_OVER})
+					s.broker.PublishToLobby(lobbyCode, Message{Data: c.GAME_OVER})
 					return
 				}
 			}

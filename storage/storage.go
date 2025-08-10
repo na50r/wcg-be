@@ -1,10 +1,15 @@
-package main
+package storage
 
 import (
 	"database/sql"
 	"time"
-
+	c "github.com/na50r/wombo-combo-go-be/constants"
 	"golang.org/x/crypto/bcrypt"
+	"log"
+	"strconv"
+	"strings"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
+	u "github.com/na50r/wombo-combo-go-be/utility"
 )
 
 type Storage interface {
@@ -29,7 +34,7 @@ type Storage interface {
 	DeleteLobby(lobbyCode string) error
 	GetLobbies() ([]*Lobby, error)
 	GetLobbyByCode(lobbyCode string) (*Lobby, error)
-	EditGameMode(lobbyCode string, gameMode GameMode) error
+	EditGameMode(lobbyCode string, gameMode c.GameMode) error
 	AddCombination(element *Combination) error
 	GetCombination(a, b string) (*string, bool, error)
 	AddWord(word *Word) error
@@ -37,7 +42,7 @@ type Storage interface {
 	GetPlayerWords(playerName, lobbyCode string) ([]string, error)
 	DeletePlayerWordsByLobbyCode(lobbyCode string) error
 	DeletePlayerWordsByPlayerAndLobbyCode(playerName, lobbyCode string) error
-	GetWordCountByLobbyCode(lobbyCode string) ([]*PlayerWordCount, error)
+	GetWordCountByLobbyCode(lobbyCode string) ([]*dto.PlayerWordCount, error)
 	UpdateAccountWinsAndLosses(lobbyCode, winner string) error
 	SetPlayerTargetWord(playerName, targetWord, lobbyCode string) error
 	GetPlayerTargetWord(playerName, lobbyCode string) (string, error)
@@ -74,7 +79,7 @@ type Account struct {
 	Losses    int    `db:"losses"`
 	ImageName string `db:"image_name"`
 	CreatedAt string `db:"created_at"`
-	Status    Status `db:"status"`
+	Status    c.Status `db:"status"`
 	IsOwner   bool   `db:"is_owner"`
 	NewWordCount int `db:"new_word_count"`
 	WordCount int `db:"word_count"`
@@ -96,7 +101,7 @@ type Lobby struct {
 	Name        string   `db:"name"`
 	ImageName   string   `db:"image_name"`
 	LobbyCode   string   `db:"lobby_code"`
-	GameMode    GameMode `db:"game_mode"`
+	GameMode    c.GameMode `db:"game_mode"`
 	PlayerCount int      `db:"player_count"`
 }
 
@@ -143,7 +148,7 @@ type Session struct {
 type AchievementEntry struct {
 	ID int `db:"id"`
 	Title string `db:"title"`
-	Type Achievement `db:"type"`
+	Type c.Achievement `db:"type"`
 	Value string `db:"value"`
 	Description string `db:"description"`
 	ImageName string `db:"image_name"`
@@ -168,7 +173,7 @@ func NewAccount(username, password string) (*Account, error) {
 		Losses:    0,
 		ImageName: imageName,
 		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
-		Status:    OFFLINE,
+		Status:    c.OFFLINE,
 		IsOwner:   false,
 		NewWordCount: 0,
 		WordCount: 0,
@@ -194,7 +199,7 @@ func NewLobby(name, lobbyCode, imageName string) *Lobby {
 		Name:        name,
 		ImageName:   imageName,
 		LobbyCode:   lobbyCode,
-		GameMode:    VANILLA,
+		GameMode:    c.VANILLA,
 		PlayerCount: 1,
 	}
 }
@@ -275,8 +280,8 @@ func scanIntoPlayerWord(rows *sql.Rows) (*PlayerWord, error) {
 	return playerWord, err
 }
 
-func scanIntoPlayerWordCount(rows *sql.Rows) (*PlayerWordCount, error) {
-	wordCount := new(PlayerWordCount)
+func scanIntoPlayerWordCount(rows *sql.Rows) (*dto.PlayerWordCount, error) {
+	wordCount := new(dto.PlayerWordCount)
 	err := rows.Scan(
 		&wordCount.PlayerName,
 		&wordCount.WordCount,
@@ -327,4 +332,135 @@ func scanIntoUnlocked(rows *sql.Rows) (*Unlocked, error) {
 		&unlocked.AchievmentTitle,
 	)
 	return unlocked, err
+}
+
+func SetAchievementImages(store Storage, aIconPath string) error {
+	images, err := u.ReadImages(aIconPath)
+	if err != nil {
+		return err
+	}
+	for name, image := range images {
+		if err := store.AddAchievementImage(image, name); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func SetImages(store Storage, iconPath string) error {
+	images, err := u.ReadImages(iconPath)
+	if err != nil {
+		return err
+	}
+	for name, image := range images {
+		if err := store.AddImage(image, name); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+
+func SetAchievements(store Storage, aPath string) error {
+	records, err := u.ReadCSV(aPath)
+	if err != nil {
+		return err
+	}
+	log.Println("Number of achievements ", len(records))
+	for _, record := range records {
+		entry := new(AchievementEntry)
+		entry.Title = record[0]
+		entry.Type = c.Achievement(record[1])
+		entry.Value = strings.ToLower(record[2])
+		entry.Description = record[3]
+		entry.ImageName = record[4]
+		if err := store.AddAchievement(entry); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func SetCombinations(store Storage, combiPath string) error {
+	records, err := u.ReadCSV(combiPath)
+	log.Println("Number of combinations ", len(records))
+	if err != nil {
+		return err
+	}
+	for _, record := range records {
+		combi := new(Combination)
+		combi.A = strings.ToLower(record[1])
+		combi.B = strings.ToLower(record[2])
+		combi.Result = strings.ToLower(record[3])
+		combi.Depth, _ = strconv.Atoi(record[0])
+		if err := store.AddCombination(combi); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func SetWords(store Storage, wordPath string) error {
+	records, err := u.ReadCSV(wordPath)
+	if err != nil {
+		return err
+	}
+	log.Println("Number of words ", len(records))
+	for _, record := range records {
+		word := new(Word)
+		word.Word = strings.ToLower(record[0])
+		word.Depth, _ = strconv.Atoi(record[1])
+		word.Reachability, _ = strconv.ParseFloat(record[2], 64)
+		if err := store.AddWord(word); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func SeedDB(store Storage, wordPath, combiPath, iconPath, aIconPath, aPath string) {
+	log.Println("Seeding database...")
+	if err := SetImages(store, iconPath); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Images seeded")
+	if err := SetCombinations(store, combiPath); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Combinations seeded")
+	if err := SetWords(store, wordPath); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Words seeded")
+	if err := SetAchievements(store, aPath); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Achievements seeded")
+	if err := SetAchievementImages(store, aIconPath); err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Achievement images seeded")
+}
+
+
+func GetCombination(store Storage, a, b, apiKey string) (string, bool, error) {
+	result, inDB, err := store.GetCombination(a, b)
+	if err != nil {
+		return "", false, err
+	}
+	if !inDB {
+		newWord, err := u.CallCohereAPI(a, b, apiKey)
+		if err != nil {
+			log.Printf("Error calling Cohere API: %v", err)
+			return "star", false, nil
+		}
+		log.Printf("Adding new combination %s + %s = %s", a, b, newWord)
+		err = store.AddNewCombination(a, b, newWord)
+		if err != nil {
+			log.Printf("Error adding new combination: %v", err)
+			return "star", false, nil
+		}
+		return newWord, true, nil
+	}
+	return *result, false, nil
 }

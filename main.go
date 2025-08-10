@@ -11,14 +11,15 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"github.com/joho/godotenv"
 	_ "github.com/na50r/wombo-combo-go-be/docs"
-	"fmt"
+    st "github.com/na50r/wombo-combo-go-be/storage"
+
 )
 
-var JWT_SECRET string
 var CLIENT string
 var ICONS string
 var COMBINATIONS string
@@ -32,9 +33,8 @@ var ACHIEVEMENT_ICONS string
 func init() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("No .env file found, continuing...")
+		log.Println("No .env file found, continuing... (main.go)")
 	}
-	JWT_SECRET = os.Getenv("JWT_SECRET")
 	CLIENT = os.Getenv("CLIENT")
 	ICONS = os.Getenv("ICONS")
 	COMBINATIONS = os.Getenv("COMBINATIONS")
@@ -45,9 +45,6 @@ func init() {
 	ACHIEVEMENTS = os.Getenv("ACHIEVEMENTS")
 	ACHIEVEMENT_ICONS = os.Getenv("ACHIEVEMENT_ICONS")
 
-	if JWT_SECRET == "" {
-		log.Fatal("JWT_SECRET not set")
-	}
 	if CLIENT == "" {
 		log.Fatal("CLIENT not set")
 	}
@@ -77,13 +74,13 @@ func init() {
 	}
 }
 
-func NewStore() (Storage, error) {
+func NewStore() (st.Storage, error) {
 	log.Printf("Using database [%s]", DB)
 	if DB == "POSTGRES" {
-		return NewPostgresStore()
+		return st.NewPostgresStore(POSTGRES_CONNECTION)
 	}
 	if DB == "SQLITE" {
-		return NewSQLiteStore("store")
+		return st.NewSQLiteStore("store")
 	}
 	return nil, fmt.Errorf("DB [%s] not found", DB)
 }
@@ -104,7 +101,9 @@ func main() {
 
 	//./bin/wc --seed
 	if *seed {
-		seedDatabase(store)
+		st.SeedDB(store, WORDS, COMBINATIONS, ICONS, ACHIEVEMENT_ICONS, ACHIEVEMENTS)
+		log.Println("Seeding completed, closing server...")
+		os.Exit(0)
 	}
 
 	//Accounts for ports provided by hosting services

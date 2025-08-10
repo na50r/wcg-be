@@ -1,10 +1,14 @@
-package main
+package game
 
 import (
 	"log"
 	"net/http"
 	"strconv"
 	"strings"
+	c "github.com/na50r/wombo-combo-go-be/constants"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
+	u "github.com/na50r/wombo-combo-go-be/utility"
+
 )
 
 type AchievementMaps struct {
@@ -13,9 +17,7 @@ type AchievementMaps struct {
 	TargetWord   map[string]string // word string → achievement title
 }
 
-// TODO: Figure out a neat way to achievements
-// Requirement: Must be easily extensible
-func (server *APIServer) SetupAchievements() error {
+func (server *GameService) SetupAchievements() error {
 	s := server.store
 	newWordCnt := map[int]string{}
 	wordCnt := map[int]string{}
@@ -26,19 +28,19 @@ func (server *APIServer) SetupAchievements() error {
 	}
 	for _, entry := range achievementEntries {
 		switch entry.Type {
-		case NewWordCount:
+		case c.NewWordCount:
 			val, err := strconv.Atoi(entry.Value)
 			if err != nil {
 				return err
 			}
 			newWordCnt[val] = entry.Title
-		case WordCount:
+		case c.WordCount:
 			val, err := strconv.Atoi(entry.Value)
 			if err != nil {
 				return err
 			}
 			wordCnt[val] = entry.Title
-		case TargetWord:
+		case c.TargetWord:
 			targetWord[entry.Value] = entry.Title
 		}
 	}
@@ -51,20 +53,20 @@ func (server *APIServer) SetupAchievements() error {
 	return nil
 }
 
-func UnlockAchievement(s *APIServer, username, achievementTitle string) error {
+func UnlockAchievement(s *GameService, username, achievementTitle string) error {
 	newUnlock, err := s.store.UnlockAchievement(username, achievementTitle)
 	if err != nil {
 		return err
 	}
 	if newUnlock {
 		log.Printf("Achievement unlocked: %s", achievementTitle)
-		s.PublishToPlayer(username, Message{Data: AchievementEvent{AchievementTitle: achievementTitle}})
+		s.broker.PublishToPlayer(username, Message{Data: dto.AchievementEvent{AchievementTitle: achievementTitle}})
 	}
 	log.Printf("Achievement already unlocked: %s", achievementTitle)
 	return nil
 }
 
-func CheckAchievements(s *APIServer, username string, updatedWordCnt, updatedNewWordCnt int, currentWord string) error {
+func CheckAchievements(s *GameService, username string, updatedWordCnt, updatedNewWordCnt int, currentWord string) error {
 	a := s.achievements
 	if title, ok := a.NewWordCount[updatedNewWordCnt]; ok {
 		err := UnlockAchievement(s, username, title)
@@ -87,7 +89,7 @@ func CheckAchievements(s *APIServer, username string, updatedWordCnt, updatedNew
 	return nil
 }
 
-func GetAchievementsForUser(s *APIServer, username string) ([]*AchievementDTO, error) {
+func GetAchievementsForUser(s *GameService, username string) ([]*dto.AchievementDTO, error) {
 	achievementTitles, err := s.store.GetAchievementsForUser(username)
 	if err != nil {
 		return nil, err
@@ -100,19 +102,19 @@ func GetAchievementsForUser(s *APIServer, username string) ([]*AchievementDTO, e
 	if err != nil {
 		return nil, err
 	}
-	achievements := []*AchievementDTO{}
+	achievements := []*dto.AchievementDTO{}
 	for _, entry := range allAchievements {
 		image, err := s.store.GetAchievementImage(entry.ImageName)
 		if err != nil {
 			return nil, err
 		}
 		unlocked := unlockedAchievements[entry.Title]
-		achievements = append(achievements, &AchievementDTO{Title: entry.Title, Description: entry.Description, Image: image, Unlocked: unlocked})
+		achievements = append(achievements, &dto.AchievementDTO{Title: entry.Title, Description: entry.Description, Image: image, Unlocked: unlocked})
 	}
 	return achievements, nil
 }
 
-// handleAchievements godoc
+// HandleAchievements godoc
 // @Summary Get all achievements for a user
 // @Description Get all achievements for a user
 // @Tags account
@@ -120,13 +122,13 @@ func GetAchievementsForUser(s *APIServer, username string) ([]*AchievementDTO, e
 // @Produce json
 // @Security BearerAuth
 // @Param username path string true "Username"
-// @Success 200 {array} AchievementDTO
-func (s *APIServer) handleAchievements(w http.ResponseWriter, r *http.Request) error {
+// @Success 200 {array} dto.AchievementDTO
+func (s *GameService) HandleAchievements(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodGet {
-		err := WriteJSON(w, http.StatusMethodNotAllowed, APIError{Error: "Method not allowed"})
+		err := u.WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
-	username, err := getUsername(r)
+	username, err := u.GetUsername(r)
 	if err != nil {
 		return err
 	}
@@ -134,5 +136,5 @@ func (s *APIServer) handleAchievements(w http.ResponseWriter, r *http.Request) e
 	if err != nil {
 		return err
 	}
-	return WriteJSON(w, http.StatusOK, achievements)
+	return u.WriteJSON(w, http.StatusOK, achievements)
 }

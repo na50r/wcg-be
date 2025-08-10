@@ -7,13 +7,16 @@ import (
 
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
+	st "github.com/na50r/wombo-combo-go-be/storage"
+	g "github.com/na50r/wombo-combo-go-be/game"
+	t "github.com/na50r/wombo-combo-go-be/token"
+	c "github.com/na50r/wombo-combo-go-be/constants"
+	"golang.org/x/crypto/bcrypt"
+	"fmt"
+	a "github.com/na50r/wombo-combo-go-be/account"
+	u "github.com/na50r/wombo-combo-go-be/utility"
 )
-
-func WriteJSON(w http.ResponseWriter, status int, v any) error {
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(status)
-	return json.NewEncoder(w).Encode(v)
-}
 
 // Allows error handling
 type APIFunc func(http.ResponseWriter, *http.Request) error
@@ -21,36 +24,28 @@ type APIFunc func(http.ResponseWriter, *http.Request) error
 func makeHTTPHandleFunc(f APIFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := f(w, r); err != nil {
-			WriteJSON(w, http.StatusBadRequest, APIError{Error: err.Error()})
+			u.WriteJSON(w, http.StatusBadRequest, dto.APIError{Error: err.Error()})
 		}
 	}
 }
 
 type APIServer struct {
-	router        *mux.Router
-	listenAddr    string
-	store         Storage
-	broker        *Broker
-	lobbyClients  map[string]map[int]bool // Maps a lobby code to a SET of clients
-	playerClient  map[string]int          // Maps each player to a client
-	accountClient map[string]int
-	games         map[string]*Game
-	achievements  AchievementMaps
+	router       *mux.Router
+	listenAddr   string
+	store        st.Storage
+	gameService  *g.GameService
+	accountService *a.AccountService
 }
 
-func NewAPIServer(listenAddr string, store Storage) *APIServer {
+func NewAPIServer(listenAddr string, store st.Storage) *APIServer {
 	s := APIServer{
-		router:        mux.NewRouter(),
-		listenAddr:    listenAddr,
-		store:         store,
-		broker:        NewBroker(),
-		lobbyClients:  make(map[string]map[int]bool),
-		playerClient:  make(map[string]int),
-		accountClient: make(map[string]int),
-		games:         make(map[string]*Game),
+		router:     mux.NewRouter(),
+		listenAddr: listenAddr,
+		store:      store,
+		accountService: a.NewAccountService(store),
+		gameService: g.NewGameService(store, COHERE_API_KEY),
 	}
-	go s.listen()
-	s.SetupAchievements()
+	s.gameService.SetupAchievements()
 	return &s
 }
 
@@ -74,33 +69,38 @@ func (s *APIServer) RegisterRoutes() error {
 	router.HandleFunc("/login", makeHTTPHandleFunc(s.handleLogin))
 	router.HandleFunc("/logout", makeHTTPHandleFunc(s.handleLogout))
 
-	router.HandleFunc("/accounts", makeHTTPHandleFunc(s.handleRegister))
-	router.HandleFunc("/account/{username}", withAccountAuth(makeHTTPHandleFunc(s.handleAccount)))
-	router.HandleFunc("/account/{username}/images", withAccountAuth(makeHTTPHandleFunc(s.handleGetImages)))
-	router.HandleFunc("/account/{username}/leaderboard", withAccountAuth(makeHTTPHandleFunc(s.handleLeaderboard)))
-	router.HandleFunc("/account/{username}/achievements", withAccountAuth(makeHTTPHandleFunc(s.handleAchievements)))
+	router.HandleFunc("/accounts", makeHTTPHandleFunc(s.accountService.HandleRegister))
+	router.HandleFunc("/account/{username}", t.WithAccountAuth(makeHTTPHandleFunc(s.accountService.HandleAccount)))
+	router.HandleFunc("/account/{username}/images", t.WithAccountAuth(makeHTTPHandleFunc(s.accountService.HandleGetImages)))
+
+	//Account / Game intersection
+	router.HandleFunc("/account/{username}/leaderboard", t.WithAccountAuth(makeHTTPHandleFunc(s.gameService.HandleLeaderboard)))
+	router.HandleFunc("/account/{username}/achievements", t.WithAccountAuth(makeHTTPHandleFunc(s.gameService.HandleAchievements)))
 
 	// Lobby Endpoints
-	router.HandleFunc("/lobbies", makeHTTPHandleFunc(s.handleLobbies))
-	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}", withPlayerAuth(makeHTTPHandleFunc(s.handleGetLobby)))
-	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/leave", withPlayerAuth(makeHTTPHandleFunc(s.handleLeaveLobby)))
-	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/edit", withPlayerAuth(makeHTTPHandleFunc(s.handleEditGameMode)))
+	router.HandleFunc("/lobbies", makeHTTPHandleFunc(s.gameService.HandleLobbies))
+	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}", t.WithPlayerAuth(makeHTTPHandleFunc(s.gameService.HandleGetLobby)))
+	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/leave", t.WithPlayerAuth(makeHTTPHandleFunc(s.gameService.HandleLeaveLobby)))
+	router.HandleFunc("/lobbies/{lobbyCode}/{playerName}/edit", t.WithPlayerAuth(makeHTTPHandleFunc(s.gameService.HandleEditGameMode)))
 
 	// Game endpoints
-	router.HandleFunc("/games/{lobbyCode}/{playerName}/game", withPlayerAuth(makeHTTPHandleFunc(s.handleGame)))
-	router.HandleFunc("/games/{lobbyCode}/{playerName}/combinations", withPlayerAuth(makeHTTPHandleFunc(s.handleCombination)))
-	router.HandleFunc("/games/{lobbyCode}/{playerName}/words", withPlayerAuth(makeHTTPHandleFunc(s.handleGetWords)))
-	router.HandleFunc("/games/{lobbyCode}/{playerName}/end", withPlayerAuth(makeHTTPHandleFunc(s.handleManualGameEnd)))
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/game", t.WithPlayerAuth(makeHTTPHandleFunc(s.gameService.HandleGame)))
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/combinations", t.WithPlayerAuth(makeHTTPHandleFunc(s.gameService.HandleCombination)))
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/words", t.WithPlayerAuth(makeHTTPHandleFunc(s.gameService.HandleGetWords)))
+	router.HandleFunc("/games/{lobbyCode}/{playerName}/end", t.WithPlayerAuth(makeHTTPHandleFunc(s.gameService.HandleManualGameEnd)))
 
 	// Events
-	router.HandleFunc("/events", s.SSEHandler)
-	router.HandleFunc("/broadcast", s.Broadcast)
-
-	// Test
-	router.HandleFunc("/test-ch/{channelID}", s.PublishToChannel)
+	router.HandleFunc("/events", s.gameService.SSEHandler)
+	router.HandleFunc("/broadcast", s.gameService.Broadcast)
 
 	// Swagger
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
+
+	// Health
+	router.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("pong\n"))
+	})
 	return nil
 }
 
@@ -109,4 +109,99 @@ func (s *APIServer) Run() {
 	router := s.router
 	log.Fatal(http.ListenAndServe(s.listenAddr, router))
 
+}
+
+
+// handleLogin godoc
+// @Summary Log in an account
+// @Description Authenticates a user and returns a JWT token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param login body dto.LoginRequest true "Username and password"
+// @Success 200 {object} dto.LoginResponse
+// @Failure 400 {object} dto.APIError
+// @Failure 405 {object} dto.APIError
+// @Router /login [post]
+func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
+	if r.Method != http.MethodPost {
+		err := u.WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
+		return err
+	}
+	req := new(dto.LoginRequest)
+	if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+		return err
+	}
+	acc, err := s.store.GetAccountByUsername(req.Username)
+	if err != nil {
+		return err
+	}
+	pw := req.Password
+	encpw := acc.Password
+	if err := bcrypt.CompareHashAndPassword([]byte(encpw), []byte(pw)); err != nil {
+		return fmt.Errorf("Incorrect password, please try again")
+	}
+
+	tokenString, err := t.CreateJWT(acc)
+	if err != nil {
+		return err
+	}
+	acc.Status = c.ONLINE
+	if err := s.store.UpdateAccount(acc); err != nil {
+		return err
+	}
+	resp := dto.LoginResponse{Token: tokenString}
+	log.Printf("User %s logged in\n", acc.Username)
+	return u.WriteJSON(w, http.StatusOK, resp)
+}
+
+// handleLogout godoc
+// @Summary Log out an account
+// @Description Logs out a user
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} dto.GenericResponse
+// @Failure 400 {object} dto.APIError
+// @Failure 405 {object} dto.APIError
+// @Router /logout [post]
+func (s *APIServer) handleLogout(w http.ResponseWriter, r *http.Request) error {
+	if r.Method != http.MethodPost {
+		err := u.WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
+		return err
+	}
+	token, tokenExists := t.GetToken(r)
+	if !tokenExists {
+		return fmt.Errorf(c.Unauthorized)
+	}
+
+	accountClaims, err := t.VerifyAccountJWT(token)
+	if err != nil {
+		return err
+	}
+	acc, err := s.store.GetAccountByUsername(accountClaims.Username)
+	if err != nil {
+		return err
+	}
+	if acc.Status == c.OFFLINE {
+		return u.WriteJSON(w, http.StatusBadRequest, dto.APIError{Error: "Already logged out"})
+	}
+	acc.Status = c.OFFLINE
+	if err := s.store.UpdateAccount(acc); err != nil {
+		return err
+	}
+
+	// Delete Lobby of logged out owner
+	lobbyCode, err := s.store.GetLobbyForOwner(accountClaims.Username)
+	if err != nil {
+		return err
+	}
+	if lobbyCode != "" {
+		if err := s.gameService.Logout(lobbyCode, accountClaims.Username); err != nil {
+			return err
+		}
+	}
+	log.Printf("User %s logged out\n", accountClaims.Username)
+	return u.WriteJSON(w, http.StatusOK, dto.GenericResponse{Message: "Logout successful"})
 }

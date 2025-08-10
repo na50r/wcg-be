@@ -1,4 +1,4 @@
-package main
+package constants
 
 type EventMesage string
 type GameMode string
