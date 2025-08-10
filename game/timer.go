@@ -1,4 +1,4 @@
-package main
+package game
 
 import (
 	"context"
@@ -18,7 +18,7 @@ func NewTimer(durationMinutes int) *Timer {
 	return &Timer{durationMinutes: durationMinutes}
 }
 
-func (mt *Timer) Start(s *APIServer, lobbyCode string, game *Game) error {
+func (mt *Timer) Start(s *GameService, lobbyCode string, game *Game) error {
 	if mt.durationMinutes < 1 {
 		return fmt.Errorf("duration must be at least 1 minute")
 	}

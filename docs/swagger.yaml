@@ -1,11 +1,31 @@
 basePath: /
 definitions:
-  main.APIError:
+  constants.GameMode:
+    enum:
+    - Vanilla
+    - Wombo Combo
+    - Fusion Frenzy
+    - Daily Challenge
+    type: string
+    x-enum-varnames:
+    - VANILLA
+    - WOMBO_COMBO
+    - FUSION_FRENZY
+    - DAILY_CHALLENGE
+  constants.Status:
+    enum:
+    - ONLINE
+    - OFFLINE
+    type: string
+    x-enum-varnames:
+    - ONLINE
+    - OFFLINE
+  dto.APIError:
     properties:
       error:
         type: string
     type: object
-  main.AccountDTO:
+  dto.AccountDTO:
     properties:
       createdAt:
         description: ISO8601 creation timestamp
@@ -23,7 +43,7 @@ definitions:
         type: integer
       status:
         allOf:
-        - $ref: '#/definitions/main.Status'
+        - $ref: '#/definitions/constants.Status'
         description: ONLINE or OFFLINE
       username:
         description: Username of the account
@@ -32,7 +52,7 @@ definitions:
         description: Number of wins
         type: integer
     type: object
-  main.AchievementDTO:
+  dto.AchievementDTO:
     properties:
       description:
         type: string
@@ -45,7 +65,7 @@ definitions:
       unlocked:
         type: boolean
     type: object
-  main.ChallengeEntryDTO:
+  dto.ChallengeEntryDTO:
     properties:
       image:
         items:
@@ -56,19 +76,19 @@ definitions:
       wordCount:
         type: integer
     type: object
-  main.CreateLobbyRequest:
+  dto.CreateLobbyRequest:
     properties:
       name:
         type: string
     type: object
-  main.CreateLobbyResponse:
+  dto.CreateLobbyResponse:
     properties:
       lobby:
-        $ref: '#/definitions/main.LobbyDTO'
+        $ref: '#/definitions/dto.LobbyDTO'
       token:
         type: string
     type: object
-  main.EditAccountRequest:
+  dto.EditAccountRequest:
     properties:
       imageName:
         type: string
@@ -81,65 +101,53 @@ definitions:
       username:
         type: string
     type: object
-  main.EditGameRequest:
+  dto.EditGameRequest:
     properties:
       duration:
         type: integer
       gameMode:
-        $ref: '#/definitions/main.GameMode'
+        $ref: '#/definitions/constants.GameMode'
     type: object
-  main.GameEndResponse:
+  dto.GameEndResponse:
     properties:
       gameMode:
-        $ref: '#/definitions/main.GameMode'
+        $ref: '#/definitions/constants.GameMode'
       manualEnd:
         type: boolean
       playerResults:
         items:
-          $ref: '#/definitions/main.PlayerResultDTO'
+          $ref: '#/definitions/dto.PlayerResultDTO'
         type: array
       winner:
         type: string
     type: object
-  main.GameMode:
-    enum:
-    - Vanilla
-    - Wombo Combo
-    - Fusion Frenzy
-    - Daily Challenge
-    type: string
-    x-enum-varnames:
-    - VANILLA
-    - WOMBO_COMBO
-    - FUSION_FRENZY
-    - DAILY_CHALLENGE
-  main.GenericResponse:
+  dto.GenericResponse:
     properties:
       message:
         type: string
     type: object
-  main.ImagesResponse:
+  dto.ImagesResponse:
     properties:
       names:
         items:
           type: string
         type: array
     type: object
-  main.JoinLobbyRequest:
+  dto.JoinLobbyRequest:
     properties:
       lobbyCode:
         type: string
       playerName:
         type: string
     type: object
-  main.JoinLobbyRespone:
+  dto.JoinLobbyRespone:
     properties:
       lobby:
-        $ref: '#/definitions/main.LobbyDTO'
+        $ref: '#/definitions/dto.LobbyDTO'
       token:
         type: string
     type: object
-  main.LobbiesDTO:
+  dto.LobbiesDTO:
     properties:
       image:
         items:
@@ -150,13 +158,13 @@ definitions:
       playerCount:
         type: integer
     type: object
-  main.LobbyDTO:
+  dto.LobbyDTO:
     properties:
       gameMode:
-        $ref: '#/definitions/main.GameMode'
+        $ref: '#/definitions/constants.GameMode'
       gameModes:
         items:
-          $ref: '#/definitions/main.GameMode'
+          $ref: '#/definitions/constants.GameMode'
         type: array
       lobbyCode:
         type: string
@@ -166,26 +174,22 @@ definitions:
         type: string
       players:
         items:
-          $ref: '#/definitions/main.PlayerDTO'
+          $ref: '#/definitions/dto.PlayerDTO'
         type: array
     type: object
-  main.LoginRequest:
+  dto.LoginRequest:
     properties:
       password:
         type: string
       username:
         type: string
     type: object
-  main.LoginResponse:
+  dto.LoginResponse:
     properties:
       token:
         type: string
     type: object
-  main.Message:
-    properties:
-      data: {}
-    type: object
-  main.PlayerDTO:
+  dto.PlayerDTO:
     properties:
       image:
         items:
@@ -194,7 +198,7 @@ definitions:
       name:
         type: string
     type: object
-  main.PlayerResultDTO:
+  dto.PlayerResultDTO:
     properties:
       image:
         items:
@@ -207,45 +211,37 @@ definitions:
       wordCount:
         type: integer
     type: object
-  main.RegisterRequest:
+  dto.RegisterRequest:
     properties:
       password:
         type: string
       username:
         type: string
     type: object
-  main.StartGameRequest:
+  dto.StartGameRequest:
     properties:
       duration:
         type: integer
       gameMode:
-        $ref: '#/definitions/main.GameMode'
+        $ref: '#/definitions/constants.GameMode'
       withTimer:
         type: boolean
     type: object
-  main.Status:
-    enum:
-    - ONLINE
-    - OFFLINE
-    type: string
-    x-enum-varnames:
-    - ONLINE
-    - OFFLINE
-  main.WordRequest:
+  dto.WordRequest:
     properties:
       a:
         type: string
       b:
         type: string
     type: object
-  main.WordResponse:
+  dto.WordResponse:
     properties:
       isNew:
         type: boolean
       result:
         type: string
     type: object
-  main.Words:
+  dto.Words:
     properties:
       targetWord:
         type: string
@@ -253,6 +249,10 @@ definitions:
         items:
           type: string
         type: array
+    type: object
+  game.Message:
+    properties:
+      data: {}
     type: object
 host: localhost:3030
 info:
@@ -278,15 +278,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.AccountDTO'
+            $ref: '#/definitions/dto.AccountDTO'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: Get an account
@@ -302,7 +302,7 @@ paths:
         name: account
         required: true
         schema:
-          $ref: '#/definitions/main.EditAccountRequest'
+          $ref: '#/definitions/dto.EditAccountRequest'
       - description: Username
         in: path
         name: username
@@ -314,15 +314,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.GenericResponse'
+            $ref: '#/definitions/dto.GenericResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: Edit an account
@@ -345,15 +345,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.ImagesResponse'
+            $ref: '#/definitions/dto.ImagesResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: Get all potential profile pictures
@@ -377,16 +377,16 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/main.ChallengeEntryDTO'
+              $ref: '#/definitions/dto.ChallengeEntryDTO'
             type: array
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: Get the leaderboard
@@ -403,25 +403,55 @@ paths:
         name: account
         required: true
         schema:
-          $ref: '#/definitions/main.RegisterRequest'
+          $ref: '#/definitions/dto.RegisterRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/main.GenericResponse'
+            $ref: '#/definitions/dto.GenericResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       summary: Register an account
       tags:
       - account
+  /broadcast:
+    post:
+      consumes:
+      - application/json
+      description: Broadcast a message to all clients
+      parameters:
+      - description: Message to broadcast
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/game.Message'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Message sent
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            type: string
+        "405":
+          description: Method not allowed
+          schema:
+            type: string
+      summary: Broadcast a message to all clients
+      tags:
+      - events
   /events:
     get:
       consumes:
@@ -433,15 +463,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.Message'
+            $ref: '#/definitions/game.Message'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       summary: Server-Sent Events
       tags:
       - events
@@ -456,7 +486,7 @@ paths:
         name: move
         required: true
         schema:
-          $ref: '#/definitions/main.WordRequest'
+          $ref: '#/definitions/dto.WordRequest'
       - description: Lobby code
         in: path
         name: lobbyCode
@@ -473,15 +503,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.WordResponse'
+            $ref: '#/definitions/dto.WordResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: Make a move
@@ -509,15 +539,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.GenericResponse'
+            $ref: '#/definitions/dto.GenericResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: End a game (owner)
@@ -545,15 +575,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.GenericResponse'
+            $ref: '#/definitions/dto.GenericResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: Delete a game (owner)
@@ -580,15 +610,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.GameEndResponse'
+            $ref: '#/definitions/dto.GameEndResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: Get game stats
@@ -604,7 +634,7 @@ paths:
         name: game
         required: true
         schema:
-          $ref: '#/definitions/main.StartGameRequest'
+          $ref: '#/definitions/dto.StartGameRequest'
       - description: Lobby code
         in: path
         name: lobbyCode
@@ -621,15 +651,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.GenericResponse'
+            $ref: '#/definitions/dto.GenericResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: Start a game (owner)
@@ -652,15 +682,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.Words'
+            $ref: '#/definitions/dto.Words'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: Get a player's words
@@ -678,16 +708,16 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/main.LobbiesDTO'
+              $ref: '#/definitions/dto.LobbiesDTO'
             type: array
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       summary: Get all lobbies
       tags:
       - lobby
@@ -701,22 +731,22 @@ paths:
         name: lobby
         required: true
         schema:
-          $ref: '#/definitions/main.CreateLobbyRequest'
+          $ref: '#/definitions/dto.CreateLobbyRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.CreateLobbyResponse'
+            $ref: '#/definitions/dto.CreateLobbyResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: Create a lobby (requires account)
@@ -732,22 +762,22 @@ paths:
         name: lobby
         required: true
         schema:
-          $ref: '#/definitions/main.JoinLobbyRequest'
+          $ref: '#/definitions/dto.JoinLobbyRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.JoinLobbyRespone'
+            $ref: '#/definitions/dto.JoinLobbyRespone'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       summary: Join a lobby
       tags:
       - lobby
@@ -773,15 +803,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.LobbyDTO'
+            $ref: '#/definitions/dto.LobbyDTO'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: Get a lobby
@@ -798,7 +828,7 @@ paths:
         name: game
         required: true
         schema:
-          $ref: '#/definitions/main.EditGameRequest'
+          $ref: '#/definitions/dto.EditGameRequest'
       - description: Lobby code
         in: path
         name: lobbyCode
@@ -815,15 +845,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.GenericResponse'
+            $ref: '#/definitions/dto.GenericResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: Edit a game mode in the lobby (owner)
@@ -851,15 +881,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.GenericResponse'
+            $ref: '#/definitions/dto.GenericResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: Leave a lobby
@@ -876,22 +906,22 @@ paths:
         name: login
         required: true
         schema:
-          $ref: '#/definitions/main.LoginRequest'
+          $ref: '#/definitions/dto.LoginRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.LoginResponse'
+            $ref: '#/definitions/dto.LoginResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       summary: Log in an account
       tags:
       - auth
@@ -906,15 +936,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.GenericResponse'
+            $ref: '#/definitions/dto.GenericResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
         "405":
           description: Method Not Allowed
           schema:
-            $ref: '#/definitions/main.APIError'
+            $ref: '#/definitions/dto.APIError'
       security:
       - BearerAuth: []
       summary: Log out an account

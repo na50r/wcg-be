@@ -1,4 +1,4 @@
-package main
+package token
 
 import (
 	"fmt"
@@ -15,9 +15,25 @@ import (
 	dto "github.com/na50r/wombo-combo-go-be/dto"
 	u "github.com/na50r/wombo-combo-go-be/utility"
 	st "github.com/na50r/wombo-combo-go-be/storage"
+	"github.com/joho/godotenv"
+	"os"
 )
 
-func getToken(r *http.Request) (string, bool) {
+//Package specific env load
+var JWT_SECRET string
+
+func init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("No .env file found, continuing...")
+	}
+	JWT_SECRET = os.Getenv("JWT_SECRET")
+	if JWT_SECRET == "" {
+		log.Fatal("JWT_SECRET not set")
+	}
+}
+
+func GetToken(r *http.Request) (string, bool) {
 	tokenString := r.Header.Get("Authorization")
 	if !strings.HasPrefix(tokenString, "Bearer ") {
 		log.Println("No Bearer Token")
@@ -33,7 +49,7 @@ func getToken(r *http.Request) (string, bool) {
 	return tokenString, true
 }
 
-func verifyAccountJWT(tokenString string) (*AccountClaims, error) {
+func VerifyAccountJWT(tokenString string) (*AccountClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &AccountClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -50,7 +66,7 @@ func verifyAccountJWT(tokenString string) (*AccountClaims, error) {
 	return claims, nil
 }
 
-func verifyPlayerJWT(tokenString string) (*PlayerClaims, error) {
+func VerifyPlayerJWT(tokenString string) (*PlayerClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &PlayerClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -67,7 +83,7 @@ func verifyPlayerJWT(tokenString string) (*PlayerClaims, error) {
 	return claims, nil
 }
 
-func createJWT(account *st.Account) (string, error) {
+func CreateJWT(account *st.Account) (string, error) {
 	claims, err := NewAccountClaims(account.Username, time.Hour*4)
 	if err != nil {
 		return "", err
@@ -76,7 +92,7 @@ func createJWT(account *st.Account) (string, error) {
 	return token.SignedString([]byte(JWT_SECRET))
 }
 
-func createLobbyToken(player *st.Player) (string, error) {
+func CreateLobbyToken(player *st.Player) (string, error) {
 	claims, err := NewPlayerClaims(player, time.Hour*4)
 	if err != nil {
 		return "", err
@@ -133,76 +149,76 @@ func NewPlayerClaims(player *st.Player, duration time.Duration) (*PlayerClaims, 
 	}, nil
 }
 
-type authKey struct{}
+type AuthKey struct{}
 
 // Protect account endpoint
-func withAccountAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
+func WithAccountAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		token, tokenExists := getToken(r)
+		token, tokenExists := GetToken(r)
 		if !tokenExists {
-			WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
+			u.WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (No Token)")
 			return
 		}
-		accountClaims, err := verifyAccountJWT(token)
+		accountClaims, err := VerifyAccountJWT(token)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
+			u.WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (Invalid Token)", err)
 			return
 		}
 		username, err := u.GetUsername(r)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
+			u.WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (No Username)", err)
 			return
 		}
 		if accountClaims.Username != username {
-			WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
+			u.WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (Invalid Username)", err)
 			return
 		}
-		ctx := context.WithValue(r.Context(), authKey{}, accountClaims)
+		ctx := context.WithValue(r.Context(), AuthKey{}, accountClaims)
 		r = r.WithContext(ctx)
 		handlerFunc(w, r)
 	}
 }
 
 // Protect player endpoints
-func withPlayerAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
+func WithPlayerAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		token, tokenExists := getToken(r)
+		token, tokenExists := GetToken(r)
 		if !tokenExists {
-			WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
+			u.WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (No Token)")
 			return
 		}
-		playerClaims, err := verifyPlayerJWT(token)
+		playerClaims, err := VerifyPlayerJWT(token)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
+			u.WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (Invalid Token)", err)
 			return
 		}
 		lobbyCode, err := u.GetLobbyCode(r)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
+			u.WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (No Lobby Code)", err)
 			return
 		}
 		playerName, err := u.GetPlayername(r)
 		if err != nil {
-			WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
+			u.WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (No Player Name)", err)
 			return
 		}
 		if lobbyCode != playerClaims.LobbyCode || playerName != playerClaims.PlayerName {
-			WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
+			u.WriteJSON(w, http.StatusUnauthorized, dto.APIError{Error: c.Unauthorized})
 			log.Println("Unauthorized (Invalid Lobby Code or Player Name)", err)
 			return
 		}
-		ctx := context.WithValue(r.Context(), authKey{}, playerClaims)
+		ctx := context.WithValue(r.Context(), AuthKey{}, playerClaims)
 		r = r.WithContext(ctx)
 		handlerFunc(w, r)
 	}
 }
 
-// Refresh Tokens
+// TODO: Refresh Tokens

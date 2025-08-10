@@ -1,10 +1,12 @@
-package main
+package game
+
 
 import (
 	"log"
 	"net/http"
 	"encoding/json"
 	"github.com/na50r/wombo-combo-go-be/sse"
+	t "github.com/na50r/wombo-combo-go-be/token"
 )
 
 type Message struct {
@@ -48,7 +50,7 @@ func (ps PlayerSubscription) GetChannelID() int       { return ps.ChannelID }
 func (ps PlayerSubscription) GetChannel() chan []byte { return ps.Channel }
 
 func MakePlayerSubscription(r *http.Request, id int, channel chan []byte) sse.Subscription {
-	token, tokenExists := getToken(r)
+	token, tokenExists := t.GetToken(r)
 	ps := PlayerSubscription{
 		BaseSubscription: sse.NewSubscription(id, channel),
 		IsPlayer:         false,
@@ -56,7 +58,7 @@ func MakePlayerSubscription(r *http.Request, id int, channel chan []byte) sse.Su
 	if !tokenExists {
 		return ps
 	}
-	claims, err := verifyPlayerJWT(token)
+	claims, err := t.VerifyPlayerJWT(token)
 	if err != nil {
 		log.Printf("JWT verification failed: %v", err)
 		return ps
@@ -118,15 +120,27 @@ func (gb *GameBroker) Publish(msg Message) {
 // @Accept json
 // @Produce json
 // @Success 200 {object} Message
-// @Failure 400 {object} APIError
-// @Failure 405 {object} APIError
+// @Failure 400 {object} dto.APIError
+// @Failure 405 {object} dto.APIError
 // @Router /events [get]
-func (gb *GameBroker) SSEHandler(w http.ResponseWriter, r *http.Request) {
-	gb.Broker.SSEHandler(w, r)
+func (gs *GameService) SSEHandler(w http.ResponseWriter, r *http.Request) {
+	gs.broker.Broker.SSEHandler(w, r)
 }
 
 //$ curl -X POST -H "Content-Type: application/json" -d '{"data": "Hello World"}' http://localhost:<port>/broadcast
-func (gb *GameBroker) Broadcast(w http.ResponseWriter, r *http.Request) {
+
+// Broadcast godoc
+// @Summary Broadcast a message to all clients
+// @Description Broadcast a message to all clients
+// @Tags events
+// @Accept json
+// @Produce json
+// @Param message body Message true "Message to broadcast"
+// @Success 200 {string} string "Message sent"
+// @Failure 400 {string} string "Bad request"
+// @Failure 405 {string} string "Method not allowed"
+// @Router /broadcast [post]
+func (gs *GameService) Broadcast(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -137,6 +151,6 @@ func (gb *GameBroker) Broadcast(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return
 	}
-	gb.Broker.Publish(m.toSSE())
+	gs.broker.Broker.Publish(m.toSSE())
 	w.Write([]byte("Msg sent\n"))
 }

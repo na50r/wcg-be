@@ -46,19 +46,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.AccountDTO"
+                            "$ref": "#/definitions/dto.AccountDTO"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -87,7 +87,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.EditAccountRequest"
+                            "$ref": "#/definitions/dto.EditAccountRequest"
                         }
                     },
                     {
@@ -102,19 +102,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.GenericResponse"
+                            "$ref": "#/definitions/dto.GenericResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -151,19 +151,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.ImagesResponse"
+                            "$ref": "#/definitions/dto.ImagesResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -202,20 +202,20 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/main.ChallengeEntryDTO"
+                                "$ref": "#/definitions/dto.ChallengeEntryDTO"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -241,7 +241,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.RegisterRequest"
+                            "$ref": "#/definitions/dto.RegisterRequest"
                         }
                     }
                 ],
@@ -249,19 +249,65 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/main.GenericResponse"
+                            "$ref": "#/definitions/dto.GenericResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
+                        }
+                    }
+                }
+            }
+        },
+        "/broadcast": {
+            "post": {
+                "description": "Broadcast a message to all clients",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events"
+                ],
+                "summary": "Broadcast a message to all clients",
+                "parameters": [
+                    {
+                        "description": "Message to broadcast",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/game.Message"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Message sent",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "405": {
+                        "description": "Method not allowed",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -284,19 +330,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.Message"
+                            "$ref": "#/definitions/game.Message"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -327,7 +373,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.WordRequest"
+                            "$ref": "#/definitions/dto.WordRequest"
                         }
                     },
                     {
@@ -349,19 +395,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.WordResponse"
+                            "$ref": "#/definitions/dto.WordResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -405,19 +451,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.GenericResponse"
+                            "$ref": "#/definitions/dto.GenericResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -461,19 +507,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.GameEndResponse"
+                            "$ref": "#/definitions/dto.GameEndResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -502,7 +548,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.StartGameRequest"
+                            "$ref": "#/definitions/dto.StartGameRequest"
                         }
                     },
                     {
@@ -524,19 +570,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.GenericResponse"
+                            "$ref": "#/definitions/dto.GenericResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -578,19 +624,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.GenericResponse"
+                            "$ref": "#/definitions/dto.GenericResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -627,19 +673,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.Words"
+                            "$ref": "#/definitions/dto.Words"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -664,20 +710,20 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/main.LobbiesDTO"
+                                "$ref": "#/definitions/dto.LobbiesDTO"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -701,7 +747,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.JoinLobbyRequest"
+                            "$ref": "#/definitions/dto.JoinLobbyRequest"
                         }
                     }
                 ],
@@ -709,19 +755,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.JoinLobbyRespone"
+                            "$ref": "#/definitions/dto.JoinLobbyRespone"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -750,7 +796,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.CreateLobbyRequest"
+                            "$ref": "#/definitions/dto.CreateLobbyRequest"
                         }
                     }
                 ],
@@ -758,19 +804,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.CreateLobbyResponse"
+                            "$ref": "#/definitions/dto.CreateLobbyResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -814,19 +860,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.LobbyDTO"
+                            "$ref": "#/definitions/dto.LobbyDTO"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -857,7 +903,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.EditGameRequest"
+                            "$ref": "#/definitions/dto.EditGameRequest"
                         }
                     },
                     {
@@ -879,19 +925,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.GenericResponse"
+                            "$ref": "#/definitions/dto.GenericResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -935,19 +981,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.GenericResponse"
+                            "$ref": "#/definitions/dto.GenericResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -973,7 +1019,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.LoginRequest"
+                            "$ref": "#/definitions/dto.LoginRequest"
                         }
                     }
                 ],
@@ -981,19 +1027,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.LoginResponse"
+                            "$ref": "#/definitions/dto.LoginResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -1021,19 +1067,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.GenericResponse"
+                            "$ref": "#/definitions/dto.GenericResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     },
                     "405": {
                         "description": "Method Not Allowed",
                         "schema": {
-                            "$ref": "#/definitions/main.APIError"
+                            "$ref": "#/definitions/dto.APIError"
                         }
                     }
                 }
@@ -1041,7 +1087,33 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "main.APIError": {
+        "constants.GameMode": {
+            "type": "string",
+            "enum": [
+                "Vanilla",
+                "Wombo Combo",
+                "Fusion Frenzy",
+                "Daily Challenge"
+            ],
+            "x-enum-varnames": [
+                "VANILLA",
+                "WOMBO_COMBO",
+                "FUSION_FRENZY",
+                "DAILY_CHALLENGE"
+            ]
+        },
+        "constants.Status": {
+            "type": "string",
+            "enum": [
+                "ONLINE",
+                "OFFLINE"
+            ],
+            "x-enum-varnames": [
+                "ONLINE",
+                "OFFLINE"
+            ]
+        },
+        "dto.APIError": {
             "type": "object",
             "properties": {
                 "error": {
@@ -1049,7 +1121,7 @@ const docTemplate = `{
                 }
             }
         },
-        "main.AccountDTO": {
+        "dto.AccountDTO": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -1075,7 +1147,7 @@ const docTemplate = `{
                     "description": "ONLINE or OFFLINE",
                     "allOf": [
                         {
-                            "$ref": "#/definitions/main.Status"
+                            "$ref": "#/definitions/constants.Status"
                         }
                     ]
                 },
@@ -1089,7 +1161,7 @@ const docTemplate = `{
                 }
             }
         },
-        "main.AchievementDTO": {
+        "dto.AchievementDTO": {
             "type": "object",
             "properties": {
                 "description": {
@@ -1109,7 +1181,7 @@ const docTemplate = `{
                 }
             }
         },
-        "main.ChallengeEntryDTO": {
+        "dto.ChallengeEntryDTO": {
             "type": "object",
             "properties": {
                 "image": {
@@ -1126,7 +1198,7 @@ const docTemplate = `{
                 }
             }
         },
-        "main.CreateLobbyRequest": {
+        "dto.CreateLobbyRequest": {
             "type": "object",
             "properties": {
                 "name": {
@@ -1134,18 +1206,18 @@ const docTemplate = `{
                 }
             }
         },
-        "main.CreateLobbyResponse": {
+        "dto.CreateLobbyResponse": {
             "type": "object",
             "properties": {
                 "lobby": {
-                    "$ref": "#/definitions/main.LobbyDTO"
+                    "$ref": "#/definitions/dto.LobbyDTO"
                 },
                 "token": {
                     "type": "string"
                 }
             }
         },
-        "main.EditAccountRequest": {
+        "dto.EditAccountRequest": {
             "type": "object",
             "properties": {
                 "imageName": {
@@ -1165,22 +1237,22 @@ const docTemplate = `{
                 }
             }
         },
-        "main.EditGameRequest": {
+        "dto.EditGameRequest": {
             "type": "object",
             "properties": {
                 "duration": {
                     "type": "integer"
                 },
                 "gameMode": {
-                    "$ref": "#/definitions/main.GameMode"
+                    "$ref": "#/definitions/constants.GameMode"
                 }
             }
         },
-        "main.GameEndResponse": {
+        "dto.GameEndResponse": {
             "type": "object",
             "properties": {
                 "gameMode": {
-                    "$ref": "#/definitions/main.GameMode"
+                    "$ref": "#/definitions/constants.GameMode"
                 },
                 "manualEnd": {
                     "type": "boolean"
@@ -1188,7 +1260,7 @@ const docTemplate = `{
                 "playerResults": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/main.PlayerResultDTO"
+                        "$ref": "#/definitions/dto.PlayerResultDTO"
                     }
                 },
                 "winner": {
@@ -1196,22 +1268,7 @@ const docTemplate = `{
                 }
             }
         },
-        "main.GameMode": {
-            "type": "string",
-            "enum": [
-                "Vanilla",
-                "Wombo Combo",
-                "Fusion Frenzy",
-                "Daily Challenge"
-            ],
-            "x-enum-varnames": [
-                "VANILLA",
-                "WOMBO_COMBO",
-                "FUSION_FRENZY",
-                "DAILY_CHALLENGE"
-            ]
-        },
-        "main.GenericResponse": {
+        "dto.GenericResponse": {
             "type": "object",
             "properties": {
                 "message": {
@@ -1219,7 +1276,7 @@ const docTemplate = `{
                 }
             }
         },
-        "main.ImagesResponse": {
+        "dto.ImagesResponse": {
             "type": "object",
             "properties": {
                 "names": {
@@ -1230,7 +1287,7 @@ const docTemplate = `{
                 }
             }
         },
-        "main.JoinLobbyRequest": {
+        "dto.JoinLobbyRequest": {
             "type": "object",
             "properties": {
                 "lobbyCode": {
@@ -1241,18 +1298,18 @@ const docTemplate = `{
                 }
             }
         },
-        "main.JoinLobbyRespone": {
+        "dto.JoinLobbyRespone": {
             "type": "object",
             "properties": {
                 "lobby": {
-                    "$ref": "#/definitions/main.LobbyDTO"
+                    "$ref": "#/definitions/dto.LobbyDTO"
                 },
                 "token": {
                     "type": "string"
                 }
             }
         },
-        "main.LobbiesDTO": {
+        "dto.LobbiesDTO": {
             "type": "object",
             "properties": {
                 "image": {
@@ -1269,16 +1326,16 @@ const docTemplate = `{
                 }
             }
         },
-        "main.LobbyDTO": {
+        "dto.LobbyDTO": {
             "type": "object",
             "properties": {
                 "gameMode": {
-                    "$ref": "#/definitions/main.GameMode"
+                    "$ref": "#/definitions/constants.GameMode"
                 },
                 "gameModes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/main.GameMode"
+                        "$ref": "#/definitions/constants.GameMode"
                     }
                 },
                 "lobbyCode": {
@@ -1293,12 +1350,12 @@ const docTemplate = `{
                 "players": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/main.PlayerDTO"
+                        "$ref": "#/definitions/dto.PlayerDTO"
                     }
                 }
             }
         },
-        "main.LoginRequest": {
+        "dto.LoginRequest": {
             "type": "object",
             "properties": {
                 "password": {
@@ -1309,7 +1366,7 @@ const docTemplate = `{
                 }
             }
         },
-        "main.LoginResponse": {
+        "dto.LoginResponse": {
             "type": "object",
             "properties": {
                 "token": {
@@ -1317,13 +1374,7 @@ const docTemplate = `{
                 }
             }
         },
-        "main.Message": {
-            "type": "object",
-            "properties": {
-                "data": {}
-            }
-        },
-        "main.PlayerDTO": {
+        "dto.PlayerDTO": {
             "type": "object",
             "properties": {
                 "image": {
@@ -1337,7 +1388,7 @@ const docTemplate = `{
                 }
             }
         },
-        "main.PlayerResultDTO": {
+        "dto.PlayerResultDTO": {
             "type": "object",
             "properties": {
                 "image": {
@@ -1357,7 +1408,7 @@ const docTemplate = `{
                 }
             }
         },
-        "main.RegisterRequest": {
+        "dto.RegisterRequest": {
             "type": "object",
             "properties": {
                 "password": {
@@ -1368,32 +1419,21 @@ const docTemplate = `{
                 }
             }
         },
-        "main.StartGameRequest": {
+        "dto.StartGameRequest": {
             "type": "object",
             "properties": {
                 "duration": {
                     "type": "integer"
                 },
                 "gameMode": {
-                    "$ref": "#/definitions/main.GameMode"
+                    "$ref": "#/definitions/constants.GameMode"
                 },
                 "withTimer": {
                     "type": "boolean"
                 }
             }
         },
-        "main.Status": {
-            "type": "string",
-            "enum": [
-                "ONLINE",
-                "OFFLINE"
-            ],
-            "x-enum-varnames": [
-                "ONLINE",
-                "OFFLINE"
-            ]
-        },
-        "main.WordRequest": {
+        "dto.WordRequest": {
             "type": "object",
             "properties": {
                 "a": {
@@ -1404,7 +1444,7 @@ const docTemplate = `{
                 }
             }
         },
-        "main.WordResponse": {
+        "dto.WordResponse": {
             "type": "object",
             "properties": {
                 "isNew": {
@@ -1415,7 +1455,7 @@ const docTemplate = `{
                 }
             }
         },
-        "main.Words": {
+        "dto.Words": {
             "type": "object",
             "properties": {
                 "targetWord": {
@@ -1427,6 +1467,12 @@ const docTemplate = `{
                         "type": "string"
                     }
                 }
+            }
+        },
+        "game.Message": {
+            "type": "object",
+            "properties": {
+                "data": {}
             }
         }
     },

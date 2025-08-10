@@ -14,16 +14,12 @@ import (
 	"fmt"
 	"log"
 	"os"
-
 	"github.com/joho/godotenv"
 	_ "github.com/na50r/wombo-combo-go-be/docs"
-	c "github.com/na50r/wombo-combo-go-be/constants"
-	dto "github.com/na50r/wombo-combo-go-be/dto"
     st "github.com/na50r/wombo-combo-go-be/storage"
 
 )
 
-var JWT_SECRET string
 var CLIENT string
 var ICONS string
 var COMBINATIONS string
@@ -39,7 +35,6 @@ func init() {
 	if err != nil {
 		log.Println("No .env file found, continuing...")
 	}
-	JWT_SECRET = os.Getenv("JWT_SECRET")
 	CLIENT = os.Getenv("CLIENT")
 	ICONS = os.Getenv("ICONS")
 	COMBINATIONS = os.Getenv("COMBINATIONS")
@@ -50,9 +45,6 @@ func init() {
 	ACHIEVEMENTS = os.Getenv("ACHIEVEMENTS")
 	ACHIEVEMENT_ICONS = os.Getenv("ACHIEVEMENT_ICONS")
 
-	if JWT_SECRET == "" {
-		log.Fatal("JWT_SECRET not set")
-	}
 	if CLIENT == "" {
 		log.Fatal("CLIENT not set")
 	}
@@ -123,27 +115,4 @@ func main() {
 	server := NewAPIServer(":"+PORT, store)
 	log.Printf("Starting server on port %s", PORT)
 	server.Run()
-}
-
-
-type Game struct {
-	GameMode    c.GameMode `json:"gameMode"`
-	LobbyCode   string   `json:"lobbyCode"`
-	TargetWord  string   `json:"targetWord"`
-	TargetWords []string `json:"targetWords"`
-	Winner      string   `json:"winner"`
-	WithTimer   bool     `json:"withTimer"`
-	Timer       *Timer   `json:"timer"`
-	ManualEnd   bool     `json:"manualEnd"`
-}
-
-func NewLobbyDTO(lobby *st.Lobby, owner string, players []*dto.PlayerDTO) *dto.LobbyDTO {
-	return &dto.LobbyDTO{
-		LobbyCode: lobby.LobbyCode,
-		Name:      lobby.Name,
-		GameMode:  lobby.GameMode,
-		Owner:     owner,
-		Players:   players,
-		GameModes: dto.NewGameModes(),
-	}
 }

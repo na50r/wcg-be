@@ -1,4 +1,4 @@
-package main
+package game
 
 import (
 	"log"
@@ -17,7 +17,7 @@ type AchievementMaps struct {
 	TargetWord   map[string]string // word string → achievement title
 }
 
-func (server *APIServer) SetupAchievements() error {
+func (server *GameService) SetupAchievements() error {
 	s := server.store
 	newWordCnt := map[int]string{}
 	wordCnt := map[int]string{}
@@ -53,7 +53,7 @@ func (server *APIServer) SetupAchievements() error {
 	return nil
 }
 
-func UnlockAchievement(s *APIServer, username, achievementTitle string) error {
+func UnlockAchievement(s *GameService, username, achievementTitle string) error {
 	newUnlock, err := s.store.UnlockAchievement(username, achievementTitle)
 	if err != nil {
 		return err
@@ -66,7 +66,7 @@ func UnlockAchievement(s *APIServer, username, achievementTitle string) error {
 	return nil
 }
 
-func CheckAchievements(s *APIServer, username string, updatedWordCnt, updatedNewWordCnt int, currentWord string) error {
+func CheckAchievements(s *GameService, username string, updatedWordCnt, updatedNewWordCnt int, currentWord string) error {
 	a := s.achievements
 	if title, ok := a.NewWordCount[updatedNewWordCnt]; ok {
 		err := UnlockAchievement(s, username, title)
@@ -89,7 +89,7 @@ func CheckAchievements(s *APIServer, username string, updatedWordCnt, updatedNew
 	return nil
 }
 
-func GetAchievementsForUser(s *APIServer, username string) ([]*dto.AchievementDTO, error) {
+func GetAchievementsForUser(s *GameService, username string) ([]*dto.AchievementDTO, error) {
 	achievementTitles, err := s.store.GetAchievementsForUser(username)
 	if err != nil {
 		return nil, err
@@ -114,7 +114,7 @@ func GetAchievementsForUser(s *APIServer, username string) ([]*dto.AchievementDT
 	return achievements, nil
 }
 
-// handleAchievements godoc
+// HandleAchievements godoc
 // @Summary Get all achievements for a user
 // @Description Get all achievements for a user
 // @Tags account
@@ -122,10 +122,10 @@ func GetAchievementsForUser(s *APIServer, username string) ([]*dto.AchievementDT
 // @Produce json
 // @Security BearerAuth
 // @Param username path string true "Username"
-// @Success 200 {array} AchievementDTO
-func (s *APIServer) handleAchievements(w http.ResponseWriter, r *http.Request) error {
+// @Success 200 {array} dto.AchievementDTO
+func (s *GameService) HandleAchievements(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodGet {
-		err := WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
+		err := u.WriteJSON(w, http.StatusMethodNotAllowed, dto.APIError{Error: "Method not allowed"})
 		return err
 	}
 	username, err := u.GetUsername(r)
@@ -136,5 +136,5 @@ func (s *APIServer) handleAchievements(w http.ResponseWriter, r *http.Request) e
 	if err != nil {
 		return err
 	}
-	return WriteJSON(w, http.StatusOK, achievements)
+	return u.WriteJSON(w, http.StatusOK, achievements)
 }
