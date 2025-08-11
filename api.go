@@ -1,21 +1,23 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
-	httpSwagger "github.com/swaggo/http-swagger"
-	dto "github.com/na50r/wombo-combo-go-be/dto"
-	st "github.com/na50r/wombo-combo-go-be/storage"
-	g "github.com/na50r/wombo-combo-go-be/game"
-	t "github.com/na50r/wombo-combo-go-be/token"
-	c "github.com/na50r/wombo-combo-go-be/constants"
-	"golang.org/x/crypto/bcrypt"
 	"fmt"
+
+	"github.com/gorilla/mux"
 	a "github.com/na50r/wombo-combo-go-be/account"
+	c "github.com/na50r/wombo-combo-go-be/constants"
+	dto "github.com/na50r/wombo-combo-go-be/dto"
+	g "github.com/na50r/wombo-combo-go-be/game"
+	st "github.com/na50r/wombo-combo-go-be/storage"
+	t "github.com/na50r/wombo-combo-go-be/token"
 	u "github.com/na50r/wombo-combo-go-be/utility"
+	httpSwagger "github.com/swaggo/http-swagger"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // Allows error handling
@@ -100,6 +102,15 @@ func (s *APIServer) RegisterRoutes() error {
 	router.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("pong\n"))
+	})
+
+
+	// Testing
+	router.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
+		size := 1024 * 1024;
+		buf := bytes.Repeat([]byte("A"), size)
+		w.WriteHeader(http.StatusOK)
+		w.Write(buf)
 	})
 	return nil
 }

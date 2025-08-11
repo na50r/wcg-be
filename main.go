@@ -14,10 +14,12 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"syscall"
+
 	"github.com/joho/godotenv"
 	_ "github.com/na50r/wombo-combo-go-be/docs"
-    st "github.com/na50r/wombo-combo-go-be/storage"
-
+	st "github.com/na50r/wombo-combo-go-be/storage"
+	"os/signal"
 )
 
 var CLIENT string
@@ -102,7 +104,7 @@ func main() {
 	//./bin/wc --seed
 	if *seed {
 		st.SeedDB(store, WORDS, COMBINATIONS, ICONS, ACHIEVEMENT_ICONS, ACHIEVEMENTS)
-		log.Println("Seeding completed, closing server...")
+		log.Println("Seeding completed, exiting...")
 		os.Exit(0)
 	}
 
@@ -114,5 +116,10 @@ func main() {
 
 	server := NewAPIServer(":"+PORT, store)
 	log.Printf("Starting server on port %s", PORT)
-	server.Run()
+	go server.Run()
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
+
+	<-stop //Wait for stop signal
+	log.Println("Shutting down server...")
 }
